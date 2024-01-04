@@ -6,16 +6,18 @@
   "configurations": [
     {
       "type": "java",
-      "name": "JavaFXTestApp",
+      "name": "MainView",
       "request": "launch",
-      "mainClass": "JavaFXTestApp",
-      "projectName": "zav-pms_954a1701"
+      "mainClass": "views.MainView",
+      "projectName": "zav-pms_954a1701",
+      "vmArgs": "--module-path \"lib/javafx-sdk-21.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
     },
     {
       "type": "java",
       "name": "Current File",
       "request": "launch",
-      "mainClass": "${file}"
+      "mainClass": "${file}",
+      "vmArgs": "--module-path \"lib/javafx-sdk-21.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
     },
     {
       "type": "java",
