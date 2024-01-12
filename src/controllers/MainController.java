@@ -1,3 +1,7 @@
+/*
+ * Connects View and Model together; contains View Logic ("what happens when I click button X?")
+ */
+
 package controllers;
 
 import javafx.event.ActionEvent;

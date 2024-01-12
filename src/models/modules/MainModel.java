@@ -1,3 +1,7 @@
+/*
+ * Contains all of the business operations and states of objects in the view
+ */
+
 package models.modules;
 
 import javafx.scene.shape.Sphere;
