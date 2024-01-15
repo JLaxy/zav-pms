@@ -1,0 +1,139 @@
+JavaFX Notes
+
+Stage - top level container; holds all JavaFX element;
+	- JFrame equivalent
+	show() - make stage visible
+	setScene()
+	setOnCloseRequest(event -> {METHOD...}) - to assign a function to be called when program is to be closed; also use "event.consume()" to prevent program to be closed when clicked CANCEL button
+	
+Scene - added to stage; drawing stage
+	- JPanel equivalent
+	- requires rootnode as argument
+	setOnKeyPressed(new EventHandler) - used to add key listener to scene
+	
+Scene-Graph - hierarichal tree of nodes
+	- holds JavaFX components in tree structure
+
+Root Node - Layout Manager equivalent
+
+Group - kind of root node; groups of nodes
+	getChildren().add(COMPONENT) - adds component to group
+	- order of addition determines layer; ex: first = back
+
+FUNCTION setStyle() - apply css effect to node in code
+
+Label - allows for text;
+	setText() - change text
+	setX() - change X pos
+	setY() - change Y pos
+	setFont(FONT_OBJECT) - change font
+	setFill(COLOR_OBJECT) - change color
+	
+Line - allows for line
+	setStartX(DOUBLE)
+	setStartY(DOUBLE)
+	setEndX(DOUBLE)
+	setEndY(DOUBLE)
+	setStrokeWidth(DOUBLE)
+	setStroke(COLOR) - change color
+	setOpacity(double)
+	setRotate(DOUBLE) - rotates line
+
+Rectangle(posX, posY, width, height)
+	setX(INT)
+	setY(INT)
+	setWidth(INT)
+	setHeight(INT)
+	setFill(COLOR) - change color
+	setStrokeWidth(INT)
+	setStroke(COLOR) - border color
+	
+Polygon(pointOneX, pointOneY, pointTwoX, pointTwoY) - allows to create other shapes
+	getPoints().setAll(pointOneX, pointOneY, pointTwoX, pointTwoY, ...)
+	setFill(COLOR)
+
+Circle(X, Y, Radius, COLOR) - allows for circle
+	setCenterX(DOUBLE)
+	setCenterY(DOUBLE)
+	setRadius(DOUBLE)
+	
+ImageView(IMAGE) - allows to display /paint images on screen; like a picture frame while IMAGE is the image object itself
+	setImage(IMAGE)
+	setX(DOUBLE)
+	setY(DOUBLE)
+	
+TextField()
+	getText()
+	setText()
+	
+Checkbox()
+	isSelected()
+	
+RadioButton()
+	isSelected()
+
+DatePicker()
+	getValue()
+	
+ColorPicker()
+	getValue()
+	
+implements Initializable
+	@override initialize - used to initialize controller after root is loaded
+	
+ChoiceBox()
+	getIttems().add() - adding items to choicebox
+	setOnAction(this::selected) - adding action listener; implemented at initialize of initializable
+	
+Slider()
+	valueProperty().addListener(new ChangeListener<Number>()) - adding action listener; implemented at initialize of initializable
+	getValue()- get value; returns double
+
+ProgressBar()
+	setStyle("-fx-accent: COLOR") - changing progress bar color
+	setProgress(DOUBLE) - set value shown in progress bar
+	
+Spinner() - needs SpinnerValueFactory
+	setValueFactory(VALUE_FACTORY) - assigns value factory for certain spinner
+	getValue() - gets current value of the spinner
+	valueProperty().addListener(CHANGE_LISTENER)
+	SpinnerValueFactory<DATATYPE> - takes care of spinner interactions
+		setValue() - sets default value
+		
+ListView<DATATYPE>() - lists items that are selectable
+	getItems().add() - add items to listview
+	getSelectionModel().selectedItemProperty().addListener(FUNCTION) - adding listener to listview
+	
+	getSelectionModel().selectedItemProperty().getSelectedItem() - returns user-selected item
+	
+TreeView() - displays data in a hierarichal structure
+	setRoot(TREEITEM) - set a TreeItem as root of the TreeView
+	TreeItem(OBJECT, ImageView) - used to populate TreeView
+	getChildren().addAll() - adding children to treeitem
+	getSelectionModel().getSelectedItem().getValue() - get value of currently selected item
+	setShowRoot(BOOL) - to or not hide root
+	
+MenuBar - visual menubar; add menu node then add menuitem to menu node
+	Menuitem - add hotkey in scene builder (accelerator)
+	
+Animations
+	TranslateTransition - allows to translate nodes in the scene
+		setNode() - select node that will be translated
+		setDuration(DURATION) - duration of transalation
+		setByX() - translate node in x axis
+		setCycleCount(INT) - amount of times transalation will repeat
+		setAutoReverse(BOOL) - allow transalation to repeat
+		play() - start translation
+	RotateTransition - rotates nodes in scene
+		setInterpolator(Interpolator.LINEAR) - sets rotation to not slowdown
+		setAxis() - change axis of rotation
+	FadeTransition - fades nodes in scene
+		setFromValue() - start opacity
+		setToValue() - end opacity
+	ScaleTransition - scales nodes in scene
+	
+MediaView() - viewport; allows to play video to scene; needs to add vmarguments
+	setMediaPlayer(MediaPlayer)
+
+WebView() - built-in browser; needs to add vmarguments
+	getEngine() - returns engine

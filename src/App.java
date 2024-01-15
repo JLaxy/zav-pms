@@ -1,7 +1,7 @@
 /*
  * JavaFX Test Application
  * 
- * if application runs, then JavaFX is correctly installd
+ * if application runs, then JavaFX is correctly installed
  */
 
 import javafx.application.Application;
