@@ -1,0 +1,100 @@
+https://www.youtube.com/watch?v=RGOj5yH7evk
+
+https://stackoverflow.com/questions/65741816/error-connecting-to-agent-no-such-file-or-directory-adding-key-to-ssh-agent
+
+https://stackoverflow.com/questions/8283915/git-author-unknown
+
+https://youtu.be/RGOj5yH7evk?si=ldxpzzGq7ok2NlZT&t=2153
+
+git clone KEY
+	- used to download a repo to your local machine
+
+git pull origin main
+	- retrieving latest version (changes) of code in repository
+	
+git status
+	- shows all of the modifications that havent been commited yet
+	- shows status of branch?
+	
+git add (FILE NAME || PERIOD)
+	- adds selected modification to committing queue
+	
+git commit -m "HEADER" -m "DESCRIPTION"
+	- adding chnages to commit queue; description is optional
+	
+git push origin main
+	- updates changes to repository
+	
+git init
+	- used to create a repository locally
+	
+git remote add origin REPOSITORY_LINK
+	- used to connect a local repository to a created existing empty repository
+
+git checkout
+	- used to switch to branches
+	
+git checkout -b BRANCH_NAME
+	- used to create a new branch
+	
+git diff BRANCH_NAME
+	- used to determine updates on branch
+	
+* when merging branches, push branch first in repository then merge
+
+git merge main
+	- merging changes to main branch
+
+git branch -d BRANCH_NAME
+	-  used to delete branch
+	
+git reset FILE_NAME
+	- remove file from being staged
+	
+git reset head
+	- undo commit
+
+git log
+	- shows all commit log
+	
+* to undo a sepcific commit, find commit hash using "git log"
+
+git reset COMMIT_HASH
+	- undo specific commit
+	
+git reset --hard COMMIT_HASH
+	- removing all changes after certain commit
+	
+	
+https://youtu.be/9XJicRt_FaI?si=Bwau4YEshIIqqsf_&t=13314
+
+CSS
+
+// Setting CSS file
+scene.getStylesheets().add(getClass().getResource("views/fxmls/css/styler.css").toExternalForm());
+
+# - targeting ID
+. - targeting Object
+
+
+NAVIGATION
+- first make sure that CONTROLLER of CURRENT VIEW has reference of ROOT SWITCHER
+	Navigate to next page:
+		- execute "this.rootSwitcher.nextView(ROOT_OF_NEXT_VIEW);"
+	Go back to previous page:
+		- execute "this.rootSwitcher.goBack();"
+		
+SQL
+	Port: 3306
+	username: root
+	Root Password: zavpms@123
+	Windows Service Name: MySQL80
+	START MySQL SERVER WHEN USING
+	
+	Database Account for Admin
+	username: admin
+	password: zavpms@123
+	
+	Database Account for PMS Program
+	username: pmsprogram
+	password: zavpms@123

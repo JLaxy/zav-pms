@@ -1,0 +1,24 @@
+https://stackoverflow.com/questions/39873287/what-is-the-relationship-between-java-fx-application-scene-and-parent
+
+Switching Scenes
+https://stackoverflow.com/questions/37200224/how-can-i-keep-my-window-size-while-switching-scenes-in-java-fx
+
+Inheritance
+https://www.w3schools.com/java/java_inheritance.asp
+
+https://www.geeksforgeeks.org/stack-clear-method-in-java-with-example/
+
+https://stackoverflow.com/questions/37813358/what-is-the-meaning-of-event-consumes-in-javafx
+
+JavaFX Tutorial
+https://www.youtube.com/watch?v=9XJicRt_FaI&t=4047s
+
+FXML Initialize vs Constructor
+https://stackoverflow.com/questions/34785417/javafx-fxml-controller-constructor-vs-initialize-method
+
+JDBC Tutorial
+https://www.youtube.com/watch?v=BOUMR85B-V0&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=1&pp=iAQB
+
+https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-create-a-database-schema-with-the-MySQL-Workbench
+
+https://www.w3schools.com/mysql/mysql_update.asp

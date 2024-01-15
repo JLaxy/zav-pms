@@ -10,11 +10,13 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 public class RootSwitcher {
-    Stack<Parent> roots = new Stack<Parent>();
-    Stage mainStage;
+    private Stack<Parent> roots;
+    private Stage mainStage;
 
+    // Constructor; setting reference to Main Stage and initializing Stack
     public RootSwitcher(Stage mainStage) {
         this.mainStage = mainStage;
+        this.roots = new Stack<Parent>();
     }
 
     // Go back to previous View
@@ -22,10 +24,21 @@ public class RootSwitcher {
         this.mainStage.getScene().setRoot(this.roots.pop());
     }
 
-    // Naavigate to next View
+    // Navigate to next View
     public void nextView(Parent nextRoot) {
+        // Adding current View in Stack
         this.roots.add(this.mainStage.getScene().getRoot());
         this.mainStage.getScene().setRoot(nextRoot);
+    }
+
+    // Returns main stage
+    public Stage getMainStage() {
+        return this.mainStage;
+    }
+
+    // Removes all roots in stack
+    public void clearStack() {
+        this.roots.clear();
     }
 
     // Debug function; shows number of roots in stack
