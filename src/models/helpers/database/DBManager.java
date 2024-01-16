@@ -1,7 +1,5 @@
 /*
- * Database Helper Class
- * 
- * Responsible for managing connections and commands of application to Database
+ * Responsible for managing connections of application to Database
  */
 
 package models.helpers.database;
@@ -11,7 +9,7 @@ import java.sql.DriverManager;
 
 import javax.swing.JOptionPane;
 
-public class DatabaseManager {
+public class DBManager {
 
     // Configuration
     private String SERVER_ADDRESS = "127.0.0.1";
@@ -20,11 +18,15 @@ public class DatabaseManager {
     private String USERNAME = "pmsprogram";
     private String PASSWORD = "zavpms@123";
 
-    public Connection con;
+    private Connection con;
+    public DBQuery query;
 
-    public DatabaseManager() {
+    public DBManager() {
         loadDriver();
         createConnection();
+        // Creating Database Query Class that is responsible for executing queries to
+        // database
+        this.query = new DBQuery(this.con);
     }
 
     // Loading Driver for Java to MySQL

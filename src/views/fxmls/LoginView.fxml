@@ -18,13 +18,13 @@
             <Image url="@../../../assets/images/logoTransparent.png" />
          </image>
       </ImageView>
-      <TextField layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username" />
-      <Button layoutX="628.0" layoutY="520.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="136.0" text="Login" textFill="WHITE">
+      <TextField fx:id="unameField" layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username" />
+      <Button fx:id="loginButton" layoutX="628.0" layoutY="520.0" mnemonicParsing="false" onAction="#login" prefHeight="50.0" prefWidth="136.0" text="Login" textFill="WHITE">
          <font>
             <Font size="23.0" />
          </font>
       </Button>
-      <PasswordField layoutX="541.0" layoutY="368.0" prefHeight="45.0" prefWidth="301.0" promptText="Password" />
+      <PasswordField fx:id="passField" layoutX="541.0" layoutY="368.0" prefHeight="45.0" prefWidth="301.0" promptText="Password" />
       <Label layoutX="651.0" layoutY="583.0" text="Forgot Password?" />
       <Button layoutX="1196.0" layoutY="638.0" mnemonicParsing="false" onAction="#goBack" prefHeight="50.0" prefWidth="136.0" text="Go Back" textFill="WHITE">
          <font>

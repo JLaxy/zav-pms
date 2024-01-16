@@ -42,7 +42,7 @@ public class RootSwitcher {
     }
 
     // Debug function; shows number of roots in stack
-    public void rootCount() {
+    private void rootCount() {
         System.out.println(this.roots.size());
     }
 }

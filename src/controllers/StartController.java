@@ -7,10 +7,8 @@ public class StartController extends ParentController {
 
     // Get Started Button Action
     public void getStarted() {
-        System.out.println("getting started...");
         try {
-
-            // DEBUG PURPOSES
+            // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/LoginView.fxml"));
 
             // FXMLLoader can only load once
@@ -18,6 +16,8 @@ public class StartController extends ParentController {
             // Passing RootSwitcher instance to next controller
             ParentController nextController = rootLoader.getController();
             nextController.setRootSwitcher(this.rootSwitcher);
+            // Passing DBManager instance to next controller
+            nextController.setDBManager(this.zavPMSDB);
             // Calling Root Switcher to navigate to next view
             this.rootSwitcher.nextView(root);
         } catch (Exception e) {
