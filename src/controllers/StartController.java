@@ -13,11 +13,12 @@ public class StartController extends ParentController {
 
             // FXMLLoader can only load once
             Parent root = rootLoader.load();
-            // Passing RootSwitcher instance to next controller
+
+            // Configuring controller of next view; passing in DBManager and RootSwitcher
+            // References
             ParentController nextController = rootLoader.getController();
-            nextController.setRootSwitcher(this.rootSwitcher);
-            // Passing DBManager instance to next controller
-            nextController.setDBManager(this.zavPMSDB);
+            nextController.initializeReferences(this.zavPMSDB, this.rootSwitcher);
+
             // Calling Root Switcher to navigate to next view
             this.rootSwitcher.nextView(root);
         } catch (Exception e) {

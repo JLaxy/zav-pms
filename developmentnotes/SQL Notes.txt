@@ -1,1 +1,7 @@
 !! Start MySQL80 service in services.msc to start database server
+
+executeQuery() - used to retrieve data from db
+
+execute() - used to insert / execute operations to db
+
+!! When executing queries, must create connection, statement and execute query in try-with-resources statement; will automatically close connection after execution; see: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html

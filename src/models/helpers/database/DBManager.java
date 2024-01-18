@@ -6,6 +6,7 @@ package models.helpers.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
@@ -18,15 +19,14 @@ public class DBManager {
     private String USERNAME = "pmsprogram";
     private String PASSWORD = "zavpms@123";
 
-    private Connection con;
     public DBQuery query;
 
     public DBManager() {
         loadDriver();
-        createConnection();
-        // Creating Database Query Class that is responsible for executing queries to
-        // database
-        this.query = new DBQuery(this.con);
+        // Creating DBQuery object to execute queries
+        this.query = new DBQuery(this);
+        // Testing connection to database
+        testConnection();
     }
 
     // Loading Driver for Java to MySQL
@@ -40,16 +40,35 @@ public class DBManager {
         }
     }
 
+    // Used at program start to determine if application is able to connect to the
+    // database
+    private void testConnection() {
+        if (createConnection() == null)
+            System.exit(1);
+    }
+
     // Creating connection to Database
-    private void createConnection() {
+    public Connection createConnection() {
         try {
-            this.con = DriverManager.getConnection(
+            return DriverManager.getConnection(
                     "jdbc:mysql://" + SERVER_ADDRESS + ":" + PORT_ADDRESS + "/" + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Unable to connect to Database!\n\n" + e,
+            JOptionPane.showMessageDialog(null, "Unable to connect to Database in DBManager!\n\n" + e,
                     "Database Connection Error",
                     JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            return null;
+        }
+    }
+
+    // Initializing Statement Object; allows program to send SQL queries to MySQL
+    public Statement createQuery(Connection con) {
+        try {
+            return con.createStatement();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Failed to initialize Statement Object in DBManager!\n\n" + e,
+                    "Statement Initialization Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
         }
     }
 }

@@ -50,8 +50,9 @@ public class PMS extends Application {
             RootSwitcher rootSwitcher = new RootSwitcher(mainStage);
             // Passing RootSwitcher instance to next controller
             ParentController nextController = rootLoader.getController();
-            nextController.setRootSwitcher(rootSwitcher);
-            nextController.setDBManager(zavPMSDB);
+            // Configuring controller of next view; passing in DBManager and RootSwitcher
+            // References
+            nextController.initializeReferences(zavPMSDB, rootSwitcher);
 
         } catch (Exception e) {
             System.out.println("Error at: " + getClass());

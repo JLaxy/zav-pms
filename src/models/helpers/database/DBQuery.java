@@ -1,41 +1,34 @@
 /*
- * Handles all queries executed on Database
+ * Handles all queries executed on Database;
+ * 
+ * IMPORTANT: always use try-with-resources statement to immediately close the connection
  */
 
 package models.helpers.database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
 public class DBQuery {
-    private Connection con;
-    private Statement query;
 
-    DBQuery(Connection con) {
-        this.con = con;
-        createQuery();
+    private DBManager zavPMSDB;
+
+    DBQuery(DBManager zavPMSDB) {
+        this.zavPMSDB = zavPMSDB;
     }
 
-    // Initializing Statement Object; allows program to send SQL queries to MySQL
-    private void createQuery() {
+    // Returns TRUE if result of query has no data / rows; automatically closes
+    // result set
+    private static boolean isNoResult(ResultSet result) {
         try {
-            this.query = this.con.createStatement();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to initialize Statement Object!\n\n" + e,
-                    "Statement Initialization Error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
-    }
-
-    // Returns TRUE if result of query has no data / rows
-    public static boolean isNoResult(ResultSet result) {
-        try {
-            if (!result.isBeforeFirst())
+            if (!result.isBeforeFirst()) {
+                result.close();
                 return true;
+            }
+            result.close();
             return false;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -46,22 +39,27 @@ public class DBQuery {
         return true;
     }
 
-    // Returns NULL instance of ResultSet if Username and Password combination does
-    // not point to a specific registered account in the Database
-    public ResultSet userLogin(String uname, String pass) {
-        ResultSet result = null;
-        try {
-            result = this.query.executeQuery(
-                    "SELECT uname FROM `zav-pms-db`.users WHERE uname = \"" + uname + "\" AND pass = \"" + pass
-                            + "\";");
-            return result;
+    // True if the user and password combination exists in database
+    public boolean userLogin(String uname, String pass) {
+        // Try-with-resources; immediately closes resources before any catach or finally
+        // block is executed
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement("SELECT uname FROM users WHERE uname = (?) AND pass = (?)")) {
+            // Apply user input
+            stmt.setString(1, uname);
+            stmt.setString(2, pass);
+            // Execute SQL Query
+            stmt.execute();
+            // Check if result has rows then return
+            return !isNoResult(stmt.getResultSet());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "There was an error in executing the query in DBQuery, userLogin()!\n\n" + e,
                     "Query Execution Error",
                     JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return result;
     }
 
 }

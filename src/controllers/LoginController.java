@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import models.helpers.database.DBQuery;
 
 public class LoginController extends ParentController {
 
@@ -28,10 +27,10 @@ public class LoginController extends ParentController {
     public void login(ActionEvent e) {
         try {
             // Checking if (account exists) / (query has no result)
-            if (DBQuery.isNoResult(this.zavPMSDB.query.userLogin(unameField.getText(), passField.getText())))
-                System.out.println("does not exist");
-            else
+            if (this.zavPMSDB.query.userLogin(unameField.getText(), passField.getText()))
                 System.out.println("exists");
+            else
+                System.out.println("does not exists");
 
         } catch (Exception ex) {
             System.out.println("Error at: " + getClass());

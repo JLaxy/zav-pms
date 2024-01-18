@@ -16,9 +16,14 @@ https://www.youtube.com/watch?v=9XJicRt_FaI&t=4047s
 FXML Initialize vs Constructor
 https://stackoverflow.com/questions/34785417/javafx-fxml-controller-constructor-vs-initialize-method
 
-JDBC Tutorial
-https://www.youtube.com/watch?v=M3f5yvHlAVM&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=4
-
 https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-create-a-database-schema-with-the-MySQL-Workbench
 
 https://www.w3schools.com/mysql/mysql_update.asp
+
+https://www.javatpoint.com/ResultSet-interface
+
+JDBC Tutorial
+https://www.youtube.com/watch?v=M3f5yvHlAVM&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=4
+
+always close connection
+https://stackoverflow.com/questions/30795591/when-to-close-connection-in-jdbc-sql

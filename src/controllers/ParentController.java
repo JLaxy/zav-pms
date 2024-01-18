@@ -25,7 +25,7 @@ public class ParentController {
     }
 
     // Sets reference to root switcher
-    public void setRootSwitcher(RootSwitcher rootSwitcher) {
+    private void setRootSwitcher(RootSwitcher rootSwitcher) {
         this.rootSwitcher = rootSwitcher;
     }
 
@@ -35,7 +35,13 @@ public class ParentController {
     }
 
     // Sets reference to DB Manager
-    public void setDBManager(DBManager zavPMSDB) {
+    private void setDBManager(DBManager zavPMSDB) {
         this.zavPMSDB = zavPMSDB;
+    }
+
+    // Method to easily configure the references of the controller of the next view
+    public void initializeReferences(DBManager dbManager, RootSwitcher rootSwitcher) {
+        setDBManager(dbManager);
+        setRootSwitcher(rootSwitcher);
     }
 }
