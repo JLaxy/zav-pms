@@ -27,3 +27,7 @@ https://www.youtube.com/watch?v=M3f5yvHlAVM&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8x
 
 always close connection
 https://stackoverflow.com/questions/30795591/when-to-close-connection-in-jdbc-sql
+
+https://stackoverflow.com/questions/18257648/get-the-current-date-in-java-sql-date-format
+
+https://www.mysqltutorial.org/mysql-basics/mysql-insert-datetime/

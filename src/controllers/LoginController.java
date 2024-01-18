@@ -27,8 +27,9 @@ public class LoginController extends ParentController {
     public void login(ActionEvent e) {
         try {
             // Checking if (account exists) / (query has no result)
-            if (this.zavPMSDB.query.userLogin(unameField.getText(), passField.getText()))
-                System.out.println("exists");
+            String loa = this.zavPMSDB.query.userLogin(unameField.getText(), passField.getText());
+            if (loa != "")
+                System.out.println("exists: " + loa);
             else
                 System.out.println("does not exists");
 
