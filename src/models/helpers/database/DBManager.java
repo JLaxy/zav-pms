@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
 public class DBManager {
 
     // Configuration
-    private String SERVER_ADDRESS = "127.0.0.1";
-    private String PORT_ADDRESS = "3306";
-    private String DATABASE_NAME = "zav-pms-db";
-    private String USERNAME = "pmsprogram";
-    private String PASSWORD = "zavpms@123";
+    private final String SERVER_ADDRESS = "127.0.0.1";
+    private final String PORT_ADDRESS = "3306";
+    private final String DATABASE_NAME = "zav-pms-db";
+    private final String USERNAME = "pmsprogram";
+    private final String PASSWORD = "zavpms@123";
 
     public DBQuery query;
 

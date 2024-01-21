@@ -14,8 +14,8 @@ import models.helpers.database.DBManager;
 
 public class PMS extends Application {
     // Easy to change values
-    private String APP_TITLE = "Zav's Kitchen and Bar: Product Management System";
-    private String ICON_PATH = "file:../../assets/images/logoTransparent.png";
+    private final String APP_TITLE = "Zav's Kitchen and Bar: Product Management System";
+    private final String ICON_PATH = "file:../../assets/images/logoTransparent.png";
 
     // Starting
     @Override

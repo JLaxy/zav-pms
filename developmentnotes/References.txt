@@ -22,12 +22,23 @@ https://www.w3schools.com/mysql/mysql_update.asp
 
 https://www.javatpoint.com/ResultSet-interface
 
-JDBC Tutorial
-https://www.youtube.com/watch?v=M3f5yvHlAVM&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=4
-
 always close connection
 https://stackoverflow.com/questions/30795591/when-to-close-connection-in-jdbc-sql
 
-https://stackoverflow.com/questions/18257648/get-the-current-date-in-java-sql-date-format
+https://stackoverflow.com/questions/39836994/how-to-insert-datetime-field-in-mysql-database-using-preparedstatement-in-java
 
 https://www.mysqltutorial.org/mysql-basics/mysql-insert-datetime/
+
+JDBC Tutorial
+https://www.youtube.com/watch?v=xco3zFcWNuA&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=5
+
+GSON Parsing
+https://stackoverflow.com/questions/16595493/gson-parsing-without-a-lot-of-classes
+https://attacomsian.com/blog/gson-read-write-json
+https://attacomsian.com/blog/gson-read-json-file
+
+Date Comparing
+https://stackoverflow.com/questions/22039991/how-to-compare-two-dates-along-with-time-in-java
+
+String to date
+https://stackoverflow.com/questions/23047200/convert-string-to-java-sql-date

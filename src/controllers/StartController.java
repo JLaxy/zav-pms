@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 public class StartController extends ParentController {
 
     // Get Started Button Action
-    public void getStarted() {
+    public void getStartedAction() {
         try {
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/LoginView.fxml"));

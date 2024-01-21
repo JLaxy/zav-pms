@@ -7,12 +7,12 @@
 package models.helpers.database;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 
 import javax.swing.JOptionPane;
+
+import models.helpers.DateHelper;
 
 public class DBQuery {
 
@@ -38,21 +38,15 @@ public class DBQuery {
         return true;
     }
 
-    // Returns current date in String format
-    private String getDateTime() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(date);
-    }
-
     // Returns level of access type of the user trying to log-in
-    public String userLogin(String uname, String pass) {
+    public String[] userLogin(String uname, String pass) {
+        String[] userInfo = { "", "" };
         // Try-with-resources; immediately closes resources before any catach or finally
         // block is executed
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT level_of_access FROM users INNER JOIN level_of_access ON users.level_of_access_id = level_of_access.id WHERE uname = (?) AND pass = (?)")) {
+                                "SELECT level_of_access, users.id FROM users INNER JOIN level_of_access ON users.level_of_access_id = level_of_access.id WHERE uname = (?) AND pass = (?)")) {
             // Apply user input
             stmt.setString(1, uname);
             stmt.setString(2, pass);
@@ -60,23 +54,28 @@ public class DBQuery {
             stmt.execute();
 
             ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
             if (isNoResult(result)) {
-                result.close();
                 // Logging log-in attempt to database
-                loginAttempt(uname, getDateTime());
-                return "";
+                loginAttempt(uname, DateHelper.getCurrentDateTimeString());
+                result.close();
+                return userInfo;
             } else {
                 result.next();
-                String loa = result.getString("level_of_access");
+                // Logging log-in to database
+                loggedIn(uname, DateHelper.getCurrentDateTimeString());
+                // Retrieve level of access and user ID
+                userInfo[0] = result.getString("level_of_access");
+                userInfo[1] = result.getString("users.id");
                 result.close();
-                return loa;
+                return userInfo;
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "There was an error in executing the query in DBQuery, userLogin()!\n\n" + e,
                     "Query Execution Error",
                     JOptionPane.ERROR_MESSAGE);
-            return "";
+            return userInfo;
         }
     }
 
@@ -97,6 +96,28 @@ public class DBQuery {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "There was an error in executing the query in DBQuery, loginAttempt()!\n\n" + e,
+                    "Query Execution Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Logs Login in Database
+    private void loggedIn(String uname, String date) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO user_logs (user_id, action_id, date, parameter) VALUES (?, ?, ?, ?);")) {
+            // Setting user as SYSTEM
+            stmt.setInt(1, 1);
+            // Setting action as Logged In
+            stmt.setInt(2, 2);
+            // Applying Date
+            stmt.setString(3, date);
+            stmt.setString(4, "for user \"" + uname + "\"");
+            stmt.execute();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "There was an error in executing the query in DBQuery, loggedIn()!\n\n" + e,
                     "Query Execution Error",
                     JOptionPane.ERROR_MESSAGE);
         }
