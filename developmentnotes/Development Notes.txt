@@ -76,6 +76,8 @@ scene.getStylesheets().add(getClass().getResource("views/fxmls/css/styler.css").
 # - targeting ID
 . - targeting Object
 
+RUNNING Program
+- make sure that working directory is "zav-pms" folder
 
 NAVIGATION
 - first make sure that CONTROLLER of CURRENT VIEW has reference of ROOT SWITCHER
@@ -83,6 +85,9 @@ NAVIGATION
 		- execute "this.rootSwitcher.nextView(ROOT_OF_NEXT_VIEW);"
 	Go back to previous page:
 		- execute "this.rootSwitcher.goBack();"
+		
+DEFAULT CONFIGS folder
+	- has copy of all configuration files when not present
 		
 SQL
 	Port: 3306
@@ -98,3 +103,19 @@ SQL
 	Database Account for PMS Program
 	username: pmsprogram
 	password: zavpms@123
+	
+Java Multithreading
+	Creating a new thread
+		- extend class as thread
+		- implement class as Runnable
+		
+	Extending thread
+		run() - task will be performed
+		.start() - call the run() method
+	
+	Implementing runnable
+		Thread VAR = new Thread(CLASS_IMPLEMENTED_WITH_RUNNABLE)
+		run() - task will be performed
+		.start() - call the run() method
+		
+	isAlive() - returns true if thread is still executing

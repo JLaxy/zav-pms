@@ -5,21 +5,30 @@ import java.util.Date;
 import controllers.LoginController;
 import models.helpers.DateHelper;
 import models.helpers.JSONManager;
+import models.helpers.PopupDialog;
 
 public class LoginModel extends ParentModel {
 
     LoginController controller;
+    private int attempts;
 
     public LoginModel(LoginController controller) {
         this.controller = controller;
+        resetAttempts();
+    }
+
+    public void resetAttempts() {
+        this.attempts = 2;
+        System.out.println("Resetted!");
     }
 
     // Returns true if cooldown is active
     public Boolean isCooldownActive() {
         // Retrieving Cooldown Date from settings file
-        JSONManager myJSONManger = new JSONManager();
-        Date cooldownDate = DateHelper.stringToDate(myJSONManger.getLoginCooldown());
+        Date cooldownDate = DateHelper.stringToDate(new JSONManager().getLoginCooldown());
         // If cooldown date has not elapsed
+        System.out.println(
+                cooldownDate + "\n" + new Date(System.currentTimeMillis()) + !DateHelper.isDateBeforeNow(cooldownDate));
         if (!DateHelper.isDateBeforeNow(cooldownDate))
             return true;
         return false;
@@ -31,9 +40,33 @@ public class LoginModel extends ParentModel {
             return this.controller.getDBManager().query.userLogin(uname, pass);
 
         } catch (Exception ex) {
-            System.out.println("Error at: " + getClass());
-            ex.printStackTrace();
+            PopupDialog.showErrorDialog(ex, this.getClass().getName());
             return null;
         }
+    }
+
+    // Updating attempt count
+    public void updateLoginAttempt() {
+        if (attempts < 1) {
+            // add cooldown
+            updateLoginCooldown();
+        }
+        --this.attempts;
+        System.out.println("attempts left: " + this.attempts);
+    }
+
+    // Adding 5 minutes to cooldown, updating to settings
+    private void updateLoginCooldown() {
+        JSONManager jsonManager = new JSONManager();
+        jsonManager.updateLoginCooldown();
+        System.out.print("changed login cooldown to: ");
+    }
+
+    public Boolean hasNoAttempts() {
+        if (this.attempts < 0) {
+            resetAttempts();
+            return true;
+        }
+        return false;
     }
 }

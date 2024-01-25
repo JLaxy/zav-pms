@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import models.helpers.JSONManager;
+import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
 import models.helpers.database.DBManager;
 
@@ -24,6 +26,9 @@ public class PMS extends Application {
 
             // Connecting to Database
             DBManager zavPMSDB = connectToDatabase();
+
+            // Initializing settings file; makes sure it exists
+            new JSONManager().initializeSettingsFile();
 
             // Loading GUI built on Scene Builder
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("views/fxmls/StartView.fxml"));
@@ -55,8 +60,7 @@ public class PMS extends Application {
             nextController.initializeReferences(zavPMSDB, rootSwitcher);
 
         } catch (Exception e) {
-            System.out.println("Error at: " + getClass());
-            e.printStackTrace();
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
     }
 

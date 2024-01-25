@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import models.LoginModel;
+import models.helpers.PopupDialog;
 
 public class LoginController extends ParentController {
 
@@ -34,8 +35,7 @@ public class LoginController extends ParentController {
             // Calling Root Switcher to go back to previous page.
             rootSwitcher.goBack();
         } catch (Exception ex) {
-            System.out.println("Error at: " + getClass());
-            ex.printStackTrace();
+            PopupDialog.showErrorDialog(ex, this.getClass().getName());
         }
     }
 
@@ -44,26 +44,31 @@ public class LoginController extends ParentController {
         try {
             // Retrieving user information from model
             String[] userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
+            // If user exists
             if (userInfo[0] != "") {
                 System.out.println("exists: " + userInfo[0] + ", " + userInfo[1]);
                 // Hiding error label
                 errorLabel.setVisible(false);
+                this.model.resetAttempts();
             } else {
                 System.out.println("does not exists");
+                // Updating login attempt
+                this.model.updateLoginAttempt();
+                checkCooldown();
                 // Showing error label
                 errorLabel.setVisible(true);
             }
 
         } catch (Exception ex) {
-            System.out.println("Error at: " + getClass());
-            ex.printStackTrace();
+            PopupDialog.showErrorDialog(ex, this.getClass().getName());
         }
     }
 
     // Checks if cooldown is active
-    private void checkCooldown() {
+    public void checkCooldown() {
+        System.out.println("---");
         // If cooldown is active
-        if (this.model.isCooldownActive()) {
+        if (this.model.isCooldownActive() || this.model.hasNoAttempts()) {
             // Disabling fields and button
             unameField.setDisable(true);
             passField.setDisable(true);

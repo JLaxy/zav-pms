@@ -42,3 +42,18 @@ https://stackoverflow.com/questions/22039991/how-to-compare-two-dates-along-with
 
 String to date
 https://stackoverflow.com/questions/23047200/convert-string-to-java-sql-date
+
+Adding minutes
+https://stackoverflow.com/questions/9015536/how-to-add-10-minutes-to-my-string-time
+
+Updating JSON
+https://stackoverflow.com/questions/63395650/change-the-json-object-value
+
+Sending Multiple Parameters Method
+https://stackoverflow.com/questions/17837117/java-sending-multiple-parameters-to-method
+
+Java Object without class
+https://stackoverflow.com/questions/34498085/java-object-without-a-class
+
+Java Multithreading
+https://www.youtube.com/watch?v=r_MbozD32eo

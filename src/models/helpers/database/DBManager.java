@@ -10,6 +10,8 @@ import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
+import models.helpers.PopupDialog;
+
 public class DBManager {
 
     // Configuration
@@ -53,9 +55,7 @@ public class DBManager {
             return DriverManager.getConnection(
                     "jdbc:mysql://" + SERVER_ADDRESS + ":" + PORT_ADDRESS + "/" + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Unable to connect to Database in DBManager!\n\n" + e,
-                    "Database Connection Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;
         }
     }
@@ -65,9 +65,7 @@ public class DBManager {
         try {
             return con.createStatement();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Failed to initialize Statement Object in DBManager!\n\n" + e,
-                    "Statement Initialization Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;
         }
     }

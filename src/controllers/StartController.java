@@ -2,12 +2,15 @@ package controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import models.helpers.PopupDialog;
 
 public class StartController extends ParentController {
 
     // Get Started Button Action
     public void getStartedAction() {
         try {
+            testFunc();
+
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/LoginView.fxml"));
 
@@ -22,8 +25,11 @@ public class StartController extends ParentController {
             // Calling Root Switcher to navigate to next view
             this.rootSwitcher.nextView(root);
         } catch (Exception e) {
-            System.out.println("Error at: " + getClass());
-            e.printStackTrace();
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
+    }
+
+    private void testFunc() {
+
     }
 }

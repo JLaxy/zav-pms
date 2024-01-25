@@ -10,9 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.swing.JOptionPane;
-
 import models.helpers.DateHelper;
+import models.helpers.PopupDialog;
 
 public class DBQuery {
 
@@ -30,12 +29,9 @@ public class DBQuery {
             }
             return false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "There was an error in DBQuery, isNoResult()!\n\n" + e,
-                    "DBQuery Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, "models.helpers.database.DBQuery");
+            return true;
         }
-        return true;
     }
 
     // Returns level of access type of the user trying to log-in
@@ -71,10 +67,7 @@ public class DBQuery {
                 return userInfo;
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "There was an error in executing the query in DBQuery, userLogin()!\n\n" + e,
-                    "Query Execution Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
             return userInfo;
         }
     }
@@ -94,10 +87,7 @@ public class DBQuery {
             stmt.setString(4, "for user \"" + uname + "\"");
             stmt.execute();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "There was an error in executing the query in DBQuery, loginAttempt()!\n\n" + e,
-                    "Query Execution Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
     }
 
@@ -116,10 +106,7 @@ public class DBQuery {
             stmt.setString(4, "for user \"" + uname + "\"");
             stmt.execute();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "There was an error in executing the query in DBQuery, loggedIn()!\n\n" + e,
-                    "Query Execution Error",
-                    JOptionPane.ERROR_MESSAGE);
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
     }
 
