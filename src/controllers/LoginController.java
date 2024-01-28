@@ -66,8 +66,9 @@ public class LoginController extends ParentController {
 
     // Checks if cooldown is active
     public void checkCooldown() {
-        System.out.println("---");
-        // If cooldown is active
+        // If cooldown is active; added hasNoAttempts() method because there seems to be
+        // a delay when writing JSON files; system is reading outdated version of
+        // program settings
         if (this.model.isCooldownActive() || this.model.hasNoAttempts()) {
             // Disabling fields and button
             unameField.setDisable(true);

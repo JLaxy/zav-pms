@@ -36,6 +36,5 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="274.0" layoutY="592.0" mnemonicParsing="false" onAction="#checkCooldown" text="Test" />
    </children>
 </AnchorPane>

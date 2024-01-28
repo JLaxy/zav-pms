@@ -19,7 +19,7 @@ public class LoginModel extends ParentModel {
 
     public void resetAttempts() {
         this.attempts = 2;
-        System.out.println("Resetted!");
+        System.out.println("attempts resetted!");
     }
 
     // Returns true if cooldown is active
@@ -27,8 +27,6 @@ public class LoginModel extends ParentModel {
         // Retrieving Cooldown Date from settings file
         Date cooldownDate = DateHelper.stringToDate(new JSONManager().getLoginCooldown());
         // If cooldown date has not elapsed
-        System.out.println(
-                cooldownDate + "\n" + new Date(System.currentTimeMillis()) + !DateHelper.isDateBeforeNow(cooldownDate));
         if (!DateHelper.isDateBeforeNow(cooldownDate))
             return true;
         return false;
@@ -59,7 +57,6 @@ public class LoginModel extends ParentModel {
     private void updateLoginCooldown() {
         JSONManager jsonManager = new JSONManager();
         jsonManager.updateLoginCooldown();
-        System.out.print("changed login cooldown to: ");
     }
 
     public Boolean hasNoAttempts() {
