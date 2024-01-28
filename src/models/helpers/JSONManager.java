@@ -111,7 +111,6 @@ public class JSONManager {
 
             myReader.close();
             myWriter.close();
-            System.out.print(root + "\n");
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
