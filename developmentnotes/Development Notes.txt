@@ -103,6 +103,9 @@ SQL
 	Database Account for PMS Program
 	username: pmsprogram
 	password: zavpms@123
+
+InputStreamReader - converts bytes into characters
+BufferedReader - buffered reading; warpper for inputstreamreader
 	
 Java Multithreading
 	Creating a new thread
