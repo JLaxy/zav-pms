@@ -58,5 +58,11 @@ https://stackoverflow.com/questions/34498085/java-object-without-a-class
 New java.date api
 https://stackoverflow.com/questions/22463062/how-can-i-parse-format-dates-with-localdatetime-java-8
 
+Java Timer
+https://stackoverflow.com/questions/26916640/javafx-not-on-fx-application-thread-when-using-timer
+https://www.tutorialspoint.com/java/util/timer_schedule_period.htm
+https://www.digitalocean.com/community/tutorials/java-timer-timertask-example
+https://stackoverflow.com/questions/19661467/timer-as-daemon-vs-non-daemon
+
 Java Multithreading
 https://www.youtube.com/watch?v=r_MbozD32eo

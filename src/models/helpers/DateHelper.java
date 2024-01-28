@@ -6,6 +6,7 @@ package models.helpers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class DateHelper {
 
@@ -50,5 +51,11 @@ public class DateHelper {
     // Adds minutes to supplied date
     public static LocalDateTime addMinutes(LocalDateTime date, int minutes) {
         return date.plusMinutes(minutes);
+    }
+
+    // Returns the seconds between the cooldown
+    public static long getLoginCooldownSecs() {
+        return ChronoUnit.SECONDS.between(getCurrentDateTime(),
+                DateHelper.stringToDate(new JSONManager().getLoginCooldown()));
     }
 }

@@ -106,6 +106,10 @@ SQL
 
 InputStreamReader - converts bytes into characters
 BufferedReader - buffered reading; warpper for inputstreamreader
+
+Timer
+	Fixed Delay - delay in x amount of secs after completion of previous
+	Fixed Rate - delay in x amount of secs
 	
 Java Multithreading
 	Creating a new thread

@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.Timer;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import models.LoginModel;
+import models.helpers.LoginCooldownTimerTask;
 import models.helpers.PopupDialog;
 
 public class LoginController extends ParentController {
@@ -18,8 +21,9 @@ public class LoginController extends ParentController {
     private Label errorLabel;
 
     private final String INVALID_COMBINATION_MSG = "Invalid username and password combination!";
-    private final String COOLDOWN_MSG = "You are not allowed to log-in until: ";
     private LoginModel model;
+    private LoginCooldownTimerTask cooldownTimerTask;
+    private Timer cooldownTimer = new Timer(true);
 
     @FXML
     public void initialize() {
@@ -29,9 +33,16 @@ public class LoginController extends ParentController {
         checkCooldown();
     }
 
+    public Label getErrorLabel() {
+        return this.errorLabel;
+    }
+
     // Go Back Button Action
     public void backAction(ActionEvent e) {
         try {
+            // Cancelling Timer if it exists
+            if (this.model.isCooldownActive() || this.model.hasNoAttempts())
+                cooldownTimer.cancel();
             // Calling Root Switcher to go back to previous page.
             rootSwitcher.goBack();
         } catch (Exception ex) {
@@ -71,14 +82,21 @@ public class LoginController extends ParentController {
         // program settings
         if (this.model.isCooldownActive() || this.model.hasNoAttempts()) {
             // Disabling fields and button
-            unameField.setDisable(true);
-            passField.setDisable(true);
-            loginButton.setDisable(true);
-            errorLabel.setText(COOLDOWN_MSG);
+            allowControlsTo(false);
+            cooldownTimerTask = new LoginCooldownTimerTask(this);
+            cooldownTimer.schedule(cooldownTimerTask, 0, 1000);
             return;
         }
         // else, Configuring Error Label
+        allowControlsTo(true);
         errorLabel.setText(INVALID_COMBINATION_MSG);
         errorLabel.setVisible(false);
+    }
+
+    // Enables Fields and Buttons if set to true
+    private void allowControlsTo(Boolean bool) {
+        unameField.setDisable(!bool);
+        passField.setDisable(!bool);
+        loginButton.setDisable(!bool);
     }
 }
