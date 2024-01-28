@@ -1,6 +1,6 @@
 package models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import controllers.LoginController;
 import models.helpers.DateHelper;
@@ -25,7 +25,7 @@ public class LoginModel extends ParentModel {
     // Returns true if cooldown is active
     public Boolean isCooldownActive() {
         // Retrieving Cooldown Date from settings file
-        Date cooldownDate = DateHelper.stringToDate(new JSONManager().getLoginCooldown());
+        LocalDateTime cooldownDate = DateHelper.stringToDate(new JSONManager().getLoginCooldown());
         // If cooldown date has not elapsed
         if (!DateHelper.isDateBeforeNow(cooldownDate))
             return true;

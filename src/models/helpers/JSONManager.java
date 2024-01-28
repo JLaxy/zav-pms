@@ -6,9 +6,11 @@ package models.helpers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +22,7 @@ import com.google.gson.JsonParser;
 public class JSONManager {
 
     // Easy to change values
-    private final String SETTINGS_PATH_WRITE = "src/appsettings.json";
-    private final String SETTINGS_PATH_READ = "../../appsettings.json";
+    private final String SETTINGS_PATH = "src/appsettings.json";
 
     // Initializies settings file; makes sure it exists at the start of the program
     public void initializeSettingsFile() {
@@ -31,8 +32,7 @@ public class JSONManager {
 
     // Returns true if settings file exists
     private Boolean doesSettingsFileExist() {
-        try (Reader myReader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(SETTINGS_PATH_READ)))) {
+        try (Reader myReader = new BufferedReader(new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
             return true;
         } catch (Exception e) {
             return false;
@@ -42,7 +42,7 @@ public class JSONManager {
     // Creating settings file if it does not exist
     private void createSettingsFile() {
         PopupDialog.showInfoDialog("No Settings File", "Creating Settings File for the first time");
-        try (BufferedWriter myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH_WRITE))) {
+        try (Writer myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH))) {
             Map<String, Object> settingsFile = new HashMap<String, Object>();
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
             settingsFile.put("program_settings", getJSONPair("cooldown", "2002-10-28 09:18:19"));
@@ -81,8 +81,7 @@ public class JSONManager {
 
     // Retrieves Login Cooldown stored in settings file
     public String getLoginCooldown() {
-        try (Reader myReader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(SETTINGS_PATH_READ)))) {
+        try (Reader myReader = new BufferedReader(new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
             JsonObject myObject = JsonParser.parseReader(myReader).getAsJsonObject();
             JsonObject program_settings = myObject.getAsJsonObject("program_settings");
             return program_settings.get("cooldown").getAsString();
@@ -94,13 +93,16 @@ public class JSONManager {
 
     // Updates Login Cooldown stored in settings file
     public void updateLoginCooldown() {
+        // CANNOT READ AND WRITE FILE AT THE SAME
         try (Reader myReader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(SETTINGS_PATH_READ)));
-                BufferedWriter myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH_WRITE))) {
+                new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
             // Creating builder
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             // Reading existing file
             JsonObject root = gson.fromJson(myReader, JsonObject.class);
+            myReader.close();
+
+            Writer myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH));
             JsonObject program_settings = root.getAsJsonObject("program_settings");
             JsonObject cooldown = program_settings.getAsJsonObject();
 
@@ -108,8 +110,6 @@ public class JSONManager {
             cooldown.addProperty("cooldown",
                     DateHelper.dateToString(DateHelper.addMinutes(DateHelper.getCurrentDateTime(), 5)));
             gson.toJson(root, myWriter);
-
-            myReader.close();
             myWriter.close();
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

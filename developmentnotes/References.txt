@@ -44,7 +44,7 @@ String to date
 https://stackoverflow.com/questions/23047200/convert-string-to-java-sql-date
 
 Adding minutes
-https://stackoverflow.com/questions/9015536/how-to-add-10-minutes-to-my-string-time
+https://stackoverflow.com/questions/30374796/how-can-i-add-an-int-minutes-to-localdatetime-now
 
 Updating JSON
 https://stackoverflow.com/questions/63395650/change-the-json-object-value
@@ -54,6 +54,9 @@ https://stackoverflow.com/questions/17837117/java-sending-multiple-parameters-to
 
 Java Object without class
 https://stackoverflow.com/questions/34498085/java-object-without-a-class
+
+New java.date api
+https://stackoverflow.com/questions/22463062/how-can-i-parse-format-dates-with-localdatetime-java-8
 
 Java Multithreading
 https://www.youtube.com/watch?v=r_MbozD32eo
