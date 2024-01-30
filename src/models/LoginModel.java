@@ -11,6 +11,8 @@ public class LoginModel extends ParentModel {
 
     LoginController controller;
     private int attempts;
+    // Number of attempts += 1
+    private int ATTEMPT_COUNT = 2;
 
     public LoginModel(LoginController controller) {
         this.controller = controller;
@@ -18,7 +20,7 @@ public class LoginModel extends ParentModel {
     }
 
     public void resetAttempts() {
-        this.attempts = 2;
+        this.attempts = ATTEMPT_COUNT;
         System.out.println("attempts resetted!");
     }
 
