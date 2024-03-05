@@ -66,3 +66,11 @@ https://stackoverflow.com/questions/19661467/timer-as-daemon-vs-non-daemon
 
 Java Multithreading
 https://www.youtube.com/watch?v=r_MbozD32eo
+
+Java Sending Email
+https://stackoverflow.com/questions/46663/how-can-i-send-an-email-by-java-application-using-gmail-yahoo-or-hotmail/47452#47452
+
+Java Getting Computer Name
+https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java
+
+https://www.tutorialspoint.com/swingexamples/show_confirm_dialog_with_yesno.htm

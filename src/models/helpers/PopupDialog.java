@@ -18,4 +18,11 @@ public class PopupDialog {
     public static void showInfoDialog(String title, String message) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    // Shows cancel operation dialog
+    public static int cancelOperationDialog() {
+        return JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel this operation?",
+                "Cancel Operation",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+    }
 }

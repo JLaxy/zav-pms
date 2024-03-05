@@ -40,6 +40,7 @@ public class LoginController extends ParentController {
     // Go Back Button Action
     public void backAction(ActionEvent e) {
         try {
+            System.out.println("TODO: REMOVE GO BACK BUTTON");
             // Cancelling Timer if it exists
             if (this.model.isCooldownActive() || this.model.hasNoAttempts())
                 cooldownTimer.cancel();
@@ -57,10 +58,17 @@ public class LoginController extends ParentController {
             String[] userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
             // If user exists
             if (userInfo[0] != "") {
-                System.out.println("exists: " + userInfo[0] + ", " + userInfo[1]);
+                System.out.println("exists: " + userInfo[0] + ", " + userInfo[1] + ", " + userInfo[2]);
                 // Hiding error label
                 errorLabel.setVisible(false);
                 this.model.resetAttempts();
+                // Clearing fields
+                this.unameField.clear();
+                this.passField.clear();
+                // Initiating OTP Process and Passing User ID
+                OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
+                        "../views/fxmls/OTPLoginView.fxml", Integer.parseInt(userInfo[1]));
+                nextController.initialize(userInfo[2]);
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt
@@ -99,4 +107,5 @@ public class LoginController extends ParentController {
         passField.setDisable(!bool);
         loginButton.setDisable(!bool);
     }
+
 }

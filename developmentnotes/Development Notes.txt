@@ -22,7 +22,7 @@ git add (FILE NAME || PERIOD)
 git commit -m "HEADER" -m "DESCRIPTION"
 	- adding chnages to commit queue; description is optional
 	
-git push origin main
+git push origin BRANCH
 	- updates changes to repository
 	
 git init
@@ -103,6 +103,11 @@ SQL
 	Database Account for PMS Program
 	username: pmsprogram
 	password: zavpms@123
+
+EMAIL
+	Email: zavskitchenandrestobar.pms@gmail.com
+	Password: j0)gtP6!0c4Zwa
+	App Password: jgzh sznn oxap ypig
 
 InputStreamReader - converts bytes into characters
 BufferedReader - buffered reading; warpper for inputstreamreader

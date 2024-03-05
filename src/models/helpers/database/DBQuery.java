@@ -36,13 +36,13 @@ public class DBQuery {
 
     // Returns level of access type of the user trying to log-in
     public String[] userLogin(String uname, String pass) {
-        String[] userInfo = { "", "" };
+        String[] userInfo = { "", "", "" };
         // Try-with-resources; immediately closes resources before any catach or finally
         // block is executed
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT level_of_access, users.id FROM users INNER JOIN level_of_access ON users.level_of_access_id = level_of_access.id WHERE uname = (?) AND pass = (?)")) {
+                                "SELECT level_of_access, users.id, users.email FROM users INNER JOIN level_of_access ON users.level_of_access_id = level_of_access.id WHERE uname = (?) AND pass = (?)")) {
             // Apply user input
             stmt.setString(1, uname);
             stmt.setString(2, pass);
@@ -60,9 +60,10 @@ public class DBQuery {
                 result.next();
                 // Logging log-in to database
                 loggedIn(uname, DateHelper.getCurrentDateTimeString());
-                // Retrieve level of access and user ID
+                // Retrieve level of access, user ID and email
                 userInfo[0] = result.getString("level_of_access");
                 userInfo[1] = result.getString("users.id");
+                userInfo[2] = result.getString("users.email");
                 result.close();
                 return userInfo;
             }

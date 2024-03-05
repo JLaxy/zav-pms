@@ -10,13 +10,13 @@ import models.helpers.PopupDialog;
 public class LoginModel extends ParentModel {
 
     LoginController controller;
-    private int attempts;
     // Number of attempts += 1
     private int ATTEMPT_COUNT = 2;
+    private int attempts = ATTEMPT_COUNT;
 
     public LoginModel(LoginController controller) {
         this.controller = controller;
-        resetAttempts();
+        System.out.println("constructor");
     }
 
     public void resetAttempts() {
