@@ -9,7 +9,7 @@ import models.helpers.PopupDialog;
 
 public class LoginModel extends ParentModel {
 
-    LoginController controller;
+    private LoginController controller;
     // Number of attempts += 1
     private int ATTEMPT_COUNT = 2;
     private int attempts = ATTEMPT_COUNT;

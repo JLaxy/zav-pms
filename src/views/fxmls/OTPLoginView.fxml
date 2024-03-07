@@ -27,7 +27,7 @@
             <Font size="23.0" />
          </font>
       </Button>
-      <TextField layoutX="557.0" layoutY="417.0" prefHeight="36.0" prefWidth="279.0" promptText="OTP" />
+      <TextField fx:id="otpField" layoutX="557.0" layoutY="417.0" prefHeight="36.0" prefWidth="279.0" promptText="OTP" />
       <Label layoutX="591.0" layoutY="324.0" text="OTP VERIFICATION">
          <font>
             <Font size="25.0" />

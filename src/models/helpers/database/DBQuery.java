@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import enums.UserLogActions;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
 
@@ -58,18 +59,50 @@ public class DBQuery {
                 return userInfo;
             } else {
                 result.next();
-                // Logging log-in to database
-                loggedIn(uname, DateHelper.getCurrentDateTimeString());
                 // Retrieve level of access, user ID and email
                 userInfo[0] = result.getString("level_of_access");
                 userInfo[1] = result.getString("users.id");
                 userInfo[2] = result.getString("users.email");
                 result.close();
+                // Logging initializing OTP authentication to database
+                logOTPAuthentication(Integer.parseInt(userInfo[1]), uname,
+                        UserLogActions.Actions.INITIATED_OTP.getValue(),
+                        DateHelper.getCurrentDateTimeString());
                 return userInfo;
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
             return userInfo;
+        }
+    }
+
+    // Retrieves Username of supplied user_id
+    public String getUname(int user_id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT users.uname FROM users WHERE id = (?)")) {
+            // Apply user input
+            stmt.setString(1, String.valueOf(user_id));
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("No username has been found for user ID: " + user_id);
+                result.close();
+                return "error";
+            } else {
+                result.next();
+                // Retrieving Username
+                String uname = result.getString("uname");
+                result.close();
+                return uname;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+            return "error";
         }
     }
 
@@ -82,7 +115,7 @@ public class DBQuery {
             // Setting user as SYSTEM
             stmt.setInt(1, 1);
             // Setting action as Login Attempt
-            stmt.setInt(2, 1);
+            stmt.setInt(2, UserLogActions.Actions.LOGIN_ATTEMPT.getValue());
             // Applying Date
             stmt.setString(3, date);
             stmt.setString(4, "for user \"" + uname + "\"");
@@ -92,16 +125,16 @@ public class DBQuery {
         }
     }
 
-    // Logs Login in Database
-    private void loggedIn(String uname, String date) {
+    // Logs OTP Authentication in Database
+    public void logOTPAuthentication(int user_id, String uname, int action, String date) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
                                 "INSERT INTO user_logs (user_id, action_id, date, parameter) VALUES (?, ?, ?, ?);")) {
-            // Setting user as SYSTEM
-            stmt.setInt(1, 1);
-            // Setting action as Logged In
-            stmt.setInt(2, 2);
+            // Setting user_id
+            stmt.setInt(1, user_id);
+            // Setting OTP Authentication Action; If initiated or cancelled
+            stmt.setInt(2, action);
             // Applying Date
             stmt.setString(3, date);
             stmt.setString(4, "for user \"" + uname + "\"");

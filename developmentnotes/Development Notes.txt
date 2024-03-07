@@ -131,3 +131,7 @@ Java Multithreading
 		.start() - call the run() method
 		
 	isAlive() - returns true if thread is still executing
+	
+UserLogActions.java - contains all of the predefined values of action_ids in database
+	- access using: UserLogActions.Actions."ACTION".getValue();
+			NOTE: REPLACE "ACTION" WITH SELECTED ACTION

@@ -25,4 +25,9 @@ public class PopupDialog {
                 "Cancel Operation",
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
     }
+
+    // Show custom pop-up error dialog
+    public static void showCustomErrorDialog(String errorDescription) {
+        JOptionPane.showMessageDialog(null, errorDescription, "An Error has occured!", JOptionPane.ERROR_MESSAGE);
+    }
 }
