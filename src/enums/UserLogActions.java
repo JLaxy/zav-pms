@@ -12,7 +12,8 @@ public class UserLogActions {
         // ACTION_NAME(action_id_in_database)
         LOGIN_ATTEMPT(1),
         INITIATED_OTP(2),
-        CANCELLED_OTP(3);
+        CANCELLED_OTP(3),
+        FAILED_OTP(4);
 
         private final int action_id;
 

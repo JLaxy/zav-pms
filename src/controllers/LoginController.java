@@ -37,20 +37,6 @@ public class LoginController extends ParentController {
         return this.errorLabel;
     }
 
-    // Go Back Button Action
-    public void backAction(ActionEvent e) {
-        try {
-            System.out.println("TODO: REMOVE GO BACK BUTTON");
-            // Cancelling Timer if it exists
-            if (this.model.isCooldownActive() || this.model.hasNoAttempts())
-                cooldownTimer.cancel();
-            // Calling Root Switcher to go back to previous page.
-            rootSwitcher.goBack();
-        } catch (Exception ex) {
-            PopupDialog.showErrorDialog(ex, this.getClass().getName());
-        }
-    }
-
     // Login Button Action
     public void loginAction(ActionEvent e) {
         try {
