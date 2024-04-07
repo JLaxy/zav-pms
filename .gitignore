@@ -1,3 +1,4 @@
 bin/
 mysqlworkbench/
 scenebuilder/
+!mysqlworkbench/connectors/mysql-connector-j-8.2.0/*
