@@ -23,6 +23,7 @@ public class OTPLoginController extends ParentController {
     private final String WRONG_OTP = "Incorrect OTP! Please try again.";
 
     private String email;
+    private String loa;
     private OTPLoginModel model;
     private OTPExpiryTimerTask otpExpiryTimerTask;
     private Timer expiryTimer = new Timer(true);
@@ -37,7 +38,8 @@ public class OTPLoginController extends ParentController {
 
     // Immediately sets up controller and send OTP
     @FXML
-    public void initialize(String email) {
+    public void initialize(String email, String loa) {
+        this.loa = loa;
         errorLabel.setVisible(false);
         this.model = new OTPLoginModel(this);
         // Send OTP to user attempting to login
@@ -47,9 +49,15 @@ public class OTPLoginController extends ParentController {
 
     // Button Click; Checks if OTP matches
     public void pressed() {
-        if (this.model.isCorrectOTP(otpField.getText()))
-            System.out.println("correct");
-        else {
+        if (this.model.isCorrectOTP(otpField.getText())) {
+            if (this.loa.compareTo("admin") == 0) {
+                System.out.println("correct: admin");
+            } else if (this.loa.compareTo("kitchen_staff") == 0) {
+                System.out.println("correct: kitchen_staff");
+            } else if (this.loa.compareTo("cashier") == 0) {
+                System.out.println("correct: cashier");
+            }
+        } else {
             // Updating attempts
             this.model.updateOTPAttempt();
             // Updating error label

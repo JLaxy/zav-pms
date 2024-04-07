@@ -44,7 +44,14 @@ public class LoginController extends ParentController {
             String[] userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
             // If user exists
             if (userInfo[0] != "") {
-                System.out.println("exists: " + userInfo[0] + ", " + userInfo[1] + ", " + userInfo[2]);
+                // If user account is disabled
+                if (userInfo[3].compareTo("2") == 0) {
+                    PopupDialog.showCustomErrorDialog(
+                            "Your account is currently disabled. Please contact your administrator!");
+                    return;
+                }
+                System.out.println(
+                        "exists: " + userInfo[0] + ", " + userInfo[1] + ", " + userInfo[2] + ", " + userInfo[3]);
                 // Hiding error label
                 errorLabel.setVisible(false);
                 this.model.resetAttempts();
@@ -54,7 +61,7 @@ public class LoginController extends ParentController {
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
                         "../views/fxmls/OTPLoginView.fxml", Integer.parseInt(userInfo[1]));
-                nextController.initialize(userInfo[2]);
+                nextController.initialize(userInfo[2], userInfo[0]);
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt
