@@ -10,6 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
+
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1366.0" stylesheets="@css/LoginView.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.OTPLoginController">
    <children>
       <Rectangle fill="WHITE" height="620.0" layoutX="493.0" layoutY="45.0" stroke="BLACK" strokeType="INSIDE" width="401.0" />
@@ -37,7 +38,8 @@
       <TextField fx:id="otpField" layoutX="557.0" layoutY="417.0" prefHeight="36.0" prefWidth="279.0" promptText="OTP">
          <cursor>
             <Cursor fx:constant="TEXT" />
-         </cursor></TextField>
+         </cursor>
+      </TextField>
       <Label layoutX="596.0" layoutY="544.0" text="Didn't recieve the code? Resend OTP" />
       <Button layoutX="588.0" layoutY="540.0" mnemonicParsing="false" onAction="#sendOTP" opacity="0.0" prefHeight="25.0" prefWidth="211.0" text="Button">
          <cursor>

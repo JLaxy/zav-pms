@@ -5,11 +5,12 @@ import java.util.Timer;
 import javax.swing.JOptionPane;
 
 import enums.UserLogActions;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.TextAlignment;
 import models.OTPLoginModel;
 import models.helpers.DateHelper;
 import models.helpers.OTPExpiryTimerTask;
@@ -94,21 +95,52 @@ public class OTPLoginController extends ParentController {
 
     // Sends System Generated OTP
     public void sendOTP() {
+        // Disable Verify Button
+        this.verifyButton.setDisable(true);
+
         // Generating OTP
         String OTP = Security.generateOTP();
         // Setting OTP to model
         this.model.setCurrentOTP(OTP);
         System.out.println("Sending OTP \"" + OTP + "\" to " + email);
 
-        // Checks if OTP has been successfully sent
-        if (Emailer.sendOTP(email, OTP))
-            System.out.println("OTP Successfully Sent!");
-        else
-            System.out.println("Error");
+        // Defining OTP Sending Service
+        Service<String> otpService = new Service<String>() {
+            @Override
+            protected Task<String> createTask() {
+                return new Task<String>() {
+                    @Override
+                    protected String call() {
+                        // Checks if OTP has been successfully sent
+                        if (Emailer.sendOTP(email, OTP))
+                            System.out.println("OTP Successfully Sent!");
+                        else
+                            System.out.println("Error");
+                        return null;
+                    }
+
+                };
+            }
+
+        };
+        // Showing Loading Screen
+        this.rootSwitcher.showLoadingScreen();
+        // Exit Loading Screean on succeed
+        otpService.setOnSucceeded(e -> {
+            this.rootSwitcher.exitLoadingScreen();
+        });
+        otpService.start();
 
         // Starting new expiry timer
         otpExpiryTimerTask = new OTPExpiryTimerTask(this, DateHelper.addMinutes(DateHelper.getCurrentDateTime(), 1));
         expiryTimer.schedule(otpExpiryTimerTask, 0, 1000);
+
+        // Enable Verify Button
+        this.verifyButton.setDisable(false);
+        // Hide Error Label
+        this.errorLabel.setVisible(false);
+        this.otpField.clear();
+        this.otpField.setDisable(false);
     }
 
     // Enables Fields and Buttons if set to true
