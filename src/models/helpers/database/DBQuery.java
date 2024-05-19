@@ -107,6 +107,34 @@ public class DBQuery {
         }
     }
 
+    // Returns true if username exist
+    public boolean doesUserNameExist(String uName) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT users.uname FROM users WHERE uname = (?)")) {
+            // Apply user input
+            stmt.setString(1, String.valueOf(uName));
+            // Execute SQL Query
+            stmt.execute();
+
+            // Retrieve results
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("User \"" + uName + "\" does not exist!");
+                result.close();
+            } else {
+                result.next();
+                result.close();
+                return true;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
     // Logs Login Attempt in Database
     private void loginAttempt(String uname, String date) {
         try (Connection con = this.zavPMSDB.createConnection();
@@ -143,6 +171,37 @@ public class DBQuery {
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
+    }
+
+    // Returns security questions of identified username
+    public String[] getSecurityQuestions(String uname) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT uname, unique_question, unique_question_answer FROM `zav-pms-db`.users INNER JOIN unique_questions ON `zav-pms-db`.users.unique_question_id = `zav-pms-db`.unique_questions.id WHERE uname = (?);")) {
+            // Apply user input
+            stmt.setString(1, String.valueOf(uname));
+            // Execute SQL Query
+            stmt.execute();
+
+            // Retrieve results
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("User \"" + uname + "\" does not exist!");
+                result.close();
+            } else {
+                result.next();
+                // Retrieving result
+                String[] queryResult = { result.getString("uname"), result.getString("unique_question"),
+                        result.getString("unique_question_answer") };
+                result.close();
+                return queryResult;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return new String[] { "", "", "" };
     }
 
 }

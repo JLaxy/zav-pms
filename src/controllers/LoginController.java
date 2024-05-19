@@ -76,6 +76,13 @@ public class LoginController extends ParentController {
         }
     }
 
+    // Forgot Password Action
+    public void forgotPasswordAction(ActionEvent e) {
+        // Navigate to Forgot Password Screen
+        initializeNextScreen("../views/fxmls/ForgotPasswordView.fxml", loggedInUser);
+        System.out.println("running");
+    }
+
     // Checks if cooldown is active
     public void checkCooldown() {
         // If cooldown is active; added hasNoAttempts() method because there seems to be

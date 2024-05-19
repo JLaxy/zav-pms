@@ -35,14 +35,19 @@
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></PasswordField>
-      <Label layoutX="651.0" layoutY="583.0" text="Forgot Password?">
+      <Label layoutX="647.0" layoutY="583.0" prefWidth="102.0" text="Forgot Password?">
          <cursor>
-            <Cursor fx:constant="HAND" />
+            <Cursor fx:constant="DEFAULT" />
          </cursor></Label>
       <Label fx:id="errorLabel" layoutX="541.0" layoutY="406.0" prefHeight="62.0" prefWidth="301.0" text="error label" textFill="RED">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
+      <Button layoutX="641.0" layoutY="579.0" mnemonicParsing="false" onAction="#forgotPasswordAction" opacity="0.0" prefHeight="25.0" prefWidth="102.0" text="Button">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>
