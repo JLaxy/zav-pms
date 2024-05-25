@@ -16,9 +16,75 @@ https://www.youtube.com/watch?v=9XJicRt_FaI&t=4047s
 FXML Initialize vs Constructor
 https://stackoverflow.com/questions/34785417/javafx-fxml-controller-constructor-vs-initialize-method
 
-JDBC Tutorial
-https://www.youtube.com/watch?v=BOUMR85B-V0&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=1&pp=iAQB
-
 https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-create-a-database-schema-with-the-MySQL-Workbench
 
 https://www.w3schools.com/mysql/mysql_update.asp
+
+https://www.javatpoint.com/ResultSet-interface
+
+always close connection
+https://stackoverflow.com/questions/30795591/when-to-close-connection-in-jdbc-sql
+
+https://stackoverflow.com/questions/39836994/how-to-insert-datetime-field-in-mysql-database-using-preparedstatement-in-java
+
+https://www.mysqltutorial.org/mysql-basics/mysql-insert-datetime/
+
+JDBC Tutorial
+https://www.youtube.com/watch?v=xco3zFcWNuA&list=PLhs1urmduZ2-yp3zID5rMEmXDETN8xvMo&index=5
+
+GSON Parsing
+https://stackoverflow.com/questions/16595493/gson-parsing-without-a-lot-of-classes
+https://attacomsian.com/blog/gson-read-write-json
+https://attacomsian.com/blog/gson-read-json-file
+
+Date Comparing
+https://stackoverflow.com/questions/22039991/how-to-compare-two-dates-along-with-time-in-java
+
+String to date
+https://stackoverflow.com/questions/23047200/convert-string-to-java-sql-date
+
+Adding minutes
+https://stackoverflow.com/questions/30374796/how-can-i-add-an-int-minutes-to-localdatetime-now
+
+Updating JSON
+https://stackoverflow.com/questions/63395650/change-the-json-object-value
+
+Sending Multiple Parameters Method
+https://stackoverflow.com/questions/17837117/java-sending-multiple-parameters-to-method
+
+Java Object without class
+https://stackoverflow.com/questions/34498085/java-object-without-a-class
+
+New java.date api
+https://stackoverflow.com/questions/22463062/how-can-i-parse-format-dates-with-localdatetime-java-8
+
+Java Timer
+https://stackoverflow.com/questions/26916640/javafx-not-on-fx-application-thread-when-using-timer
+https://www.tutorialspoint.com/java/util/timer_schedule_period.htm
+https://www.digitalocean.com/community/tutorials/java-timer-timertask-example
+https://stackoverflow.com/questions/19661467/timer-as-daemon-vs-non-daemon
+
+Java Multithreading
+https://www.youtube.com/watch?v=r_MbozD32eo
+
+Java Sending Email
+https://stackoverflow.com/questions/46663/how-can-i-send-an-email-by-java-application-using-gmail-yahoo-or-hotmail/47452#47452
+
+Java Getting Computer Name
+https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java
+
+https://www.tutorialspoint.com/swingexamples/show_confirm_dialog_with_yesno.htm
+
+Loading screen on stack pane
+https://stackoverflow.com/questions/32794379/how-to-show-progressindicator-in-center-of-pane-in-javafx
+
+JavaFX Service (multi-threading)
+https://stackoverflow.com/questions/42162058/show-progressindicator-during-heavy-work-in-gui-thread-has-to-be-done
+https://stackoverflow.com/questions/22098288/javafx-how-can-i-use-correctly-a-progressindicator-in-javafx
+https://stackoverflow.com/questions/39299724/javafx-service-and-gui
+
+Check password requirements
+https://stackoverflow.com/questions/36097097/password-validate-8-digits-contains-upper-lowercase-and-a-special-character
+
+MySQL case-sensitive search
+https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql

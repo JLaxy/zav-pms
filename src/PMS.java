@@ -9,15 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import models.helpers.JSONManager;
+import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
-import models.helpers.database.DatabaseManager;
+import models.helpers.database.DBManager;
 
 public class PMS extends Application {
     // Easy to change values
-    private String APP_TITLE = "Zav's Kitchen and Bar: Product Management System";
-    private String ICON_PATH = "file:../../assets/images/logoTransparent.png";
-    private int stageWidth = 1366;
-    private int stageHeight = 768;
+    private final String APP_TITLE = "Zav's Kitchen and Bar: Product Management System";
+    private final String ICON_PATH = "file:../../assets/images/logoTransparent.png";
 
     // Starting
     @Override
@@ -25,7 +25,10 @@ public class PMS extends Application {
         try {
 
             // Connecting to Database
-            DatabaseManager zavPMSDB = connectToDatabase();
+            DBManager zavPMSDB = connectToDatabase();
+
+            // Initializing settings file; makes sure it exists
+            new JSONManager().initializeSettingsFile();
 
             // Loading GUI built on Scene Builder
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("views/fxmls/StartView.fxml"));
@@ -42,9 +45,6 @@ public class PMS extends Application {
             // Sets title of the Stage / Window
             mainStage.setTitle(APP_TITLE);
 
-            // Setting Stage Dimensions
-            // mainStage.setWidth(stageWidth);
-            // mainStage.setHeight(stageHeight);
             mainStage.setResizable(false);
             mainStage.setScene(scene);
 
@@ -55,16 +55,17 @@ public class PMS extends Application {
             RootSwitcher rootSwitcher = new RootSwitcher(mainStage);
             // Passing RootSwitcher instance to next controller
             ParentController nextController = rootLoader.getController();
-            nextController.setRootSwitcher(rootSwitcher);
+            // Configuring controller of next view; passing in DBManager and RootSwitcher
+            // References
+            nextController.initializeReferences(zavPMSDB, rootSwitcher);
 
         } catch (Exception e) {
-            System.out.println("Error at: " + getClass());
-            e.printStackTrace();
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
     }
 
     // Connecting to Database
-    public DatabaseManager connectToDatabase() {
-        return new DatabaseManager();
+    private DBManager connectToDatabase() {
+        return new DBManager();
     }
 }

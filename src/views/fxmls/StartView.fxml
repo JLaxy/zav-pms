@@ -13,7 +13,7 @@
             <Image url="@../../../assets/images/logo.png" />
          </image>
       </ImageView>
-      <Button layoutX="562.0" layoutY="577.0" mnemonicParsing="false" onAction="#getStarted" prefHeight="50.0" prefWidth="242.0" text="Get Started" textFill="WHITE">
+      <Button layoutX="562.0" layoutY="577.0" mnemonicParsing="false" onAction="#getStartedAction" prefHeight="50.0" prefWidth="242.0" text="Get Started" textFill="WHITE">
          <font>
             <Font size="23.0" />
          </font>

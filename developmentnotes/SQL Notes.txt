@@ -1,0 +1,11 @@
+!! Start MySQL80 service in services.msc to start database server
+
+executeQuery() - used to retrieve data from db
+
+execute() - used to insert / execute operations to db
+
+!! When executing queries, must create connection, statement and execute query in try-with-resources statement; will automatically close connection after execution; see: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+
+
+https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql
+add "BINARY" after column name for case-sensitive search
