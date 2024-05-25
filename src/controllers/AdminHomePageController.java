@@ -43,11 +43,12 @@ public class AdminHomePageController extends ParentController {
     @FXML
     private void initialize() {
         System.out.println("Initializing AdminHomePageController with user info: " + this.loggedInUserInfo); // Debugging statement
-        if (this.loggedInUserInfo != null && this.loggedInUserInfo.containsKey("username")) {
-            String username = this.loggedInUserInfo.get("username");
-            System.out.println("Initializing with username: " + username); // Debugging statement
-            usersname.setText(username);
-            usersname1.setText(username);
+        if (this.loggedInUserInfo != null && this.loggedInUserInfo.containsKey("uname")) {
+            String uname = this.loggedInUserInfo.get("uname");
+            String fname = this.loggedInUserInfo.get("fname");
+            System.out.println("Initializing with username: " + uname); // Debugging statement
+            usersname.setText(fname);
+            usersname1.setText(uname);
         } else {
             System.out.println("User info is not set or does not contain 'username' key."); // Debugging statement
         }

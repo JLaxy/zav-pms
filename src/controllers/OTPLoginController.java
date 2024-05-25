@@ -58,21 +58,22 @@ public class OTPLoginController extends ParentController {
     // Button Click; Checks if OTP matches
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
+            Map<String, String> userInfo = this.loggedInUserInfo;
             switch (this.loa) {
                 case "1":
                     System.out.println("correct: admin");
                     // Redirect to admin homepage
-                    redirectUser("../views/fxmls/AdminHomePage.fxml");
+                    this.initializeNextScreen("../views/fxmls/AdminHomePage.fxml", userInfo);
                     break;
                 case "2":
                     System.out.println("correct: kitchen_staff");
                     // Redirect to kitchen staff homepage
-                    redirectUser("../views/fxmls/KitchenStaffHomePage.fxml");
+                    this.initializeNextScreen("../views/fxmls/KitchenStaffHomePage.fxml", userInfo);
                     break;
                 case "3":
                     System.out.println("correct: cashier");
                     // Redirect to cashier homepage
-                    redirectUser("../views/fxmls/CashierHomePage.fxml");
+                    this.initializeNextScreen("../views/fxmls/CashierHomePage.fxml", userInfo);
                     break;
                 default:
                     System.out.println("Invalid level of access");
@@ -99,20 +100,6 @@ public class OTPLoginController extends ParentController {
             }
         }
     }
-
-    // Method to redirect user to their designated homepage
-    private void redirectUser(String homepage) {
-        try {
-            Map<String, String> userInfo = this.loggedInUserInfo; // Get logged-in user info
-            System.out.println("Redirecting with user info: " + userInfo); // Debugging statement
-            this.initializeNextScreen(homepage, userInfo);
-        } catch (Exception e) {
-            System.out.println("Error loading homepage: " + e.getMessage());
-            // Handle error loading homepage
-        }
-    }
-    
-
 
     // Cancels OTP Transaction
     public void cancelAction() {
