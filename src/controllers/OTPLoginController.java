@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Timer;
 
 import javax.swing.JOptionPane;
@@ -9,6 +11,8 @@ import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -54,18 +58,25 @@ public class OTPLoginController extends ParentController {
     // Button Click; Checks if OTP matches
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
-            if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.ADMIN.getValue())) == 0) {
-                System.out.println("correct: admin");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
-            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())) == 0) {
-                System.out.println("correct: kitchen_staff");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
-            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.CASHIER.getValue())) == 0) {
-                System.out.println("correct: cashier");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
+            switch (this.loa) {
+                case "1":
+                    System.out.println("correct: admin");
+                    // Redirect to admin homepage
+                    redirectUser("../views/fxmls/AdminHomePage.fxml");
+                    break;
+                case "2":
+                    System.out.println("correct: kitchen_staff");
+                    // Redirect to kitchen staff homepage
+                    redirectUser("../views/fxmls/KitchenStaffHomePage.fxml");
+                    break;
+                case "3":
+                    System.out.println("correct: cashier");
+                    // Redirect to cashier homepage
+                    redirectUser("../views/fxmls/CashierHomePage.fxml");
+                    break;
+                default:
+                    System.out.println("Invalid level of access");
+                    break;
             }
         } else {
             // Updating attempts
@@ -88,6 +99,20 @@ public class OTPLoginController extends ParentController {
             }
         }
     }
+
+    // Method to redirect user to their designated homepage
+    private void redirectUser(String homepage) {
+        try {
+            Map<String, String> userInfo = this.loggedInUserInfo; // Get logged-in user info
+            System.out.println("Redirecting with user info: " + userInfo); // Debugging statement
+            this.initializeNextScreen(homepage, userInfo);
+        } catch (Exception e) {
+            System.out.println("Error loading homepage: " + e.getMessage());
+            // Handle error loading homepage
+        }
+    }
+    
+
 
     // Cancels OTP Transaction
     public void cancelAction() {
