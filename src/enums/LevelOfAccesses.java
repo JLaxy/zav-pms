@@ -1,5 +1,5 @@
 /*
- * Contains all of the pre-defined User Log Actions in the database
+ * Contains all of the pre-defined Levels of Access in the database
  * with their respective action_id
  * 
  * For better readability
@@ -7,20 +7,17 @@
 
 package enums;
 
-public class UserLogActions {
-    public enum Actions {
+public class LevelOfAccesses {
+    public enum AccessLevel {
         // ACTION_NAME(action_id_in_database)
-        LOGIN_ATTEMPT(1),
-        INITIATED_OTP(2),
-        CANCELLED_OTP(3),
-        FAILED_OTP(4),
-        INITIATED_PASSWORD_RESET(5),
-        CANCELLED_PASSWORD_RESET(6);
+        ADMIN(1),
+        KITCHEN_STAFF(2),
+        CASHIER(3);
 
         private final int action_id;
 
         // Constructor for ENUM
-        Actions(int action_id) {
+        AccessLevel(int action_id) {
             this.action_id = action_id;
         }
 

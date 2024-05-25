@@ -1,11 +1,12 @@
 package controllers;
 
+import java.util.Map;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import models.ForgotPasswordModel;
-import controllers.PasswordQuestionController;
 
 /*
  * ForgotPasswordController
@@ -27,17 +28,27 @@ public class ForgotPasswordController extends ParentController {
     // Next Action
     public void nextAction(ActionEvent e) {
         String uName = unameField.getText();
-        if (this.model.doesUsernameExist(uName)) {
+        // Retrieving info of user
+        Map<String, String> userInfo = this.model.getUserInfo(uName);
+
+        // If ID is empty; then means user does not exist
+        if (userInfo.get("id") != "") {
             // Navigate to next screen
             PasswordQuestionController nextController = (PasswordQuestionController) initializeNextScreen(
                     "../views/fxmls/PasswordQuestionView.fxml", loggedInUser);
             // Retrieves question details of user (uname, question, answer)
             String[] questionDetails = this.model.getUserQuestions(uName);
             // Passing question details to next controller
-            nextController.question = questionDetails[1];
-            nextController.answer = questionDetails[2];
+            nextController.setQuestionAnswer(questionDetails[1], questionDetails[2]);
             // Configure controller
-            nextController.configureQuestions();
+            nextController.configureController(userInfo);
+            // Logging Password Reset Action to Database
+            this.model.logPasswordReset(userInfo.get("id"), userInfo.get("uname"));
         }
+    }
+
+    // Going back to previous screen
+    public void goBack(ActionEvent e) {
+        rootSwitcher.goBack();
     }
 }

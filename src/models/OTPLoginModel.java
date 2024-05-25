@@ -20,7 +20,7 @@ public class OTPLoginModel {
         // Retrieving username
         String username = this.controller.getDBManager().query.getUname(user_id);
         // Logging to Database
-        this.controller.getDBManager().query.logOTPAuthentication(user_id, username,
+        this.controller.getDBManager().query.logAction(user_id, username,
                 action.getValue(), DateHelper.getCurrentDateTimeString());
     }
 

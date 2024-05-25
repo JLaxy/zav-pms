@@ -1,5 +1,5 @@
 /*
- * Contains all of the pre-defined User Log Actions in the database
+ * Contains all of the pre-defined Account Statuses in the database
  * with their respective action_id
  * 
  * For better readability
@@ -7,20 +7,16 @@
 
 package enums;
 
-public class UserLogActions {
-    public enum Actions {
+public class AccountStatuses {
+    public enum Status {
         // ACTION_NAME(action_id_in_database)
-        LOGIN_ATTEMPT(1),
-        INITIATED_OTP(2),
-        CANCELLED_OTP(3),
-        FAILED_OTP(4),
-        INITIATED_PASSWORD_RESET(5),
-        CANCELLED_PASSWORD_RESET(6);
+        ACTIVE(1),
+        DISABLED(2);
 
         private final int action_id;
 
         // Constructor for ENUM
-        Actions(int action_id) {
+        Status(int action_id) {
             this.action_id = action_id;
         }
 

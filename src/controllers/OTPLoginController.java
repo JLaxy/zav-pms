@@ -4,6 +4,7 @@ import java.util.Timer;
 
 import javax.swing.JOptionPane;
 
+import enums.LevelOfAccesses;
 import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -51,11 +52,11 @@ public class OTPLoginController extends ParentController {
     // Button Click; Checks if OTP matches
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
-            if (this.loa.compareTo("admin") == 0) {
+            if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.ADMIN.getValue())) == 0) {
                 System.out.println("correct: admin");
-            } else if (this.loa.compareTo("kitchen_staff") == 0) {
+            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())) == 0) {
                 System.out.println("correct: kitchen_staff");
-            } else if (this.loa.compareTo("cashier") == 0) {
+            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.CASHIER.getValue())) == 0) {
                 System.out.println("correct: cashier");
             }
         } else {

@@ -1,7 +1,9 @@
 package controllers;
 
+import java.util.Map;
 import java.util.Timer;
 
+import enums.AccountStatuses;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -41,17 +43,19 @@ public class LoginController extends ParentController {
     public void loginAction(ActionEvent e) {
         try {
             // Retrieving user information from model
-            String[] userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
+            Map<String, String> userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
             // If user exists
-            if (userInfo[0] != "") {
+            if (userInfo.get("id") != "") {
                 // If user account is disabled
-                if (userInfo[3].compareTo("2") == 0) {
+                if (userInfo.get("account_status_id")
+                        .compareTo(String.valueOf(AccountStatuses.Status.DISABLED.getValue())) == 0) {
                     PopupDialog.showCustomErrorDialog(
                             "Your account is currently disabled. Please contact your administrator!");
                     return;
                 }
                 System.out.println(
-                        "exists: " + userInfo[0] + ", " + userInfo[1] + ", " + userInfo[2] + ", " + userInfo[3]);
+                        "exists: " + userInfo.get("id") + ", " + userInfo.get("uname") + ", "
+                                + userInfo.get("account_status_id") + ", " + userInfo.get("level_of_access_id"));
                 // Hiding error label
                 errorLabel.setVisible(false);
                 this.model.resetAttempts();
@@ -60,8 +64,8 @@ public class LoginController extends ParentController {
                 this.passField.clear();
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
-                        "../views/fxmls/OTPLoginView.fxml", Integer.parseInt(userInfo[1]));
-                nextController.initialize(userInfo[2], userInfo[0]);
+                        "../views/fxmls/OTPLoginView.fxml", Integer.parseInt(userInfo.get("id")));
+                nextController.initialize(userInfo.get("email"), userInfo.get("level_of_access_id"));
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt

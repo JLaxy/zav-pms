@@ -10,9 +10,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import static java.util.Map.entry;
+import java.util.Map;
+
 import enums.UserLogActions;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
+import models.modules.Security;
 
 public class DBQuery {
 
@@ -35,17 +39,14 @@ public class DBQuery {
         }
     }
 
-    // Returns level of access type of the user trying to log-in
-    public String[] userLogin(String uname, String pass) {
-        String[] userInfo = { "", "", "", "" };
-        // Try-with-resources; immediately closes resources before any catach or finally
-        // block is executed
+    // Returns user information of user trying to log in
+    public Map<String, String> userLogin(String uName, String pass) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT level_of_access, users.id, users.email, account_status_id FROM users INNER JOIN level_of_access ON users.level_of_access_id = level_of_access.id WHERE uname = (?) AND pass = (?)")) {
+                                "SELECT users.uname FROM users WHERE uname = (?) AND pass = (?)")) {
             // Apply user input
-            stmt.setString(1, uname);
+            stmt.setString(1, uName);
             stmt.setString(2, pass);
             // Execute SQL Query
             stmt.execute();
@@ -54,27 +55,23 @@ public class DBQuery {
             // Checking if there are any matches
             if (isNoResult(result)) {
                 // Logging log-in attempt to database
-                loginAttempt(uname, DateHelper.getCurrentDateTimeString());
+                logAction(1, uName, UserLogActions.Actions.LOGIN_ATTEMPT.getValue(),
+                        DateHelper.getCurrentDateTimeString());
                 result.close();
-                return userInfo;
             } else {
                 result.next();
-                // Retrieve level of access, user ID and email
-                userInfo[0] = result.getString("level_of_access");
-                userInfo[1] = result.getString("users.id");
-                userInfo[2] = result.getString("users.email");
-                userInfo[3] = result.getString("users.account_status_id");
                 result.close();
+                Map<String, String> userInfo = getUserInfo(uName);
                 // Logging initializing OTP authentication to database
-                logOTPAuthentication(Integer.parseInt(userInfo[1]), uname,
+                logAction(Integer.parseInt(userInfo.get("id")), uName,
                         UserLogActions.Actions.INITIATED_OTP.getValue(),
                         DateHelper.getCurrentDateTimeString());
                 return userInfo;
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
-            return userInfo;
         }
+        return Map.of("id", "");
     }
 
     // Retrieves Username of supplied user_id
@@ -107,12 +104,12 @@ public class DBQuery {
         }
     }
 
-    // Returns true if username exist
-    public boolean doesUserNameExist(String uName) {
+    // Returns info of username
+    public Map<String, String> getUserInfo(String uName) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT users.uname FROM users WHERE uname = (?)")) {
+                                "SELECT * FROM users WHERE uname = (?)")) {
             // Apply user input
             stmt.setString(1, String.valueOf(uName));
             // Execute SQL Query
@@ -126,36 +123,28 @@ public class DBQuery {
                 result.close();
             } else {
                 result.next();
+                Map<String, String> userInfo = Map.ofEntries(
+                        entry("id", result.getString("id")),
+                        entry("uname", result.getString("uname")),
+                        entry("email", result.getString("email")),
+                        entry("level_of_access_id", result.getString("level_of_access_id")),
+                        entry("fname", result.getString("fname")),
+                        entry("lname", result.getString("lname")),
+                        entry("account_status_id", result.getString("account_status_id")),
+                        entry("unique_question_id", result.getString("unique_question_id")),
+                        entry("unique_question_answer", result.getString("unique_question_answer")));
                 result.close();
-                return true;
+                return userInfo;
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
-        return false;
+        // Return empty String
+        return (Map<String, String>) Map.of("id", "");
     }
 
-    // Logs Login Attempt in Database
-    private void loginAttempt(String uname, String date) {
-        try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con
-                        .prepareStatement(
-                                "INSERT INTO user_logs (user_id, action_id, date, parameter) VALUES (?, ?, ?, ?);")) {
-            // Setting user as SYSTEM
-            stmt.setInt(1, 1);
-            // Setting action as Login Attempt
-            stmt.setInt(2, UserLogActions.Actions.LOGIN_ATTEMPT.getValue());
-            // Applying Date
-            stmt.setString(3, date);
-            stmt.setString(4, "for user \"" + uname + "\"");
-            stmt.execute();
-        } catch (Exception e) {
-            PopupDialog.showErrorDialog(e, this.getClass().getName());
-        }
-    }
-
-    // Logs OTP Authentication in Database
-    public void logOTPAuthentication(int user_id, String uname, int action, String date) {
+    // Logging Actions to Database
+    public void logAction(int user_id, String uname, int action, String date) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -166,7 +155,7 @@ public class DBQuery {
             stmt.setInt(2, action);
             // Applying Date
             stmt.setString(3, date);
-            stmt.setString(4, "for user \"" + uname + "\"");
+            stmt.setString(4, "for user \"" + uname + "\" at " + Security.getSystemName());
             stmt.execute();
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
