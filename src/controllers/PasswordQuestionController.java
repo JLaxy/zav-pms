@@ -48,7 +48,7 @@ public class PasswordQuestionController extends ParentController {
         if (PopupDialog.cancelOperationDialog() == JOptionPane.YES_OPTION) {
             // Logging to database
             this.model.logAction(userInfo.get("id"), userInfo.get("uname"));
-            this.rootSwitcher.goBack();
+            this.rootSwitcher.goBack(2);
         }
     }
 
@@ -56,7 +56,10 @@ public class PasswordQuestionController extends ParentController {
     public void verifyAnswer() {
         // If matches answer
         if (answerField.getText().compareTo(this.answer) == 0) {
-            System.out.println("matched!");
+            this.errorLabel.setVisible(false);
+            System.out.println("correct!");
+            initializeNextScreen(
+                    "../views/fxmls/NewPasswordView.fxml", userInfo);
             // Else, show error label
         } else
             this.errorLabel.setVisible(true);

@@ -23,6 +23,8 @@ public class OTPLoginController extends ParentController {
 
     private final String EXPIRED_OTP = "The OTP has expired! Resend the OTP.";
     private final String WRONG_OTP = "Incorrect OTP! Please try again.";
+    // In minutes
+    private final int OTP_TIME_EXPIRY = 1;
 
     private String email;
     private String loa;
@@ -54,10 +56,16 @@ public class OTPLoginController extends ParentController {
         if (this.model.isCorrectOTP(otpField.getText())) {
             if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.ADMIN.getValue())) == 0) {
                 System.out.println("correct: admin");
+                // Cancelling Timer
+                this.expiryTimer.cancel();
             } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())) == 0) {
                 System.out.println("correct: kitchen_staff");
+                // Cancelling Timer
+                this.expiryTimer.cancel();
             } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.CASHIER.getValue())) == 0) {
                 System.out.println("correct: cashier");
+                // Cancelling Timer
+                this.expiryTimer.cancel();
             }
         } else {
             // Updating attempts
@@ -70,7 +78,8 @@ public class OTPLoginController extends ParentController {
                 // Disabling Controls
                 allowControlsTo(false);
                 // Logging OTP Fail
-                this.model.logOTPAuthentication(this.loggedInUser, UserLogActions.Actions.FAILED_OTP);
+                this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+                        UserLogActions.Actions.FAILED_OTP);
                 // Showing Pop-Up dialog
                 PopupDialog.showCustomErrorDialog("You have failed the OTP Authentication! You will be logged out.");
                 // Cancelling Timer
@@ -84,7 +93,8 @@ public class OTPLoginController extends ParentController {
     public void cancelAction() {
         // Confirmation Diaglog
         if (PopupDialog.cancelOperationDialog() == JOptionPane.YES_OPTION) {
-            this.model.logOTPAuthentication(this.loggedInUser, UserLogActions.Actions.CANCELLED_OTP);
+            this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+                    UserLogActions.Actions.CANCELLED_OTP);
             this.rootSwitcher.goBack();
         }
     }
@@ -133,7 +143,8 @@ public class OTPLoginController extends ParentController {
         otpService.start();
 
         // Starting new expiry timer
-        otpExpiryTimerTask = new OTPExpiryTimerTask(this, DateHelper.addMinutes(DateHelper.getCurrentDateTime(), 1));
+        otpExpiryTimerTask = new OTPExpiryTimerTask(this,
+                DateHelper.addMinutes(DateHelper.getCurrentDateTime(), OTP_TIME_EXPIRY));
         expiryTimer.schedule(otpExpiryTimerTask, 0, 1000);
 
         // Enable Verify Button

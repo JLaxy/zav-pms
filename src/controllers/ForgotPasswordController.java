@@ -32,10 +32,10 @@ public class ForgotPasswordController extends ParentController {
         Map<String, String> userInfo = this.model.getUserInfo(uName);
 
         // If ID is empty; then means user does not exist
-        if (userInfo.get("id") != "") {
+        if (userInfo.get("id") != "" && Integer.valueOf(userInfo.get("id")) != 1) {
             // Navigate to next screen
             PasswordQuestionController nextController = (PasswordQuestionController) initializeNextScreen(
-                    "../views/fxmls/PasswordQuestionView.fxml", loggedInUser);
+                    "../views/fxmls/PasswordQuestionView.fxml", this.loggedInUserInfo);
             // Retrieves question details of user (uname, question, answer)
             String[] questionDetails = this.model.getUserQuestions(uName);
             // Passing question details to next controller

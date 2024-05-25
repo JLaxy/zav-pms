@@ -37,6 +37,13 @@ public class RootSwitcher {
         this.mainStage.getScene().setRoot(this.roots.pop());
     }
 
+    // Go back to previous View in X number of times
+    public void goBack(int numberOfScreens) {
+        for (int i = 0; i < numberOfScreens; i++) {
+            this.mainStage.getScene().setRoot(this.roots.pop());
+        }
+    }
+
     // Navigate to next View
     public void nextView(Parent nextRoot) {
         // Adding current View in Stack

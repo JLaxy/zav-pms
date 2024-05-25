@@ -5,6 +5,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ public class ParentController {
     protected RootSwitcher rootSwitcher;
     protected DBManager zavPMSDB;
 
-    protected int loggedInUser;
+    protected Map<String, String> loggedInUserInfo;
 
     // Sets reference to root switcher
     private void setRootSwitcher(RootSwitcher rootSwitcher) {
@@ -30,7 +31,7 @@ public class ParentController {
     }
 
     // Initializes the View and Controller of the next screen
-    public ParentController initializeNextScreen(String fxmlPath, int userID) {
+    public ParentController initializeNextScreen(String fxmlPath, Map<String, String> userInfo) {
         try {
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -40,7 +41,7 @@ public class ParentController {
             ParentController nextController = rootLoader.getController();
             // Passing References
             nextController.initializeReferences(this.zavPMSDB, this.rootSwitcher);
-            nextController.setLoggedInUser(userID);
+            nextController.syncLoggedInUserInfo(userInfo);
             // Changing view
             this.rootSwitcher.nextView(root);
             // Returning Controller
@@ -67,8 +68,8 @@ public class ParentController {
         setRootSwitcher(rootSwitcher);
     }
 
-    // Keeps track of the user currently logged in
-    private void setLoggedInUser(int id) {
-        this.loggedInUser = id;
+    // Passes information of logged in user to other controller
+    public void syncLoggedInUserInfo(Map<String, String> userInfo) {
+        this.loggedInUserInfo = userInfo;
     }
 }

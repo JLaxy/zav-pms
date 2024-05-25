@@ -64,7 +64,7 @@ public class LoginController extends ParentController {
                 this.passField.clear();
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
-                        "../views/fxmls/OTPLoginView.fxml", Integer.parseInt(userInfo.get("id")));
+                        "../views/fxmls/OTPLoginView.fxml", userInfo);
                 nextController.initialize(userInfo.get("email"), userInfo.get("level_of_access_id"));
             } else {
                 System.out.println("does not exists");
@@ -83,7 +83,7 @@ public class LoginController extends ParentController {
     // Forgot Password Action
     public void forgotPasswordAction(ActionEvent e) {
         // Navigate to Forgot Password Screen
-        initializeNextScreen("../views/fxmls/ForgotPasswordView.fxml", loggedInUser);
+        initializeNextScreen("../views/fxmls/ForgotPasswordView.fxml", loggedInUserInfo);
         System.out.println("running");
     }
 

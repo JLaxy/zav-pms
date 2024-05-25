@@ -74,3 +74,17 @@ Java Getting Computer Name
 https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java
 
 https://www.tutorialspoint.com/swingexamples/show_confirm_dialog_with_yesno.htm
+
+Loading screen on stack pane
+https://stackoverflow.com/questions/32794379/how-to-show-progressindicator-in-center-of-pane-in-javafx
+
+JavaFX Service (multi-threading)
+https://stackoverflow.com/questions/42162058/show-progressindicator-during-heavy-work-in-gui-thread-has-to-be-done
+https://stackoverflow.com/questions/22098288/javafx-how-can-i-use-correctly-a-progressindicator-in-javafx
+https://stackoverflow.com/questions/39299724/javafx-service-and-gui
+
+Check password requirements
+https://stackoverflow.com/questions/36097097/password-validate-8-digits-contains-upper-lowercase-and-a-special-character
+
+MySQL case-sensitive search
+https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql

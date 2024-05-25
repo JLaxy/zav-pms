@@ -1,6 +1,7 @@
 package models.modules;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Security {
     private static final int OTP_LENGTH = 6;
@@ -31,5 +32,26 @@ public class Security {
             return env.get("HOSTNAME");
         else
             return "Unknown Computer";
+    }
+
+    // Returns error string of password; returns empty string if no errors
+    public static String isNewPasswordValid(String password) {
+        Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Pattern UpperCasePatten = Pattern.compile("[A-Z ]");
+        Pattern lowerCasePatten = Pattern.compile("[a-z ]");
+        Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+
+        if (password.length() < 8 || password.length() > 22)
+            return "Password must be between 8 to 22 characters!";
+        if (!specialCharPatten.matcher(password).find())
+            return "Password must have a special character!";
+        if (!UpperCasePatten.matcher(password).find())
+            return "Password must have an uppercase character!";
+        if (!lowerCasePatten.matcher(password).find())
+            return "Password must have a lowercase character!";
+        if (!digitCasePatten.matcher(password).find())
+            return "Password must have a number!";
+
+        return "";
     }
 }

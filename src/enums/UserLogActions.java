@@ -15,7 +15,8 @@ public class UserLogActions {
         CANCELLED_OTP(3),
         FAILED_OTP(4),
         INITIATED_PASSWORD_RESET(5),
-        CANCELLED_PASSWORD_RESET(6);
+        CANCELLED_PASSWORD_RESET(6),
+        SUCCESS_PASSWORD_RESET(7);
 
         private final int action_id;
 

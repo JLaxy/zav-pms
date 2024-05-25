@@ -39,12 +39,12 @@ public class DBQuery {
         }
     }
 
-    // Returns user information of user trying to log in
+    // Verify user credentials then return user information of user trying to log in
     public Map<String, String> userLogin(String uName, String pass) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT users.uname FROM users WHERE uname = (?) AND pass = (?)")) {
+                                "SELECT users.uname FROM users WHERE BINARY uname = (?) AND BINARY pass = (?);")) {
             // Apply user input
             stmt.setString(1, uName);
             stmt.setString(2, pass);
@@ -79,7 +79,7 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT users.uname FROM users WHERE id = (?)")) {
+                                "SELECT users.uname FROM users WHERE BINARY id = (?);")) {
             // Apply user input
             stmt.setString(1, String.valueOf(user_id));
             // Execute SQL Query
@@ -109,7 +109,7 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT * FROM users WHERE uname = (?)")) {
+                                "SELECT * FROM users WHERE BINARY uname = (?);")) {
             // Apply user input
             stmt.setString(1, String.valueOf(uName));
             // Execute SQL Query
@@ -162,12 +162,34 @@ public class DBQuery {
         }
     }
 
+    // Updates password of user via Forgot Password
+    public boolean updateUserPassword(String username, String newPassword) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "UPDATE users SET pass = (?) WHERE BINARY uname = (?);")) {
+            // Setting user_id
+            stmt.setString(1, newPassword);
+            // Setting OTP Authentication Action; If initiated or cancelled
+            stmt.setString(2, username);
+            stmt.execute();
+
+            // Logging password update to database
+            logAction(1, username, UserLogActions.Actions.SUCCESS_PASSWORD_RESET.getValue(),
+                    DateHelper.getCurrentDateTimeString());
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
     // Returns security questions of identified username
     public String[] getSecurityQuestions(String uname) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT uname, unique_question, unique_question_answer FROM `zav-pms-db`.users INNER JOIN unique_questions ON `zav-pms-db`.users.unique_question_id = `zav-pms-db`.unique_questions.id WHERE uname = (?);")) {
+                                "SELECT uname, unique_question, unique_question_answer FROM `zav-pms-db`.users INNER JOIN unique_questions ON `zav-pms-db`.users.unique_question_id = `zav-pms-db`.unique_questions.id WHERE BINARY uname = (?);")) {
             // Apply user input
             stmt.setString(1, String.valueOf(uname));
             // Execute SQL Query

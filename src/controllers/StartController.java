@@ -1,11 +1,13 @@
 package controllers;
 
+import java.util.Map;
+
 public class StartController extends ParentController {
 
     // Get Started Button Action
     public void getStartedAction() {
         testFunc();
-        initializeNextScreen("../views/fxmls/LoginView.fxml", 0);
+        initializeNextScreen("../views/fxmls/LoginView.fxml", Map.of("id", ""));
     }
 
     // Debug function
