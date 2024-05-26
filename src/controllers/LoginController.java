@@ -65,7 +65,7 @@ public class LoginController extends ParentController {
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
                         "../views/fxmls/OTPLoginView.fxml", userInfo);
-                nextController.initialize(userInfo.get("email"), userInfo.get("level_of_access_id"));
+                nextController.initialize(userInfo.get("email"));
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt

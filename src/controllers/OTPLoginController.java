@@ -1,18 +1,13 @@
 package controllers;
 
-import java.io.IOException;
-import java.util.Map;
 import java.util.Timer;
 
 import javax.swing.JOptionPane;
 
-import enums.LevelOfAccesses;
 import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -31,7 +26,6 @@ public class OTPLoginController extends ParentController {
     private final int OTP_TIME_EXPIRY = 1;
 
     private String email;
-    private String loa;
     private OTPLoginModel model;
     private OTPExpiryTimerTask otpExpiryTimerTask;
     private Timer expiryTimer = new Timer(true);
@@ -46,8 +40,7 @@ public class OTPLoginController extends ParentController {
 
     // Immediately sets up controller and send OTP
     @FXML
-    public void initialize(String email, String loa) {
-        this.loa = loa;
+    public void initialize(String email) {
         errorLabel.setVisible(false);
         this.model = new OTPLoginModel(this);
         // Send OTP to user attempting to login
@@ -58,27 +51,14 @@ public class OTPLoginController extends ParentController {
     // Button Click; Checks if OTP matches
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
-            Map<String, String> userInfo = this.loggedInUserInfo;
-            switch (this.loa) {
-                case "1":
-                    System.out.println("correct: admin");
-                    // Redirect to admin homepage
-                    this.initializeNextScreen("../views/fxmls/AdminHomePage.fxml", userInfo);
-                    break;
-                case "2":
-                    System.out.println("correct: kitchen_staff");
-                    // Redirect to kitchen staff homepage
-                    this.initializeNextScreen("../views/fxmls/KitchenStaffHomePage.fxml", userInfo);
-                    break;
-                case "3":
-                    System.out.println("correct: cashier");
-                    // Redirect to cashier homepage
-                    this.initializeNextScreen("../views/fxmls/CashierHomePage.fxml", userInfo);
-                    break;
-                default:
-                    System.out.println("Invalid level of access");
-                    break;
-            }
+            // Log successful login of user in database
+            this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+                    UserLogActions.Actions.SUCCESSFUL_LOGIN);
+            // Redirect to NavigatorView
+            PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
+                    "../views/fxmls/PageNavigatorView.fxml", this.loggedInUserInfo);
+            // Sync screen with passed user details
+            controller.configureScreen();
         } else {
             // Updating attempts
             this.model.updateOTPAttempt();

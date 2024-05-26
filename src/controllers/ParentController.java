@@ -15,7 +15,7 @@ import models.helpers.database.DBManager;
 
 public class ParentController {
 
-    protected RootSwitcher rootSwitcher;
+    protected RootSwitcher rootSwitcher, borderPaneRootSwitcher;
     protected DBManager zavPMSDB;
 
     protected Map<String, String> loggedInUserInfo;
@@ -23,6 +23,11 @@ public class ParentController {
     // Sets reference to root switcher
     private void setRootSwitcher(RootSwitcher rootSwitcher) {
         this.rootSwitcher = rootSwitcher;
+    }
+
+    // Sets reference to border pane root switcher
+    private void setRootSwitcher_BP(RootSwitcher rootSwitcher) {
+        this.borderPaneRootSwitcher = rootSwitcher;
     }
 
     // Sets reference to DB Manager
@@ -52,6 +57,28 @@ public class ParentController {
         }
     }
 
+    // Initializes the View and Controller of the next screen for MainBorderPane
+    public ParentController initializeNextScreen_BP(String fxmlPath, Map<String, String> userInfo, String pageTitle) {
+        try {
+            // Loading View
+            FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            // FXML can only be loaded once
+            Parent root = rootLoader.load();
+            // Retrieving Controller
+            ParentController nextController = rootLoader.getController();
+            // Passing References
+            nextController.initializeReferences_BP(this.zavPMSDB, this.borderPaneRootSwitcher);
+            nextController.syncLoggedInUserInfo(userInfo);
+            // Changing view
+            this.borderPaneRootSwitcher.nextView_BP(root, pageTitle);
+            // Returning Controller
+            return nextController;
+        } catch (IOException e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+            return null;
+        }
+    }
+
     // Returns reference to DBManager
     public DBManager getDBManager() {
         return this.zavPMSDB;
@@ -68,8 +95,25 @@ public class ParentController {
         setRootSwitcher(rootSwitcher);
     }
 
+    // Method to easily configure the references of the controller of the next
+    // border pane view
+    public void initializeReferences_BP(DBManager zavPMSDB, RootSwitcher rootSwitcher) {
+        setDBManager(zavPMSDB);
+        setRootSwitcher_BP(rootSwitcher);
+    }
+
     // Passes information of logged in user to other controller
     public void syncLoggedInUserInfo(Map<String, String> userInfo) {
         this.loggedInUserInfo = userInfo;
+    }
+
+    // Debug function; shows all of the references the controller has
+    public void showReferences() {
+        System.out.println("---\nReferences of " + this.getClass().getName());
+        System.out.println("RootSwitcher: " + this.rootSwitcher);
+        System.out.println("Border Pane Root Switcher: " + this.borderPaneRootSwitcher);
+        System.out.println("zavPMSDB: " + this.zavPMSDB);
+        System.out.println("LoggedInUserInfo: " + this.loggedInUserInfo);
+        System.out.println("---");
     }
 }

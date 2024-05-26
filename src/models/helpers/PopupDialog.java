@@ -26,6 +26,13 @@ public class PopupDialog {
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
     }
 
+    // Shows cancel operation dialog
+    public static int confirmOperationDialog(String message) {
+        return JOptionPane.showConfirmDialog(null, message,
+                "Confirm Operation",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+    }
+
     // Show custom pop-up error dialog
     public static void showCustomErrorDialog(String errorDescription) {
         JOptionPane.showMessageDialog(null, errorDescription, "An Error has occured!", JOptionPane.ERROR_MESSAGE);

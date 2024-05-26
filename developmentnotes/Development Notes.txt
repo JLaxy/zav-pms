@@ -135,3 +135,7 @@ Java Multithreading
 UserLogActions.java - contains all of the predefined values of action_ids in database
 	- access using: UserLogActions.Actions."ACTION".getValue();
 			NOTE: REPLACE "ACTION" WITH SELECTED ACTION
+			
+When designing new views, dimensions are 1366 x 614 (accounting for the topbar)
+
+when switching views for borderpane views, use "this.borderPaneRootSwitcher" or any function that has "_BP"

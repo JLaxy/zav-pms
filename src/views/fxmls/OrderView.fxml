@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.OrderController">
+   <children>
+      <Button fx:id="createOrderButton" layoutX="211.0" layoutY="260.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="95.0" prefWidth="370.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="CREATE ORDER" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="30.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="viewOrdersButton" layoutX="837.0" layoutY="260.0" mnemonicParsing="false" onAction="#viewOrders" prefHeight="95.0" prefWidth="370.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="VIEW ORDERS" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="30.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="goBackButton" layoutX="1180.0" layoutY="535.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="16.0" layoutY="536.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="453.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Show All Missing Inventory Items" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="showBackordersButton" layoutX="481.0" layoutY="536.0" mnemonicParsing="false" onAction="#showBackorders" prefHeight="58.0" prefWidth="258.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Show Backorders" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>
