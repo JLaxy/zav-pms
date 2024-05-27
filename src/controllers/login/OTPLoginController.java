@@ -1,9 +1,11 @@
-package controllers;
+package controllers.login;
 
 import java.util.Timer;
 
 import javax.swing.JOptionPane;
 
+import controllers.PageNavigatorViewController;
+import controllers.ParentController;
 import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -11,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import models.OTPLoginModel;
+import models.login.OTPLoginModel;
 import models.helpers.DateHelper;
 import models.helpers.OTPExpiryTimerTask;
 import models.helpers.PopupDialog;
@@ -56,7 +58,7 @@ public class OTPLoginController extends ParentController {
                     UserLogActions.Actions.SUCCESSFUL_LOGIN);
             // Redirect to NavigatorView
             PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
-                    "../views/fxmls/PageNavigatorView.fxml", this.loggedInUserInfo);
+                    "../../views/fxmls/PageNavigatorView.fxml", this.loggedInUserInfo);
             // Sync screen with passed user details
             controller.configureScreen();
         } else {

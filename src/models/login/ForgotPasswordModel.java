@@ -1,8 +1,8 @@
-package models;
+package models.login;
 
 import java.util.Map;
 
-import controllers.ForgotPasswordController;
+import controllers.login.ForgotPasswordController;
 import enums.UserLogActions;
 import models.helpers.DateHelper;
 

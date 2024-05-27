@@ -1,14 +1,15 @@
-package controllers;
+package controllers.login;
 
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import controllers.ParentController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import models.PasswordQuestionModel;
+import models.login.PasswordQuestionModel;
 import models.helpers.PopupDialog;
 
 public class PasswordQuestionController extends ParentController {
@@ -59,7 +60,7 @@ public class PasswordQuestionController extends ParentController {
             this.errorLabel.setVisible(false);
             System.out.println("correct!");
             initializeNextScreen(
-                    "../views/fxmls/NewPasswordView.fxml", userInfo);
+                    "../../views/fxmls/login/NewPasswordView.fxml", userInfo);
             // Else, show error label
         } else
             this.errorLabel.setVisible(true);

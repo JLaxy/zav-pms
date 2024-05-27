@@ -1,6 +1,6 @@
-package models;
+package models.login;
 
-import controllers.PasswordQuestionController;
+import controllers.login.PasswordQuestionController;
 import enums.UserLogActions;
 import models.helpers.DateHelper;
 

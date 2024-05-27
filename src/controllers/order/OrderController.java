@@ -1,5 +1,6 @@
-package controllers;
+package controllers.order;
 
+import controllers.ParentController;
 import javafx.fxml.FXML;
 
 public class OrderController extends ParentController {

@@ -6,13 +6,16 @@ package controllers;
 
 import javax.swing.JOptionPane;
 
-import enums.UserLogActions;
+import controllers.homepage.AdminHomePageController;
+import controllers.homepage.CashierHomePageController;
+import controllers.homepage.KitchenStaffHomePageController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+
 import models.PageNavigatorViewModel;
 import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
@@ -64,15 +67,16 @@ public class PageNavigatorViewController extends ParentController {
             switch (loa) {
                 // Admin
                 case "1":
-                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/AdminHomePage.fxml"));
+                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/AdminHomePage.fxml"));
                     break;
                 // Kitchen Staff
                 case "2":
-                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/KitchenStaffHomePage.fxml"));
+                    rootLoader = new FXMLLoader(
+                            getClass().getResource("../views/fxmls/homepage/KitchenStaffHomePage.fxml"));
                     break;
                 // Cashier
                 case "3":
-                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/CashierHomePage.fxml"));
+                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/CashierHomePage.fxml"));
                     break;
                 default:
                     break;

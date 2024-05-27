@@ -1,21 +1,22 @@
-package controllers;
+package controllers.homepage;
 
+import controllers.ParentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class CashierHomePageController extends ParentController {
+public class AdminHomePageController extends ParentController {
+    @FXML
+    private Button orderButton, transactionsButton, inventoryButton, reportsButton, manageAccountButton,
+            maintenanceButton, helpButton, aboutButton;
 
     @FXML
-    private Button orderButton, transactionsButton, helpButton, aboutButton;
-
-    @FXML
-    private Label welcomeNameLabel, unameLabel;
+    private Label welcomeNameLabel;
 
     // Syncs screen elements with passed user info
     public void configureScreen() {
-        System.out.println("Initializing CashierHomePage with user info: " + this.loggedInUserInfo);
+        System.out.println("Initializing AdminHomePageController with user info: " + this.loggedInUserInfo);
         // Checks if valid user info
         if (this.loggedInUserInfo != null && this.loggedInUserInfo.containsKey("uname")) {
             String uname = this.loggedInUserInfo.get("uname");
@@ -24,7 +25,6 @@ public class CashierHomePageController extends ParentController {
             System.out.println("Initializing with username: " + uname); // Debugging statement
 
             welcomeNameLabel.setText("WELCOME, " + fname);
-            unameLabel.setText(uname);
         } else {
             System.out.println("User info is not set or does not contain 'uname' key."); // Debugging statement
         }
@@ -34,9 +34,18 @@ public class CashierHomePageController extends ParentController {
     @FXML
     private void orderAction(ActionEvent e) {
         if ((Button) e.getSource() == this.orderButton) {
-            System.out.println("order button");
+            initializeNextScreen_BP("../../views/fxmls/order/OrderView.fxml", this.loggedInUserInfo, "ORDER");
         } else if ((Button) e.getSource() == this.transactionsButton) {
             System.out.println("transactions button");
+            showReferences();
+        } else if ((Button) e.getSource() == this.inventoryButton) {
+            System.out.println("inventoryButton");
+        } else if ((Button) e.getSource() == this.reportsButton) {
+            System.out.println("reportsButton");
+        } else if ((Button) e.getSource() == this.manageAccountButton) {
+            System.out.println("manageAccountButton");
+        } else if ((Button) e.getSource() == this.maintenanceButton) {
+            System.out.println("maintenanceButton");
         } else if ((Button) e.getSource() == this.helpButton) {
             System.out.println("helpButton");
         } else if ((Button) e.getSource() == this.aboutButton) {

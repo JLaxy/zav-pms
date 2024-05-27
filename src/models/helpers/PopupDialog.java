@@ -37,4 +37,5 @@ public class PopupDialog {
     public static void showCustomErrorDialog(String errorDescription) {
         JOptionPane.showMessageDialog(null, errorDescription, "An Error has occured!", JOptionPane.ERROR_MESSAGE);
     }
+
 }

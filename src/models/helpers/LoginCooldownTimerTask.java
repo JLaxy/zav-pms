@@ -5,7 +5,7 @@ package models.helpers;
 
 import java.util.TimerTask;
 
-import controllers.LoginController;
+import controllers.login.LoginController;
 import javafx.application.Platform;
 
 public class LoginCooldownTimerTask extends TimerTask {

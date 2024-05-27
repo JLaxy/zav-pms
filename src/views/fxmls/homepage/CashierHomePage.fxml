@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" stylesheets="@css/LoggedInView.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CashierHomePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" stylesheets="@css/LoggedInView.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.homepage.CashierHomePageController">
    <children>
       <Button fx:id="orderButton" layoutX="176.0" layoutY="212.0" mnemonicParsing="false" onAction="#orderAction" prefHeight="95.0" prefWidth="370.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="ORDER" textFill="WHITE">
          <font>
