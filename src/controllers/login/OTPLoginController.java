@@ -1,10 +1,11 @@
-package controllers;
+package controllers.login;
 
 import java.util.Timer;
 
 import javax.swing.JOptionPane;
 
-import enums.LevelOfAccesses;
+import controllers.PageNavigatorViewController;
+import controllers.ParentController;
 import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -12,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import models.OTPLoginModel;
+import models.login.OTPLoginModel;
 import models.helpers.DateHelper;
 import models.helpers.OTPExpiryTimerTask;
 import models.helpers.PopupDialog;
@@ -27,7 +28,6 @@ public class OTPLoginController extends ParentController {
     private final int OTP_TIME_EXPIRY = 1;
 
     private String email;
-    private String loa;
     private OTPLoginModel model;
     private OTPExpiryTimerTask otpExpiryTimerTask;
     private Timer expiryTimer = new Timer(true);
@@ -42,8 +42,7 @@ public class OTPLoginController extends ParentController {
 
     // Immediately sets up controller and send OTP
     @FXML
-    public void initialize(String email, String loa) {
-        this.loa = loa;
+    public void initialize(String email) {
         errorLabel.setVisible(false);
         this.model = new OTPLoginModel(this);
         // Send OTP to user attempting to login
@@ -54,19 +53,14 @@ public class OTPLoginController extends ParentController {
     // Button Click; Checks if OTP matches
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
-            if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.ADMIN.getValue())) == 0) {
-                System.out.println("correct: admin");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
-            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())) == 0) {
-                System.out.println("correct: kitchen_staff");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
-            } else if (this.loa.compareTo(String.valueOf(LevelOfAccesses.AccessLevel.CASHIER.getValue())) == 0) {
-                System.out.println("correct: cashier");
-                // Cancelling Timer
-                this.expiryTimer.cancel();
-            }
+            // Log successful login of user in database
+            this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+                    UserLogActions.Actions.SUCCESSFUL_LOGIN);
+            // Redirect to NavigatorView
+            PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
+                    "../../views/fxmls/PageNavigatorView.fxml", this.loggedInUserInfo);
+            // Sync screen with passed user details
+            controller.configureScreen();
         } else {
             // Updating attempts
             this.model.updateOTPAttempt();

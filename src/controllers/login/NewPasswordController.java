@@ -1,11 +1,12 @@
-package controllers;
+package controllers.login;
 
+import controllers.ParentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import models.NewPasswordModel;
+import models.login.NewPasswordModel;
 import models.helpers.PopupDialog;
 import models.modules.Security;
 

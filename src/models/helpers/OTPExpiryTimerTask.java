@@ -6,7 +6,7 @@ package models.helpers;
 import java.time.LocalDateTime;
 import java.util.TimerTask;
 
-import controllers.OTPLoginController;
+import controllers.login.OTPLoginController;
 import javafx.application.Platform;
 
 public class OTPExpiryTimerTask extends TimerTask {

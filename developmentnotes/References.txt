@@ -88,3 +88,12 @@ https://stackoverflow.com/questions/36097097/password-validate-8-digits-contains
 
 MySQL case-sensitive search
 https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql
+
+MenuButton User Icon
+https://stackoverflow.com/questions/59146482/javafx-menubutton-only-as-a-graphic-or-an-icon-with-the-functionality-of-a-menub
+https://stackoverflow.com/questions/59244920/how-to-set-fx-graphic-size-in-javafx
+https://stackoverflow.com/questions/29572839/change-javafx-menubutton-icon
+https://stackoverflow.com/questions/43991889/add-icon-to-menuitem-in-javafx-by-css
+
+Using Borderpane
+https://www.youtube.com/watch?v=cDefe-jQunQ

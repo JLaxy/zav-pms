@@ -1,9 +1,10 @@
-package models;
+package models.login;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import controllers.LoginController;
+import controllers.login.LoginController;
+import models.ParentModel;
 import models.helpers.DateHelper;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;

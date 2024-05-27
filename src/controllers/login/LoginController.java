@@ -1,15 +1,16 @@
-package controllers;
+package controllers.login;
 
 import java.util.Map;
 import java.util.Timer;
 
+import controllers.ParentController;
 import enums.AccountStatuses;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import models.LoginModel;
+import models.login.LoginModel;
 import models.helpers.LoginCooldownTimerTask;
 import models.helpers.PopupDialog;
 
@@ -64,8 +65,8 @@ public class LoginController extends ParentController {
                 this.passField.clear();
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
-                        "../views/fxmls/OTPLoginView.fxml", userInfo);
-                nextController.initialize(userInfo.get("email"), userInfo.get("level_of_access_id"));
+                        "../../views/fxmls/login/OTPLoginView.fxml", userInfo);
+                nextController.initialize(userInfo.get("email"));
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt
@@ -83,7 +84,7 @@ public class LoginController extends ParentController {
     // Forgot Password Action
     public void forgotPasswordAction(ActionEvent e) {
         // Navigate to Forgot Password Screen
-        initializeNextScreen("../views/fxmls/ForgotPasswordView.fxml", loggedInUserInfo);
+        initializeNextScreen("../../views/fxmls/login/ForgotPasswordView.fxml", loggedInUserInfo);
         System.out.println("running");
     }
 

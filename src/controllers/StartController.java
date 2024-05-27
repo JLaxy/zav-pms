@@ -7,7 +7,7 @@ public class StartController extends ParentController {
     // Get Started Button Action
     public void getStartedAction() {
         testFunc();
-        initializeNextScreen("../views/fxmls/LoginView.fxml", Map.of("id", ""));
+        initializeNextScreen("../views/fxmls/login/LoginView.fxml", Map.of("id", ""));
     }
 
     // Debug function

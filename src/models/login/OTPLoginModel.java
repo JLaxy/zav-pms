@@ -1,6 +1,6 @@
-package models;
+package models.login;
 
-import controllers.OTPLoginController;
+import controllers.login.OTPLoginController;
 import enums.UserLogActions;
 import models.helpers.DateHelper;
 

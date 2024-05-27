@@ -1,6 +1,6 @@
-package models;
+package models.login;
 
-import controllers.NewPasswordController;
+import controllers.login.NewPasswordController;
 
 public class NewPasswordModel {
     private NewPasswordController controller;
