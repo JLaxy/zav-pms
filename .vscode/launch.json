@@ -9,13 +9,6 @@
       "name": "Runner",
       "request": "launch",
       "mainClass": "Runner",
-      "projectName": "zav-pms_dea6d31d"
-    },
-    {
-      "type": "java",
-      "name": "Runner",
-      "request": "launch",
-      "mainClass": "Runner",
       "projectName": "zav-pms_954a1701"
     },
     {
@@ -23,14 +16,6 @@
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",
-      "vmArgs": "--module-path \"lib/javafx-sdk-21.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
-    },
-    {
-      "type": "java",
-      "name": "App",
-      "request": "launch",
-      "mainClass": "App",
-      "projectName": "zav-pms_954a1701",
       "vmArgs": "--module-path \"lib/javafx-sdk-21.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
     }
   ]

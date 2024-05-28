@@ -23,7 +23,7 @@
                         <Image url="@../../../assets/images/logoTransparent.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="pageTitleLabel" layoutX="110.0" layoutY="17.0" prefHeight="74.0" prefWidth="422.0" text="TITLE PAGE" textFill="WHITE">
+                  <Label fx:id="pageTitleLabel" layoutX="110.0" layoutY="17.0" prefHeight="74.0" prefWidth="1036.0" text="TITLE PAGE" textFill="WHITE">
                      <font>
                         <Font name="Arial Black" size="50.0" />
                      </font>

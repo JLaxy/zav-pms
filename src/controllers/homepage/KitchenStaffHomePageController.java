@@ -12,7 +12,7 @@ public class KitchenStaffHomePageController extends ParentController {
     private Button orderButton, inventoryButton, helpButton, aboutButton;
 
     @FXML
-    private Label welcomeNameLabel, unameLabel;
+    private Label welcomeNameLabel;
 
     // Syncs screen elements with passed user info
     public void configureScreen() {
@@ -25,7 +25,6 @@ public class KitchenStaffHomePageController extends ParentController {
             System.out.println("Initializing with username: " + uname); // Debugging statement
 
             welcomeNameLabel.setText("WELCOME, " + fname);
-            unameLabel.setText(uname);
         } else {
             System.out.println("User info is not set or does not contain 'uname' key."); // Debugging statement
         }

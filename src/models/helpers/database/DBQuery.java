@@ -157,6 +157,7 @@ public class DBQuery {
             stmt.setString(3, date);
             stmt.setString(4, "for user \"" + uname + "\" at " + Security.getSystemName());
             stmt.execute();
+            System.out.println("SUCESSFULLY LOGGED ACTION: " + action);
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }

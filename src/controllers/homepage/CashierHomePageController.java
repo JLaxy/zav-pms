@@ -12,7 +12,7 @@ public class CashierHomePageController extends ParentController {
     private Button orderButton, transactionsButton, helpButton, aboutButton;
 
     @FXML
-    private Label welcomeNameLabel, unameLabel;
+    private Label welcomeNameLabel;
 
     // Syncs screen elements with passed user info
     public void configureScreen() {
@@ -22,10 +22,9 @@ public class CashierHomePageController extends ParentController {
             String uname = this.loggedInUserInfo.get("uname");
             String fname = this.loggedInUserInfo.get("fname").toUpperCase();
 
-            System.out.println("Initializing with username: " + uname); // Debugging statement
+            System.out.println("Initializing with username: " + uname + " LINE 25"); // Debugging statement
 
             welcomeNameLabel.setText("WELCOME, " + fname);
-            unameLabel.setText(uname);
         } else {
             System.out.println("User info is not set or does not contain 'uname' key."); // Debugging statement
         }
