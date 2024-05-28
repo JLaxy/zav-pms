@@ -36,15 +36,18 @@ public class AdminHomePageController extends ParentController {
         if ((Button) e.getSource() == this.orderButton) {
             initializeNextScreen_BP("../../views/fxmls/order/OrderView.fxml", this.loggedInUserInfo, "ORDER");
         } else if ((Button) e.getSource() == this.transactionsButton) {
-            System.out.println("transactions button");
+            initializeNextScreen_BP("../../views/fxmls/transactions/TransactionsView.fxml", this.loggedInUserInfo, "TRANSACTIONS");
             showReferences();
         } else if ((Button) e.getSource() == this.inventoryButton) {
-            System.out.println("inventoryButton");
+            initializeNextScreen_BP("../../views/fxmls/inventory/InventoryView.fxml", this.loggedInUserInfo, "INVENTORY");
         } else if ((Button) e.getSource() == this.reportsButton) {
+            initializeNextScreen_BP("../../views/fxmls/report/ReportView.fxml", this.loggedInUserInfo, "REPORT");
             System.out.println("reportsButton");
         } else if ((Button) e.getSource() == this.manageAccountButton) {
+            initializeNextScreen_BP("../../views/fxmls/manageaccounts/ManageAccountsView.fxml", this.loggedInUserInfo, "MANAGE ACCOUNTS");
             System.out.println("manageAccountButton");
         } else if ((Button) e.getSource() == this.maintenanceButton) {
+            initializeNextScreen_BP("../../views/fxmls/maintenance/MaintenanceView.fxml", this.loggedInUserInfo, "MAINTENANCE");
             System.out.println("maintenanceButton");
         } else if ((Button) e.getSource() == this.helpButton) {
             System.out.println("helpButton");

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AdminHomePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ProductInventoryController">
    <children>
       <Button fx:id="registernewfoodproductButton" layoutX="95.0" layoutY="115.0" mnemonicParsing="false" onAction="#registernewfood" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Register New Food &#10;Product" textAlignment="CENTER" textFill="WHITE">
          <font>

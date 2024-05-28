@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AdminHomePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.InventoryController">
    <children>
       <Button fx:id="productInventoryButton" layoutX="95.0" layoutY="199.0" mnemonicParsing="false" onAction="#productInventory" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Product &#10;(Finished Product)" textAlignment="CENTER" textFill="WHITE">
          <font>
