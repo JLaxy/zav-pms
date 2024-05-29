@@ -1,6 +1,7 @@
 package controllers.homepage;
 
 import controllers.ParentController;
+import controllers.manageaccounts.ManageAccountsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,26 +29,33 @@ public class AdminHomePageController extends ParentController {
         } else {
             System.out.println("User info is not set or does not contain 'uname' key."); // Debugging statement
         }
+        showReferences();
     }
 
     // Action methods for buttons
     @FXML
     private void orderAction(ActionEvent e) {
         if ((Button) e.getSource() == this.orderButton) {
-            initializeNextScreen_BP("../../views/fxmls/order/OrderView.fxml", this.loggedInUserInfo, "ORDER");
+            this.initializeNextScreen_BP("../../views/fxmls/order/OrderView.fxml", this.loggedInUserInfo, "ORDER");
         } else if ((Button) e.getSource() == this.transactionsButton) {
-            initializeNextScreen_BP("../../views/fxmls/transactions/TransactionsView.fxml", this.loggedInUserInfo, "TRANSACTIONS");
-            showReferences();
+            this.initializeNextScreen_BP("../../views/fxmls/transactions/TransactionsView.fxml", this.loggedInUserInfo,
+                    "TRANSACTIONS");
         } else if ((Button) e.getSource() == this.inventoryButton) {
-            initializeNextScreen_BP("../../views/fxmls/inventory/InventoryView.fxml", this.loggedInUserInfo, "INVENTORY");
+            this.initializeNextScreen_BP("../../views/fxmls/inventory/InventoryView.fxml", this.loggedInUserInfo,
+                    "INVENTORY");
         } else if ((Button) e.getSource() == this.reportsButton) {
-            initializeNextScreen_BP("../../views/fxmls/report/ReportView.fxml", this.loggedInUserInfo, "REPORT");
+            this.initializeNextScreen_BP("../../views/fxmls/report/ReportView.fxml", this.loggedInUserInfo, "REPORT");
             System.out.println("reportsButton");
         } else if ((Button) e.getSource() == this.manageAccountButton) {
-            initializeNextScreen_BP("../../views/fxmls/manageaccounts/ManageAccountsView.fxml", this.loggedInUserInfo, "MANAGE ACCOUNTS");
+            ManageAccountsController controller = (ManageAccountsController) this.initializeNextScreen_BP(
+                    "../../views/fxmls/manageaccounts/ManageAccountsView.fxml",
+                    this.loggedInUserInfo,
+                    "MANAGE ACCOUNTS");
+            controller.syncUserTableView();
             System.out.println("manageAccountButton");
         } else if ((Button) e.getSource() == this.maintenanceButton) {
-            initializeNextScreen_BP("../../views/fxmls/maintenance/MaintenanceView.fxml", this.loggedInUserInfo, "MAINTENANCE");
+            this.initializeNextScreen_BP("../../views/fxmls/maintenance/MaintenanceView.fxml", this.loggedInUserInfo,
+                    "MAINTENANCE");
             System.out.println("maintenanceButton");
         } else if ((Button) e.getSource() == this.helpButton) {
             System.out.println("helpButton");

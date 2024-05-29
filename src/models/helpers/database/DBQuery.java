@@ -14,9 +14,12 @@ import static java.util.Map.entry;
 import java.util.Map;
 
 import enums.UserLogActions;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
 import models.modules.Security;
+import models.schemas.User;
 
 public class DBQuery {
 
@@ -214,6 +217,46 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return new String[] { "", "", "" };
+    }
+
+    // Returns all of the users registered in database in ObservableList
+    public ObservableList<User> getAllUsers() {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM users;")) {
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("Error retrieving list of users");
+                result.close();
+            } else {
+                // Instatiate observable list
+                ObservableList<User> myList = FXCollections.observableArrayList();
+                // Iterate through all users
+                while (result.next()) {
+                    // Skipping SYSTEM user
+                    if (result.getInt("id") == 1)
+                        continue;
+
+                    // Add each user in list
+                    myList.add(new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
+                            result.getString("email"),
+                            result.getInt("level_of_access_id"), result.getString("fname"), result.getString("lname"),
+                            result.getInt("account_status_id"), result.getInt("unique_question_id"),
+                            result.getString("unique_question_answer")));
+                }
+                result.close();
+                return myList;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return null;
+
     }
 
 }

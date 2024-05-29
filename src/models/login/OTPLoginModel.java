@@ -22,7 +22,6 @@ public class OTPLoginModel {
         // Logging to Database
         this.controller.getDBManager().query.logAction(user_id, username,
                 action.getValue(), DateHelper.getCurrentDateTimeString());
-        System.out.println("logging successful login... NIGGAAAAA");
     }
 
     // Sets current OTP being tracked

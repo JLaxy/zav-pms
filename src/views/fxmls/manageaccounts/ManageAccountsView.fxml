@@ -7,10 +7,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.manageaccounts.ManageAccountsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" stylesheets="@../css/LoggedInView.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.manageaccounts.ManageAccountsController">
    <children>
       <Button fx:id="goBackButton" layoutX="1190.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
          <font>
@@ -44,31 +43,29 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <HBox alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="1368.0" style="-fx-background-color: #CAE6F3;">
-         <children>
-            <TextField prefHeight="43.0" prefWidth="592.0" promptText="search" style="-fx-background-color: #D552A0; -fx-background-radius: 1000;">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <HBox.margin>
-                  <Insets left="45.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </TextField>
-            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleClearAction" text="X" />
-         </children>
-      </HBox>
-      <TableView layoutX="40.0" layoutY="115.0" prefHeight="402.0" prefWidth="1292.0">
+      <TableView fx:id="accountsTableView" layoutX="40.0" layoutY="115.0" prefHeight="402.0" prefWidth="1292.0">
         <columns>
-          <TableColumn prefWidth="215.0" text="User ID" />
-          <TableColumn minWidth="0.0" prefWidth="215.0" text="User Name" />
-            <TableColumn minWidth="0.0" prefWidth="215.0" text="Password" />
-            <TableColumn minWidth="0.0" prefWidth="215.0" text="Level of Access" />
-            <TableColumn minWidth="0.0" prefWidth="215.0" text="Last User Logs" />
-            <TableColumn minWidth="0.0" prefWidth="215.0" text="Status" />
+          <TableColumn fx:id="userIdCol" prefWidth="215.0" text="User ID" />
+          <TableColumn fx:id="uNameCol" minWidth="0.0" prefWidth="215.0" text="User Name" />
+            <TableColumn fx:id="passCol" minWidth="0.0" prefWidth="215.0" text="Password" />
+            <TableColumn fx:id="loaCol" minWidth="0.0" prefWidth="215.0" text="Level of Access" />
+            <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="200.0" text="Status" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
+      <TextField fx:id="searchField" layoutX="129.0" layoutY="37.0" prefHeight="43.0" prefWidth="592.0" promptText="     Search">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <font>
+            <Font size="20.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextField>
+      <Button fx:id="searchButton" layoutX="75.0" layoutY="38.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="83.0" />
    </children>
 </AnchorPane>

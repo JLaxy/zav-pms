@@ -1,0 +1,14 @@
+#userIconMenuButton > .arrow-button,
+#userIconMenuButton > .arrow,
+#userIconMenuButton > .label {
+  -fx-background-color: black;
+  -fx-border-color: black;
+  -fx-border-width: 0px;
+}
+
+#userIconMenuButton > .label {
+  -fx-background-image: url("../../../../assets/images/accountIcon.png");
+  -fx-background-position: center;
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: 70px 70px;
+}

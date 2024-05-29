@@ -97,3 +97,15 @@ https://stackoverflow.com/questions/43991889/add-icon-to-menuitem-in-javafx-by-c
 
 Using Borderpane
 https://www.youtube.com/watch?v=cDefe-jQunQ
+
+Empty Observable list
+https://stackoverflow.com/questions/26195243/creating-an-observable-list-collection
+
+Tableview property value
+https://stackoverflow.com/questions/55874952/javafx-propertyvaluefactory-is-not-able-to-retrieve-property
+
+Adding items to table view
+https://www.youtube.com/watch?v=qQcr_JMxWRw
+
+JavaFX CSS Guide
+https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html

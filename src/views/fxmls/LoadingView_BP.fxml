@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cc549c5e" height="720.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1366.0">
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor></Rectangle>
+      <ProgressIndicator layoutX="670.0" layoutY="340.0" prefHeight="128.0" prefWidth="109.0" stylesheets="@css/LoggedInView.css">
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor></ProgressIndicator>
+   </children>
+</AnchorPane>

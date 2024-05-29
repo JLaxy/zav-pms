@@ -1,14 +1,19 @@
-#userIconMenuButton > .arrow-button,
-#userIconMenuButton > .arrow,
-#userIconMenuButton > .label {
-  -fx-background-color: black;
-  -fx-border-color: black;
-  -fx-border-width: 0px;
-}
-
-#userIconMenuButton > .label {
-  -fx-background-image: url("../../../../assets/images/accountIcon.png");
+#searchButton {
+  -fx-background-color: #db95be;
+  -fx-background-image: url("../../../../assets/images/searchIcon.png");
+  -fx-background-radius: 25;
   -fx-background-position: center;
   -fx-background-repeat: no-repeat;
-  -fx-background-size: 70px 70px;
+  -fx-background-size: 35px 35px;
+}
+
+#searchField {
+  -fx-background-radius: 1000;
+  -fx-background-color: #d552a0;
+  -fx-text-fill: white;
+  -fx-prompt-text-fill: white;
+}
+
+.progress-indicator {
+  -fx-progress-color: #d552a0;
 }

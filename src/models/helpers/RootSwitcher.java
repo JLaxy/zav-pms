@@ -18,7 +18,7 @@ public class RootSwitcher {
     private Stack<String> pageViewTitles;
     private Stage mainStage;
     private BorderPane mainBorderPane;
-    private Parent previousRoot, loadingScreenRoot;
+    private Parent previousRoot, loadingScreenRoot, loadingScreenRoot_BP;
     private PageNavigatorViewController pageNavigatorViewController;
 
     // Constructor for mainStage; setting reference to Main Stage and initializing
@@ -45,6 +45,8 @@ public class RootSwitcher {
         // Loading loading screen root
         try {
             this.loadingScreenRoot = new FXMLLoader(getClass().getResource("../../views/fxmls/LoadingView.fxml"))
+                    .load();
+            this.loadingScreenRoot_BP = new FXMLLoader(getClass().getResource("../../views/fxmls/LoadingView_BP.fxml"))
                     .load();
         } catch (IOException e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
@@ -116,9 +118,20 @@ public class RootSwitcher {
         this.mainStage.getScene().setRoot(this.loadingScreenRoot);
     }
 
+    // Show Loading Screen above borderpane
+    public void showLoadingScreen_BP() {
+        // Show loading screen
+        this.pageNavigatorViewController.getMainStackPane().getChildren().add(loadingScreenRoot_BP);
+    }
+
     // Exit Loading Screen
     public void exitLoadingScreen() {
         this.mainStage.getScene().setRoot(this.previousRoot);
+    }
+
+    // Remove Loading Screen above borderpane
+    public void exitLoadingScreen_BP() {
+        this.pageNavigatorViewController.getMainStackPane().getChildren().remove(loadingScreenRoot_BP);
     }
 
     // Navigates user back to login screen

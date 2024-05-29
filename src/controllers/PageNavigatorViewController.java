@@ -15,7 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-
+import javafx.scene.layout.StackPane;
 import models.PageNavigatorViewModel;
 import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
@@ -25,6 +25,8 @@ public class PageNavigatorViewController extends ParentController {
     private Label pageTitleLabel, unameLabel;
     @FXML
     private BorderPane mainBorderPane;
+    @FXML
+    private StackPane mainStackPane;
 
     private RootSwitcher borderPaneRootSwitcher;
     private PageNavigatorViewModel model;
@@ -122,4 +124,10 @@ public class PageNavigatorViewController extends ParentController {
             this.borderPaneRootSwitcher.getPageNavigatorViewController().rootSwitcher.logout();
         }
     }
+
+    // Returns main stack pane
+    public StackPane getMainStackPane() {
+        return this.mainStackPane;
+    }
+
 }
