@@ -12,11 +12,13 @@ public class EditAutoReportGenerationController extends ParentController {
 
     @FXML
     private void eardestinationemail() {
+        initializeNextScreen_BP("../../views/fxmls/report/EditAutoReportDestinationEmailView.fxml", this.loggedInUserInfo, "REPORT");
         System.out.println("Edit Auto Report Destination Email");
     }
 
     @FXML
     private void eartimeinterval() {
+        initializeNextScreen_BP("../../views/fxmls/report/EditAutoReportTimeIntervalView.fxml", this.loggedInUserInfo, "REPORT");
         System.out.println("Edit Auto Report Time Interval");
     }
     

@@ -6,11 +6,13 @@ import javafx.fxml.FXML;
 public class ProductInventoryController extends ParentController {
     @FXML
     private void registernewfood() {
+        initializeNextScreen_BP("../../views/fxmls/inventory/RegisterNewFoodProductView.fxml", this.loggedInUserInfo, "PRODUCT INVENTORY");
         System.out.println("Register New Food Product");
     }
 
     @FXML
     private void registernewbeverage() {
+        initializeNextScreen_BP("../../views/fxmls/inventory/RegisterNewBeverageProductView.fxml", this.loggedInUserInfo, "PRODUCT INVENTORY");
         System.out.println("Register New Beverage Product");
     }
 
