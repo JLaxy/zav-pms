@@ -14,6 +14,6 @@ public class PasswordQuestionModel {
     // Logging Action to Database
     public void logAction(String id, String uName) {
         this.controller.getDBManager().query.logAction(Integer.valueOf(id), uName,
-                UserLogActions.Actions.CANCELLED_PASSWORD_RESET.getValue(), DateHelper.getCurrentDateTimeString());
+                UserLogActions.Actions.CANCELLED_PASSWORD_RESET.getValue(), DateHelper.getCurrentDateTimeString(), "");
     }
 }

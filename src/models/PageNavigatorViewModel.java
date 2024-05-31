@@ -15,7 +15,7 @@ public class PageNavigatorViewModel {
     // Logs user logout to database
     public void logUserLogout(int id, String uname) {
         this.controller.getDBManager().query.logAction(id, uname, UserLogActions.Actions.USER_LOGOUT.getValue(),
-                DateHelper.getCurrentDateTimeString());
+                DateHelper.getCurrentDateTimeString(), "");
     }
 
 }

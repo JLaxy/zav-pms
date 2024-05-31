@@ -26,6 +26,6 @@ public class ForgotPasswordModel {
     // Logs Forgot Password initiation on Database
     public void logPasswordReset(String id, String uName) {
         this.controller.getDBManager().query.logAction(Integer.valueOf(id), uName,
-                UserLogActions.Actions.INITIATED_PASSWORD_RESET.getValue(), DateHelper.getCurrentDateTimeString());
+                UserLogActions.Actions.INITIATED_PASSWORD_RESET.getValue(), DateHelper.getCurrentDateTimeString(), "");
     }
 }

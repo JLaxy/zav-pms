@@ -25,6 +25,13 @@ public class User {
         this.unique_question_answer = unique_question_answer;
     }
 
+    // Returns copy of this user
+    public User getCopy() {
+        return new User(this.id, this.uname, this.pass, this.email, this.level_of_access_id, this.fname, this.lname,
+                this.account_status_id, this.unique_question_id,
+                this.unique_question_answer);
+    }
+
     public int getId() {
         return this.id;
     }

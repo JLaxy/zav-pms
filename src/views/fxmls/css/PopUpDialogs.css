@@ -1,0 +1,18 @@
+#backgroundRect {
+  -fx-fill: #cc549c;
+  -fx-opacity: 0.6;
+}
+
+#updateButton,
+#deactivateButton,
+#reactivateButton {
+  -fx-text-fill: white;
+  -fx-background-color: black;
+  -fx-background-radius: 100;
+}
+
+#cancelButton {
+  -fx-background-color: #d552a0;
+  -fx-text-fill: white;
+  -fx-background-radius: 100;
+}

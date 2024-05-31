@@ -124,6 +124,17 @@ public class RootSwitcher {
         this.pageNavigatorViewController.getMainStackPane().getChildren().add(loadingScreenRoot_BP);
     }
 
+    // Display Popup Dialog on stackpane of pagenavigatorview
+    public void showPopUpDialog(Parent dialogRoot) {
+        this.pageNavigatorViewController.getMainStackPane().getChildren().add(dialogRoot);
+    }
+
+    // Remove Popup Dialog
+    public void exitPopUpDialog() {
+        this.pageNavigatorViewController.getMainStackPane().getChildren()
+                .remove(this.pageNavigatorViewController.getMainStackPane().getChildren().getLast());
+    }
+
     // Exit Loading Screen
     public void exitLoadingScreen() {
         this.mainStage.getScene().setRoot(this.previousRoot);

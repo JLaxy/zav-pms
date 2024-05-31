@@ -79,6 +79,28 @@ public class ParentController {
         }
     }
 
+    // Initializes the View and Controller of the popup dialog for MainBorderPane
+    public ParentController initializePopUpDialog(String fxmlPath, Map<String, String> userInfo) {
+        try {
+            // Loading View
+            FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            // FXML can only be loaded once
+            Parent root = rootLoader.load();
+            // Retrieving Controller
+            ParentController nextController = rootLoader.getController();
+            // Passing References
+            nextController.initializeReferences_BP(this.zavPMSDB, this.borderPaneRootSwitcher);
+            nextController.syncLoggedInUserInfo(userInfo);
+            // Changing view
+            this.borderPaneRootSwitcher.showPopUpDialog(root);
+            // Returning Controller
+            return nextController;
+        } catch (IOException e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+            return null;
+        }
+    }
+
     // Returns reference to DBManager
     public DBManager getDBManager() {
         return this.zavPMSDB;

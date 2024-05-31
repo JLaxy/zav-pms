@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static java.util.Map.entry;
+
 import java.util.Map;
 
 import enums.UserLogActions;
@@ -59,7 +60,7 @@ public class DBQuery {
             if (isNoResult(result)) {
                 // Logging log-in attempt to database
                 logAction(1, uName, UserLogActions.Actions.LOGIN_ATTEMPT.getValue(),
-                        DateHelper.getCurrentDateTimeString());
+                        DateHelper.getCurrentDateTimeString(), "");
                 result.close();
             } else {
                 result.next();
@@ -68,7 +69,7 @@ public class DBQuery {
                 // Logging initializing OTP authentication to database
                 logAction(Integer.parseInt(userInfo.get("id")), uName,
                         UserLogActions.Actions.INITIATED_OTP.getValue(),
-                        DateHelper.getCurrentDateTimeString());
+                        DateHelper.getCurrentDateTimeString(), "");
                 return userInfo;
             }
         } catch (Exception e) {
@@ -147,7 +148,7 @@ public class DBQuery {
     }
 
     // Logging Actions to Database
-    public void logAction(int user_id, String uname, int action, String date) {
+    public void logAction(int user_id, String uname, int action, String date, String actionDetails) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -158,7 +159,7 @@ public class DBQuery {
             stmt.setInt(2, action);
             // Applying Date
             stmt.setString(3, date);
-            stmt.setString(4, "for user \"" + uname + "\" at " + Security.getSystemName());
+            stmt.setString(4, "for user \"" + uname + "\" at " + Security.getSystemName() + ": " + actionDetails);
             stmt.execute();
             System.out.println("SUCESSFULLY LOGGED ACTION: " + action);
         } catch (Exception e) {
@@ -180,7 +181,7 @@ public class DBQuery {
 
             // Logging password update to database
             logAction(1, username, UserLogActions.Actions.SUCCESS_PASSWORD_RESET.getValue(),
-                    DateHelper.getCurrentDateTimeString());
+                    DateHelper.getCurrentDateTimeString(), "");
             return true;
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
