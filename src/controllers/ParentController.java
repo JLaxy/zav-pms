@@ -5,20 +5,20 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
 import models.helpers.database.DBManager;
+import models.schemas.User;
 
 public class ParentController {
 
     protected RootSwitcher rootSwitcher, borderPaneRootSwitcher;
     protected DBManager zavPMSDB;
 
-    protected Map<String, String> loggedInUserInfo;
+    protected User loggedInUserInfo;
 
     // Sets reference to root switcher
     private void setRootSwitcher(RootSwitcher rootSwitcher) {
@@ -36,7 +36,7 @@ public class ParentController {
     }
 
     // Initializes the View and Controller of the next screen
-    public ParentController initializeNextScreen(String fxmlPath, Map<String, String> userInfo) {
+    public ParentController initializeNextScreen(String fxmlPath, User userInfo) {
         try {
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -58,7 +58,7 @@ public class ParentController {
     }
 
     // Initializes the View and Controller of the next screen for MainBorderPane
-    public ParentController initializeNextScreen_BP(String fxmlPath, Map<String, String> userInfo, String pageTitle) {
+    public ParentController initializeNextScreen_BP(String fxmlPath, User userInfo, String pageTitle) {
         try {
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -80,7 +80,7 @@ public class ParentController {
     }
 
     // Initializes the View and Controller of the popup dialog for MainBorderPane
-    public ParentController initializePopUpDialog(String fxmlPath, Map<String, String> userInfo) {
+    public ParentController initializePopUpDialog(String fxmlPath, User userInfo) {
         try {
             // Loading View
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -125,7 +125,7 @@ public class ParentController {
     }
 
     // Passes information of logged in user to other controller
-    public void syncLoggedInUserInfo(Map<String, String> userInfo) {
+    public void syncLoggedInUserInfo(User userInfo) {
         this.loggedInUserInfo = userInfo;
     }
 

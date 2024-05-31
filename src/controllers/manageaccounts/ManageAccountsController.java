@@ -108,7 +108,7 @@ public class ManageAccountsController extends ParentController {
         try {
             System.out.println("Editing user " + selectedUser.getUname());
             // Logging user view on database
-            this.model.logViewingUserDetails(Integer.valueOf(loggedInUserInfo.get("id")), loggedInUserInfo.get("uname"),
+            this.model.logViewingUserDetails(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
                     selectedUser.getUname());
 
             // Configuring controller

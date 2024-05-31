@@ -11,6 +11,11 @@ public class User {
     int id, level_of_access_id, account_status_id, unique_question_id;
     String uname, pass, email, fname, lname, unique_question_answer;
 
+    // Null User Constructor
+    public User() {
+
+    }
+
     public User(int id, String uname, String pass, String email, int level_of_access_id, String fname, String lname,
             int account_status_id, int unique_question_id, String unique_question_answer) {
         this.id = id;

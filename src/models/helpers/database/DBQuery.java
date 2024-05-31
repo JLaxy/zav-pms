@@ -10,10 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import static java.util.Map.entry;
-
-import java.util.Map;
-
 import enums.UserLogActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,7 +40,7 @@ public class DBQuery {
     }
 
     // Verify user credentials then return user information of user trying to log in
-    public Map<String, String> userLogin(String uName, String pass) {
+    public User userLogin(String uName, String pass) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -65,9 +61,9 @@ public class DBQuery {
             } else {
                 result.next();
                 result.close();
-                Map<String, String> userInfo = getUserInfo(uName);
+                User userInfo = getUserInfo(uName);
                 // Logging initializing OTP authentication to database
-                logAction(Integer.parseInt(userInfo.get("id")), uName,
+                logAction(userInfo.getId(), uName,
                         UserLogActions.Actions.INITIATED_OTP.getValue(),
                         DateHelper.getCurrentDateTimeString(), "");
                 return userInfo;
@@ -75,7 +71,7 @@ public class DBQuery {
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
-        return Map.of("id", "");
+        return new User();
     }
 
     // Retrieves Username of supplied user_id
@@ -109,7 +105,7 @@ public class DBQuery {
     }
 
     // Returns info of username
-    public Map<String, String> getUserInfo(String uName) {
+    public User getUserInfo(String uName) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -127,24 +123,24 @@ public class DBQuery {
                 result.close();
             } else {
                 result.next();
-                Map<String, String> userInfo = Map.ofEntries(
-                        entry("id", result.getString("id")),
-                        entry("uname", result.getString("uname")),
-                        entry("email", result.getString("email")),
-                        entry("level_of_access_id", result.getString("level_of_access_id")),
-                        entry("fname", result.getString("fname")),
-                        entry("lname", result.getString("lname")),
-                        entry("account_status_id", result.getString("account_status_id")),
-                        entry("unique_question_id", result.getString("unique_question_id")),
-                        entry("unique_question_answer", result.getString("unique_question_answer")));
+
+                // Create new object
+                User retrievedUser = new User(Integer.valueOf(result.getString("id")), result.getString("uname"),
+                        result.getString("pass"), result.getString("email"),
+                        Integer.valueOf(result.getString("level_of_access_id")), result.getString("fname"),
+                        result.getString("lname"), Integer.valueOf(result.getString("account_status_id")),
+                        Integer.valueOf(result.getString("unique_question_id")),
+                        result.getString("unique_question_answer"));
+
                 result.close();
-                return userInfo;
+
+                return retrievedUser;
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         // Return empty String
-        return (Map<String, String>) Map.of("id", "");
+        return new User();
     }
 
     // Logging Actions to Database

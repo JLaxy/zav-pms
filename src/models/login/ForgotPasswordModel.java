@@ -1,10 +1,9 @@
 package models.login;
 
-import java.util.Map;
-
 import controllers.login.ForgotPasswordController;
 import enums.UserLogActions;
 import models.helpers.DateHelper;
+import models.schemas.User;
 
 public class ForgotPasswordModel {
     ForgotPasswordController controller;
@@ -14,7 +13,7 @@ public class ForgotPasswordModel {
     }
 
     // Returns true if username exists
-    public Map<String, String> getUserInfo(String uname) {
+    public User getUserInfo(String uname) {
         return this.controller.getDBManager().query.getUserInfo(uname);
     }
 

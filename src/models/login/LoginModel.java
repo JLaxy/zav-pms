@@ -1,13 +1,13 @@
 package models.login;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import controllers.login.LoginController;
 import models.ParentModel;
 import models.helpers.DateHelper;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
+import models.schemas.User;
 
 public class LoginModel extends ParentModel {
 
@@ -37,7 +37,7 @@ public class LoginModel extends ParentModel {
     }
 
     // Returning user information (level of access, userID)
-    public Map<String, String> getUserInfo(String uname, String pass) {
+    public User getUserInfo(String uname, String pass) {
         try {
             return this.controller.getDBManager().query.userLogin(uname, pass);
 

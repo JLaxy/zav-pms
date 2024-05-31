@@ -1,13 +1,12 @@
 package controllers.login;
 
-import java.util.Map;
-
 import controllers.ParentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import models.login.ForgotPasswordModel;
+import models.schemas.User;
 
 /*
  * ForgotPasswordController
@@ -30,10 +29,11 @@ public class ForgotPasswordController extends ParentController {
     public void nextAction(ActionEvent e) {
         String uName = unameField.getText();
         // Retrieving info of user
-        Map<String, String> userInfo = this.model.getUserInfo(uName);
+        User userInfo = this.model.getUserInfo(uName);
 
         // If ID is empty; then means user does not exist
-        if (userInfo.get("id") != "" && Integer.valueOf(userInfo.get("id")) != 1) {
+
+        if (userInfo.getId() != 0 && userInfo.getId() != 1) {
             // Navigate to next screen
             PasswordQuestionController nextController = (PasswordQuestionController) initializeNextScreen(
                     "../../views/fxmls/login/PasswordQuestionView.fxml", this.loggedInUserInfo);
@@ -44,7 +44,7 @@ public class ForgotPasswordController extends ParentController {
             // Configure controller
             nextController.configureController(userInfo);
             // Logging Password Reset Action to Database
-            this.model.logPasswordReset(userInfo.get("id"), userInfo.get("uname"));
+            this.model.logPasswordReset(String.valueOf(userInfo.getId()), userInfo.getUname());
         }
     }
 

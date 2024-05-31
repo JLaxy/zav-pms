@@ -54,7 +54,7 @@ public class OTPLoginController extends ParentController {
     public void pressed() {
         if (this.model.isCorrectOTP(otpField.getText())) {
             // Log successful login of user in database
-            this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+            this.model.logOTPAuthentication(this.loggedInUserInfo.getId(),
                     UserLogActions.Actions.SUCCESSFUL_LOGIN);
             // Redirect to NavigatorView
             PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
@@ -72,7 +72,7 @@ public class OTPLoginController extends ParentController {
                 // Disabling Controls
                 allowControlsTo(false);
                 // Logging OTP Fail
-                this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+                this.model.logOTPAuthentication(this.loggedInUserInfo.getId(),
                         UserLogActions.Actions.FAILED_OTP);
                 // Showing Pop-Up dialog
                 PopupDialog.showCustomErrorDialog("You have failed the OTP Authentication! You will be logged out.");
@@ -87,7 +87,7 @@ public class OTPLoginController extends ParentController {
     public void cancelAction() {
         // Confirmation Diaglog
         if (PopupDialog.cancelOperationDialog() == JOptionPane.YES_OPTION) {
-            this.model.logOTPAuthentication(Integer.parseInt(this.loggedInUserInfo.get("id")),
+            this.model.logOTPAuthentication(this.loggedInUserInfo.getId(),
                     UserLogActions.Actions.CANCELLED_OTP);
             this.rootSwitcher.goBack();
         }

@@ -1,16 +1,15 @@
 package controllers.login;
 
-import java.util.Map;
 import java.util.Timer;
 
 import controllers.ParentController;
-import enums.AccountStatuses;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import models.login.LoginModel;
+import models.schemas.User;
 import models.helpers.LoginCooldownTimerTask;
 import models.helpers.PopupDialog;
 
@@ -36,6 +35,7 @@ public class LoginController extends ParentController {
         checkCooldown();
     }
 
+    // Returns Error Label
     public Label getErrorLabel() {
         return this.errorLabel;
     }
@@ -44,19 +44,18 @@ public class LoginController extends ParentController {
     public void loginAction(ActionEvent e) {
         try {
             // Retrieving user information from model
-            Map<String, String> userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
+            User userInfo = this.model.getUserInfo(unameField.getText(), passField.getText());
             // If user exists
-            if (userInfo.get("id") != "") {
+            if (userInfo.getId() != 0) {
                 // If user account is disabled
-                if (userInfo.get("account_status_id")
-                        .compareTo(String.valueOf(AccountStatuses.Status.DISABLED.getValue())) == 0) {
+                if (userInfo.getAccount_status_id() == "Disabled") {
                     PopupDialog.showCustomErrorDialog(
                             "Your account is currently disabled. Please contact your administrator!");
                     return;
                 }
                 System.out.println(
-                        "exists: " + userInfo.get("id") + ", " + userInfo.get("uname") + ", "
-                                + userInfo.get("account_status_id") + ", " + userInfo.get("level_of_access_id"));
+                        "exists: " + userInfo.getId() + ", " + userInfo.getUname() + ", "
+                                + userInfo.getAccount_status_id() + ", " + userInfo.getLevel_of_access_id());
                 // Hiding error label
                 errorLabel.setVisible(false);
                 this.model.resetAttempts();
@@ -66,7 +65,7 @@ public class LoginController extends ParentController {
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
                         "../../views/fxmls/login/OTPLoginView.fxml", userInfo);
-                nextController.initialize(userInfo.get("email"));
+                nextController.initialize(userInfo.getEmail());
             } else {
                 System.out.println("does not exists");
                 // Updating login attempt

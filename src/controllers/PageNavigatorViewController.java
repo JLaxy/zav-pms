@@ -43,8 +43,8 @@ public class PageNavigatorViewController extends ParentController {
     public void configureScreen() {
         System.out.println("Initializing HomePage with user info: " + this.loggedInUserInfo);
         // Checks if valid user info
-        if (this.loggedInUserInfo != null && this.loggedInUserInfo.containsKey("uname")) {
-            String uname = this.loggedInUserInfo.get("uname");
+        if (this.loggedInUserInfo != null && this.loggedInUserInfo.getUname() != null) {
+            String uname = this.loggedInUserInfo.getUname();
 
             System.out.println("Initializing with username: " + uname); // Debugging statement
 
@@ -62,22 +62,22 @@ public class PageNavigatorViewController extends ParentController {
     private void navigateToHomepage() {
         try {
             // Get level of access
-            String loa = this.loggedInUserInfo.get("level_of_access_id");
+            String loa = this.loggedInUserInfo.getLevel_of_access_id();
             FXMLLoader rootLoader = null;
 
             // Assign FXML file to be loaded according to LOA
             switch (loa) {
                 // Admin
-                case "1":
+                case "Admin":
                     rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/AdminHomePage.fxml"));
                     break;
                 // Kitchen Staff
-                case "2":
+                case "Kitchen Staff":
                     rootLoader = new FXMLLoader(
                             getClass().getResource("../views/fxmls/homepage/KitchenStaffHomePage.fxml"));
                     break;
                 // Cashier
-                case "3":
+                case "Cashier":
                     rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/CashierHomePage.fxml"));
                     break;
                 default:
@@ -118,8 +118,8 @@ public class PageNavigatorViewController extends ParentController {
         // Show confirmation dialog
         if (PopupDialog.confirmOperationDialog("Are you sure you want to logout?") == JOptionPane.YES_OPTION) {
             // Logging user logout action to database
-            this.model.logUserLogout(Integer.valueOf(this.loggedInUserInfo.get("id")),
-                    this.loggedInUserInfo.get("uname"));
+            this.model.logUserLogout(this.loggedInUserInfo.getId(),
+                    this.loggedInUserInfo.getUname());
             System.out.println("logging out...");
             this.borderPaneRootSwitcher.getPageNavigatorViewController().rootSwitcher.logout();
         }

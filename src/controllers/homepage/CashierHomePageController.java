@@ -18,9 +18,9 @@ public class CashierHomePageController extends ParentController {
     public void configureScreen() {
         System.out.println("Initializing CashierHomePage with user info: " + this.loggedInUserInfo);
         // Checks if valid user info
-        if (this.loggedInUserInfo != null && this.loggedInUserInfo.containsKey("uname")) {
-            String uname = this.loggedInUserInfo.get("uname");
-            String fname = this.loggedInUserInfo.get("fname").toUpperCase();
+        if (this.loggedInUserInfo != null && this.loggedInUserInfo.getUname() != null) {
+            String uname = this.loggedInUserInfo.getUname();
+            String fname = this.loggedInUserInfo.getFName().toUpperCase();
 
             System.out.println("Initializing with username: " + uname + " LINE 25"); // Debugging statement
 

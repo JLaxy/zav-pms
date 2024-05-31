@@ -54,9 +54,9 @@ public class NewPasswordController extends ParentController {
         newPassErrorLabel.setText("");
 
         System.out.println("changing password to " + newPassword + "...");
-        if (this.model.updatePassword(this.loggedInUserInfo.get("uname"), newPassword)) {
+        if (this.model.updatePassword(this.loggedInUserInfo.getUname(), newPassword)) {
             PopupDialog.showInfoDialog("Updated Password",
-                    "Successfully updated password of user \"" + this.loggedInUserInfo.get("uname") + "\"");
+                    "Successfully updated password of user \"" + this.loggedInUserInfo.getUname() + "\"");
             // Return to login view
             rootSwitcher.goBack(3);
         }

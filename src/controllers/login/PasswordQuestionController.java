@@ -1,7 +1,5 @@
 package controllers.login;
 
-import java.util.Map;
-
 import javax.swing.JOptionPane;
 
 import controllers.ParentController;
@@ -10,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import models.login.PasswordQuestionModel;
+import models.schemas.User;
 import models.helpers.PopupDialog;
 
 public class PasswordQuestionController extends ParentController {
@@ -19,7 +18,7 @@ public class PasswordQuestionController extends ParentController {
     private TextField answerField;
 
     private String question, answer;
-    private Map<String, String> userInfo;
+    private User userInfo;
 
     private PasswordQuestionModel model;
 
@@ -35,7 +34,7 @@ public class PasswordQuestionController extends ParentController {
     }
 
     // Initializes screen; displays question
-    public void configureController(Map<String, String> userInfo) {
+    public void configureController(User userInfo) {
         this.userInfo = userInfo;
         // Hide error label
         this.errorLabel.setVisible(false);
@@ -48,7 +47,7 @@ public class PasswordQuestionController extends ParentController {
         // Confirmation Diaglog
         if (PopupDialog.cancelOperationDialog() == JOptionPane.YES_OPTION) {
             // Logging to database
-            this.model.logAction(userInfo.get("id"), userInfo.get("uname"));
+            this.model.logAction(String.valueOf(userInfo.getId()), userInfo.getUname());
             this.rootSwitcher.goBack(2);
         }
     }
