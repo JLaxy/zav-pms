@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import enums.DatabaseLists;
 import enums.UserLogActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,10 +63,6 @@ public class DBQuery {
                 result.next();
                 result.close();
                 User userInfo = getUserInfo(uName);
-                // Logging initializing OTP authentication to database
-                logAction(userInfo.getId(), uName,
-                        UserLogActions.Actions.INITIATED_OTP.getValue(),
-                        DateHelper.getCurrentDateTimeString(), "");
                 return userInfo;
             }
         } catch (Exception e) {
@@ -254,6 +251,83 @@ public class DBQuery {
         }
         return null;
 
+    }
+
+    // Returns list of items predefined in database
+    public ObservableList<String> getListOnDatabase(DatabaseLists.Lists listType) {
+        String query = "";
+
+        switch (listType) {
+            case DatabaseLists.Lists.SECURITY_QUESTIONS:
+                query = "SELECT unique_question FROM unique_questions;";
+                break;
+            case DatabaseLists.Lists.ACCOUNT_STATUSES:
+                query = "SELECT status FROM account_status;";
+                break;
+            case DatabaseLists.Lists.LEVELS_OF_ACCESS:
+                query = "SELECT level_of_access FROM level_of_access;";
+            default:
+                break;
+        }
+
+        ObservableList<String> databaseList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                query)) {
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("Error: List is empty");
+                result.close();
+            } else {
+                // Iterate through each question
+                while (result.next()) {
+                    databaseList.add(result.getString(result.getMetaData().getColumnName(1)));
+                }
+                result.close();
+                // Return question list
+                return databaseList;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return null;
+    }
+
+    // Updates selected user on database
+    public boolean updateUserInfo(String targetUser, User updatedUserInfo, User loggedInUser) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "UPDATE users SET uname = (?), pass = (?), email = (?), level_of_access_id = (?), account_status_id = (?), unique_question_id = (?), unique_question_answer = (?) WHERE BINARY uname = (?);")) {
+
+            // Putting in values
+            stmt.setString(1, updatedUserInfo.getUname());
+            stmt.setString(2, updatedUserInfo.getPass());
+            stmt.setString(3, updatedUserInfo.getEmail());
+            stmt.setInt(4, updatedUserInfo.getLevel_of_access_id());
+            stmt.setInt(5, updatedUserInfo.getAccount_status_id());
+            stmt.setInt(6, updatedUserInfo.getUniqueQuestionID());
+            stmt.setString(7, updatedUserInfo.getUniqueQuestionAnswer());
+            stmt.setString(8, targetUser);
+
+            stmt.execute();
+
+            // Logging account update to database
+            logAction(1, loggedInUser.getUname(), UserLogActions.Actions.SUCCESS_PASSWORD_RESET.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "updated account details of user " + "\"" + updatedUserInfo.getUname() + "\"");
+            // Return true if success
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return false if error
+        return false;
     }
 
 }

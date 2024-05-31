@@ -43,8 +43,12 @@ public class OTPLoginController extends ParentController {
     // Immediately sets up controller and send OTP
     @FXML
     public void initialize(String email) {
-        errorLabel.setVisible(false);
         this.model = new OTPLoginModel(this);
+
+        // Logging initializing OTP authentication to database
+        this.model.logOTPAuthentication(loggedInUserInfo.getId(), UserLogActions.Actions.INITIATED_OTP);
+        errorLabel.setVisible(false);
+
         // Send OTP to user attempting to login
         setUserEmail(email);
         sendOTP();

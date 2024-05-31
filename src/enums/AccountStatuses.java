@@ -9,20 +9,20 @@ package enums;
 
 public class AccountStatuses {
     public enum Status {
-        // ACTION_NAME(action_id_in_database)
+        // ACCOUNT_STATUS(account_status_id_in_database)
         ACTIVE(1),
         DISABLED(2);
 
-        private final int action_id;
+        private final int account_status_id;
 
         // Constructor for ENUM
-        Status(int action_id) {
-            this.action_id = action_id;
+        Status(int account_status_id) {
+            this.account_status_id = account_status_id;
         }
 
-        // Returns the value of the action_id equivalent to database
+        // Returns the value of the account_status_id equivalent to database
         public int getValue() {
-            return this.action_id;
+            return this.account_status_id;
         }
     }
 }

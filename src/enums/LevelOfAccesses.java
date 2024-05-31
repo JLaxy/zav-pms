@@ -9,21 +9,21 @@ package enums;
 
 public class LevelOfAccesses {
     public enum AccessLevel {
-        // ACTION_NAME(action_id_in_database)
+        // LEVEL_OF_ACCESS(level_of_access_id_in_db)
         ADMIN(1),
         KITCHEN_STAFF(2),
         CASHIER(3);
 
-        private final int action_id;
+        private final int level_of_access_id;
 
         // Constructor for ENUM
-        AccessLevel(int action_id) {
-            this.action_id = action_id;
+        AccessLevel(int level_of_access_id) {
+            this.level_of_access_id = level_of_access_id;
         }
 
-        // Returns the value of the action_id equivalent to database
+        // Returns the value of the level_of_access equivalent to database
         public int getValue() {
-            return this.action_id;
+            return this.level_of_access_id;
         }
     }
 }

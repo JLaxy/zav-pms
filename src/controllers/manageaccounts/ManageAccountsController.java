@@ -53,44 +53,48 @@ public class ManageAccountsController extends ParentController {
         userIdCol.setCellValueFactory(new PropertyValueFactory<User, Integer>("id"));
         uNameCol.setCellValueFactory(new PropertyValueFactory<User, String>("uname"));
         passCol.setCellValueFactory(new PropertyValueFactory<User, String>("pass"));
-        loaCol.setCellValueFactory(new PropertyValueFactory<User, String>("level_of_access_id"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("account_status_id"));
+        loaCol.setCellValueFactory(new PropertyValueFactory<User, String>("level_of_access_id_string"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("account_status_id_string"));
     }
 
     // Returns all of the existing users from database
     public void syncUserTableView() {
-        this.userList = FXCollections.observableArrayList();
-        // Defining task; Retrieving users from database using another thread
-        Service<ObservableList<User>> databaseService = new Service<ObservableList<User>>() {
-            @Override
-            protected Task<ObservableList<User>> createTask() {
-                return new Task<ObservableList<User>>() {
-                    @Override
-                    protected ObservableList<User> call() throws Exception {
-                        return model.getAllUsers();
-                    }
-                };
-            }
+        try {
+            this.userList = FXCollections.observableArrayList();
+            // Defining task; Retrieving users from database using another thread
+            Service<ObservableList<User>> databaseService = new Service<ObservableList<User>>() {
+                @Override
+                protected Task<ObservableList<User>> createTask() {
+                    return new Task<ObservableList<User>>() {
+                        @Override
+                        protected ObservableList<User> call() throws Exception {
+                            return model.getAllUsers();
+                        }
+                    };
+                }
 
-        };
+            };
 
-        // Do after completing service
-        databaseService.setOnSucceeded(e -> {
-            // Get retrieved value
-            this.userList = databaseService.getValue();
+            // Do after completing service
+            databaseService.setOnSucceeded(e -> {
+                // Get retrieved value
+                this.userList = databaseService.getValue();
 
-            // Update table view with list of users where password is muted
-            accountsTableView.setItems(
-                    this.model.mutePasswords(this.model.copyUserList(this.userList)));
+                // Update table view with list of users where password is muted
+                accountsTableView.setItems(
+                        this.model.mutePasswords(this.model.copyUserList(this.userList)));
 
-            // Exit Loading Screen
-            this.borderPaneRootSwitcher.exitLoadingScreen_BP();
-        });
+                // Exit Loading Screen
+                this.borderPaneRootSwitcher.exitLoadingScreen_BP();
+            });
 
-        // Start service
-        databaseService.start();
-        // Show loading Screen
-        this.borderPaneRootSwitcher.showLoadingScreen_BP();
+            // Start service
+            databaseService.start();
+            // Show loading Screen
+            this.borderPaneRootSwitcher.showLoadingScreen_BP();
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
     }
 
     @FXML
@@ -114,7 +118,7 @@ public class ManageAccountsController extends ParentController {
             // Configuring controller
             UserDetailsController controller = (UserDetailsController) this.initializePopUpDialog(
                     "../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
-            controller.configureUserInfo(selectedUser);
+            controller.configureUserInfo(selectedUser, this);
         } catch (Exception e) {
             PopupDialog.showCustomErrorDialog("Please select a user first!");
         }

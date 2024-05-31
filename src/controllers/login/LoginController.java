@@ -3,6 +3,7 @@ package controllers.login;
 import java.util.Timer;
 
 import controllers.ParentController;
+import enums.AccountStatuses;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -48,7 +49,7 @@ public class LoginController extends ParentController {
             // If user exists
             if (userInfo.getId() != 0) {
                 // If user account is disabled
-                if (userInfo.getAccount_status_id() == "Disabled") {
+                if (userInfo.getAccount_status_id() == AccountStatuses.Status.DISABLED.getValue()) {
                     PopupDialog.showCustomErrorDialog(
                             "Your account is currently disabled. Please contact your administrator!");
                     return;

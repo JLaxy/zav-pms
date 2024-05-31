@@ -8,8 +8,9 @@ import enums.AccountStatuses;
 import enums.LevelOfAccesses;
 
 public class User {
-    int id, level_of_access_id, account_status_id, unique_question_id;
-    String uname, pass, email, fname, lname, unique_question_answer;
+    private int id, level_of_access_id, account_status_id, unique_question_id;
+    private String uname, pass, email, fname, lname, unique_question_answer, level_of_access_id_string,
+            account_status_id_string;
 
     // Null User Constructor
     public User() {
@@ -28,6 +29,24 @@ public class User {
         this.account_status_id = account_status_id;
         this.unique_question_id = unique_question_id;
         this.unique_question_answer = unique_question_answer;
+
+        // Updates string equivalents of LOA and Account Status
+        updateStringEquivalents();
+    }
+
+    // Updates string equivalents of LOA and Account Status
+    public void updateStringEquivalents() {
+        if (this.level_of_access_id == LevelOfAccesses.AccessLevel.ADMIN.getValue())
+            this.level_of_access_id_string = "Admin";
+        else if (this.level_of_access_id == LevelOfAccesses.AccessLevel.CASHIER.getValue())
+            this.level_of_access_id_string = "Cashier";
+        else if (this.level_of_access_id == LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())
+            this.level_of_access_id_string = "Kitchen Staff";
+
+        if (this.account_status_id == AccountStatuses.Status.ACTIVE.getValue())
+            this.account_status_id_string = "Active";
+        else if (this.account_status_id == AccountStatuses.Status.DISABLED.getValue())
+            this.account_status_id_string = "Disabled";
     }
 
     // Returns copy of this user
@@ -41,7 +60,11 @@ public class User {
         return this.id;
     }
 
-    public String getLevel_of_access_id() {
+    public int getLevel_of_access_id() {
+        return this.level_of_access_id;
+    }
+
+    public String getLevel_of_access_string() {
         if (this.level_of_access_id == LevelOfAccesses.AccessLevel.ADMIN.getValue())
             return "Admin";
         else if (this.level_of_access_id == LevelOfAccesses.AccessLevel.CASHIER.getValue())
@@ -51,7 +74,11 @@ public class User {
         return "error";
     }
 
-    public String getAccount_status_id() {
+    public int getAccount_status_id() {
+        return this.account_status_id;
+    }
+
+    public String getAccount_status_string() {
         if (this.account_status_id == AccountStatuses.Status.ACTIVE.getValue())
             return "Active";
         else if (this.level_of_access_id == AccountStatuses.Status.DISABLED.getValue())
@@ -89,5 +116,24 @@ public class User {
 
     public String getUniqueQuestionAnswer() {
         return this.unique_question_answer;
+    }
+
+    public String getLevel_of_access_id_string() {
+        return this.level_of_access_id_string;
+    }
+
+    public String getAccount_status_id_string() {
+        return this.account_status_id_string;
+    }
+
+    // Activates / Disables Account
+    public void toggleAccountStatus() {
+        // If active, then disable
+        if (this.account_status_id == AccountStatuses.Status.ACTIVE.getValue()) {
+            this.account_status_id = AccountStatuses.Status.DISABLED.getValue();
+            return;
+        }
+        // Activate
+        this.account_status_id = AccountStatuses.Status.ACTIVE.getValue();
     }
 }

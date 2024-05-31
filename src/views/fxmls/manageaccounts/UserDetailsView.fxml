@@ -68,10 +68,6 @@
             </Label>
          </children>
       </VBox>
-      <Button fx:id="showPassButton" layoutX="412.0" layoutY="208.0" mnemonicParsing="false" text="B">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
       <VBox layoutX="564.0" layoutY="166.0" prefHeight="200.0" prefWidth="470.0" spacing="20.0">
          <children>
             <TextField fx:id="unameField" promptText="username">

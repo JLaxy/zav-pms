@@ -62,7 +62,7 @@ public class PageNavigatorViewController extends ParentController {
     private void navigateToHomepage() {
         try {
             // Get level of access
-            String loa = this.loggedInUserInfo.getLevel_of_access_id();
+            String loa = this.loggedInUserInfo.getLevel_of_access_string();
             FXMLLoader rootLoader = null;
 
             // Assign FXML file to be loaded according to LOA

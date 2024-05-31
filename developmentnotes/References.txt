@@ -109,3 +109,6 @@ https://www.youtube.com/watch?v=qQcr_JMxWRw
 
 JavaFX CSS Guide
 https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
+
+Get columnnames in resultset
+https://stackoverflow.com/questions/696782/retrieve-column-names-from-java-sql-resultset
