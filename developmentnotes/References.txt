@@ -112,3 +112,6 @@ https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
 
 Get columnnames in resultset
 https://stackoverflow.com/questions/696782/retrieve-column-names-from-java-sql-resultset
+
+Do task from another thread
+https://stackoverflow.com/questions/44239194/javafx-updating-ui-from-a-thread-java-8

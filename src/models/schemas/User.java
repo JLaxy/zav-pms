@@ -4,6 +4,9 @@
 
 package models.schemas;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 import enums.AccountStatuses;
 import enums.LevelOfAccesses;
 
@@ -136,4 +139,30 @@ public class User {
         // Activate
         this.account_status_id = AccountStatuses.Status.ACTIVE.getValue();
     }
+
+    // Returns string that describes account changes
+    public static String[] getAccountChangesMessage(User oldUserInfo, User newUserInfo) {
+
+        ArrayList<String> changes = new ArrayList<String>();
+        // Load all fields in the class (private included)
+        Field[] attributes = oldUserInfo.getClass().getDeclaredFields();
+
+        for (Field field : attributes) {
+            try {
+                // If attributed value was changed
+                if (field.get(oldUserInfo).toString().compareTo(field.get(newUserInfo).toString()) != 0) {
+                    changes.add("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to " + field.get(newUserInfo));
+                    System.out.println("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to " + field.get(newUserInfo));
+                }
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return changes.toArray(new String[changes.size()]);
+    }
+
 }

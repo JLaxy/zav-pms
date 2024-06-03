@@ -38,7 +38,17 @@ public class UserDetailsController extends ParentController {
 
     @FXML
     private void deactivate() {
-        System.out.println("deactivating...");
+        // If success
+        if (this.model.deactivate(this.selectedUser, this.loggedInUserInfo)) {
+            // Exit pop-up dialog
+            this.borderPaneRootSwitcher.exitPopUpDialog();
+            // Show dialog
+            PopupDialog.showInfoDialog("Deactivated Account",
+                    "Successfully deactivated user account \"" + this.selectedUser.getUname() +
+                            "\"");
+            // Update Table View
+            this.manageAccountsController.syncUserTableView();
+        }
     }
 
     // Reactivate user account
@@ -53,7 +63,7 @@ public class UserDetailsController extends ParentController {
             PopupDialog.showInfoDialog("Activated Account",
                     "Successfully activated user account \"" + this.selectedUser.getUname() +
                             "\"");
-            // Update Table View; CAUSES ERROR IDK WHY
+            // Update Table View
             this.manageAccountsController.syncUserTableView();
         }
     }

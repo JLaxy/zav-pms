@@ -299,7 +299,7 @@ public class DBQuery {
     }
 
     // Updates selected user on database
-    public boolean updateUserInfo(String targetUser, User updatedUserInfo, User loggedInUser) {
+    public boolean updateUserInfo(User oldUserInfo, User updatedUserInfo, User loggedInUser, String[] changes) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -313,14 +313,20 @@ public class DBQuery {
             stmt.setInt(5, updatedUserInfo.getAccount_status_id());
             stmt.setInt(6, updatedUserInfo.getUniqueQuestionID());
             stmt.setString(7, updatedUserInfo.getUniqueQuestionAnswer());
-            stmt.setString(8, targetUser);
+            stmt.setString(8, oldUserInfo.getUname());
 
             stmt.execute();
 
+            String changeMessage = "";
+            // Getting changes in array
+            for (String change : changes) {
+                changeMessage += (change + ", ");
+            }
+
             // Logging account update to database
-            logAction(1, loggedInUser.getUname(), UserLogActions.Actions.SUCCESS_PASSWORD_RESET.getValue(),
+            logAction(loggedInUser.getId(), loggedInUser.getUname(), UserLogActions.Actions.UPDATED_USER_ACCOUNT.getValue(),
                     DateHelper.getCurrentDateTimeString(),
-                    "updated account details of user " + "\"" + updatedUserInfo.getUname() + "\"");
+                    "updated account details of user " + "\"" + updatedUserInfo.getUname() + "\"; " + changeMessage);
             // Return true if success
             return true;
         } catch (Exception e) {

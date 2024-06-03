@@ -39,11 +39,28 @@ public class UserDetailsModel {
             PopupDialog.showCustomErrorDialog("User account is already active!");
             return false;
         }
-        // Toggling account status
-        selectedUser.toggleAccountStatus();
+
+        User updatedUser = selectedUser.getCopy();
+        updatedUser.toggleAccountStatus();
 
         // Save changes to database
-        return this.controller.getDBManager().query.updateUserInfo(selectedUser.getUname(), selectedUser, loggedInUser);
+        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser, User.getAccountChangesMessage(selectedUser, updatedUser));
+    }
+
+    // Reactivate current user
+    public boolean deactivate(User selectedUser, User loggedInUser) {
+        // If already disabled
+        if (this.controller.getDBManager().query.getUserInfo(selectedUser.getUname())
+                .getAccount_status_id() == AccountStatuses.Status.DISABLED.getValue()) {
+            PopupDialog.showCustomErrorDialog("User account is already disabled!");
+            return false;
+        }
+        
+        User updatedUser = selectedUser.getCopy();
+        updatedUser.toggleAccountStatus();
+
+        // Save changes to database
+        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser, User.getAccountChangesMessage(selectedUser, updatedUser));
     }
 
 }

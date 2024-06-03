@@ -19,7 +19,8 @@ public class UserLogActions {
         SUCCESS_PASSWORD_RESET(7),
         SUCCESSFUL_LOGIN(8),
         USER_LOGOUT(9),
-        VIEWED_ACCOUNT_DETAILS(10);
+        VIEWED_ACCOUNT_DETAILS(10),
+        UPDATED_USER_ACCOUNT(11);
 
         private final int action_id;
 
