@@ -92,11 +92,11 @@ public class PageNavigatorViewController extends ParentController {
             nextController.syncLoggedInUserInfo(this.loggedInUserInfo);
 
             // Configure Homescreens
-            if (loa.compareTo("1") == 0)
+            if (loa.compareTo("Admin") == 0)
                 ((AdminHomePageController) nextController).configureScreen();
-            else if (loa.compareTo("2") == 0)
+            else if (loa.compareTo("Kitchen Staff") == 0)
                 ((KitchenStaffHomePageController) nextController).configureScreen();
-            else if (loa.compareTo("3") == 0)
+            else if (loa.compareTo("Cashier") == 0)
                 ((CashierHomePageController) nextController).configureScreen();
 
             // Change View in BorderPane

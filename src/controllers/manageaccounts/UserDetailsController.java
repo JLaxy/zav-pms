@@ -33,7 +33,10 @@ public class UserDetailsController extends ParentController {
 
     @FXML
     private void update() {
-        System.out.println("updating...");
+        String loa = accountTypeCBox.getSelectionModel().getSelectedItem();
+        int secQuesId = secQuesCBox.getSelectionModel().getSelectedIndex();
+        User updatedUserInfo = new User(selectedUser.getId(), unameField.getText(), passField.getText(), emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)), selectedUser.getFName(), selectedUser.getLName(), selectedUser.getAccount_status_id(), secQuesId, secAnsField.getText());
+        updatedUserInfo.showValues();
     }
 
     @FXML

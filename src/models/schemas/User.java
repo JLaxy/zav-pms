@@ -147,22 +147,51 @@ public class User {
         // Load all fields in the class (private included)
         Field[] attributes = oldUserInfo.getClass().getDeclaredFields();
 
+        // Iterate through attributes
         for (Field field : attributes) {
             try {
-                // If attributed value was changed
+                // If value of attribute on previous is different to new
                 if (field.get(oldUserInfo).toString().compareTo(field.get(newUserInfo).toString()) != 0) {
-                    changes.add("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to " + field.get(newUserInfo));
-                    System.out.println("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to " + field.get(newUserInfo));
+                    switch (field.getName()) {
+                        // For account status id
+                        case "account_status_id":
+                            changes.add("changed account status" + " from "
+                                    + (field.get(oldUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled")
+                                    + " to "
+                                    + (field.get(newUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled"));
+                            System.out.println("changed account status" + " from "
+                                    + (field.get(oldUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled")
+                                    + " to "
+                                    + (field.get(newUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled"));
+                            break;
+                        // For other attributes
+                        default:
+                            changes.add("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to "
+                                    + field.get(newUserInfo));
+                            System.out.println("changed " + field.getName() + " from " + field.get(oldUserInfo) + " to "
+                                    + field.get(newUserInfo));
+                            break;
+                    }
                 }
-            } catch (IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            } catch (Exception e) {
+                // TODO: handle exception
             }
         }
+        // Return list of changes in array
         return changes.toArray(new String[changes.size()]);
+    }
+
+    public void showValues(){
+        // Load all fields in the class (private included)
+        Field[] attributes = this.getClass().getDeclaredFields();
+
+        for (Field field : attributes) {
+            try {
+                System.out.println(field.getName() + ": " + field.get(this));
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
     }
 
 }
