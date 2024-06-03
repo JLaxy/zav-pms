@@ -1,11 +1,11 @@
 package controllers.manageaccounts;
 
 import controllers.ParentController;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -38,10 +38,12 @@ public class ManageAccountsController extends ParentController {
         this.accountsTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>() {
             @Override
             public void changed(ObservableValue<? extends User> arg0, User arg1, User arg2) {
-                // Set selected user by the user as the selectedUser
-                selectedUser = accountsTableView.getSelectionModel().getSelectedItem();
-                // Getting index of currently selected user
-                selectedUser = userList.get(accountsTableView.getItems().indexOf(selectedUser));
+                if (accountsTableView.getSelectionModel().getSelectedItem() != null) {
+                    // Set selected user by the user as the selectedUser
+                    selectedUser = accountsTableView.getSelectionModel().getSelectedItem();
+                    // Getting index of currently selected user
+                    selectedUser = userList.get(accountsTableView.getItems().indexOf(selectedUser));
+                }
             }
 
         });
@@ -61,37 +63,28 @@ public class ManageAccountsController extends ParentController {
     public void syncUserTableView() {
         try {
             this.userList = FXCollections.observableArrayList();
-            // Defining task; Retrieving users from database using another thread
-            Service<ObservableList<User>> databaseService = new Service<ObservableList<User>>() {
-                @Override
-                protected Task<ObservableList<User>> createTask() {
-                    return new Task<ObservableList<User>>() {
-                        @Override
-                        protected ObservableList<User> call() throws Exception {
-                            return model.getAllUsers();
-                        }
-                    };
-                }
-
-            };
-
-            // Do after completing service
-            databaseService.setOnSucceeded(e -> {
-                // Get retrieved value
-                this.userList = databaseService.getValue();
-
-                // Update table view with list of users where password is muted
-                accountsTableView.setItems(
-                        this.model.mutePasswords(this.model.copyUserList(this.userList)));
-
-                // Exit Loading Screen
-                this.borderPaneRootSwitcher.exitLoadingScreen_BP();
-            });
-
-            // Start service
-            databaseService.start();
             // Show loading Screen
             this.borderPaneRootSwitcher.showLoadingScreen_BP();
+
+            // Create thread
+            Thread tableViewSyncer = new Thread(new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    Platform.runLater(() -> {
+                        // Get retrieved value
+                        userList = model.getAllUsers();
+                        // Update table view with list of users where password is muted
+                        accountsTableView.setItems(model.mutePasswords(model.copyUserList(userList)));
+                        // Exit Loading Screen
+                        borderPaneRootSwitcher.exitLoadingScreen_BP();
+                    });
+                    return null;
+                }
+            });
+
+            tableViewSyncer.setDaemon(true);
+            tableViewSyncer.start();
+
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }

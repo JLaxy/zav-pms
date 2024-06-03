@@ -20,20 +20,20 @@ public class Debugger {
                  * COMMENT THE APPROPRIATE CODE
                  */
 
-                // JUNELL
-                String[] COMMAND = new String[] {
-                        "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u", "pmsprogram",
-                        "-pzavpms@123", "zav-pms-db",
-                        "-r",
-                        "F:\\Jownjown\\Education\\3rd Year\\Summer\\Software Engineering 2\\Final Project\\zav-pms\\databaseexport\\data.sql" };
-
-                // // CLARK
+                // // JUNELL
                 // String[] COMMAND = new String[] {
-                // "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
-                // "pmsprogram",
-                // "-pzavpms@123", "zav-pms-db",
-                // "-r",
-                // "C:\\Users\\Clark\\Desktop\\zavs\\zav-pms\\databaseexport\\data.sql" };
+                //         "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u", "pmsprogram",
+                //         "-pzavpms@123", "zav-pms-db",
+                //         "-r",
+                //         "F:\\Jownjown\\Education\\3rd Year\\Summer\\Software Engineering 2\\Final Project\\zav-pms\\databaseexport\\data.sql" };
+
+                // CLARK
+                String[] COMMAND = new String[] {
+                "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
+                "pmsprogram",
+                "-pzavpms@123", "zav-pms-db",
+                "-r",
+                "C:\\Users\\Clark\\Desktop\\zavs\\zav-pms\\databaseexport\\data.sql" };
 
                 Runtime runner = Runtime.getRuntime();
                 // Executing command

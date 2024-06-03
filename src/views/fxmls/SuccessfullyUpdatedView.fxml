@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1366.0" stylesheets="@css/PopUpDialogs.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.manageaccounts.UserDetailsController">
+   <children>
+      <Rectangle fx:id="backgroundRect" arcHeight="5.0" arcWidth="5.0" fill="#2197ff4f" height="720.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1366.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="410.0" layoutX="307.0" layoutY="113.0" strokeType="INSIDE" strokeWidth="0.0" width="753.0">
+         <stroke>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </stroke>
+      </Rectangle>
+      <AnchorPane layoutX="307.0" layoutY="113.0" prefHeight="85.0" prefWidth="754.0" style="-fx-background-color: #D552A0;">
+         <children>
+            <Button layoutX="680.0" layoutY="33.0" mnemonicParsing="false" onAction="#x" fx:id="xButton">
+               <graphic>
+                  <ImageView fx:id="exitDialogButton" fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../assets/images/x-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+      </AnchorPane>
+      <Label layoutX="304.0" layoutY="262.0" prefHeight="163.0" prefWidth="754.0" text="Successfully&#10;Updated!" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+         <padding>
+            <Insets left="250.0" />
+         </padding>
+      </Label>
+   </children>
+</AnchorPane>
