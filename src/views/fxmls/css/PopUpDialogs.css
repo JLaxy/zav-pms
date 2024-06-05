@@ -3,7 +3,7 @@
   -fx-opacity: 0.6;
 }
 
-#updateButton,
+#saveButton,
 #deactivateButton,
 #reactivateButton {
   -fx-text-fill: white;

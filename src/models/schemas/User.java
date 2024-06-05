@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import enums.AccountStatuses;
 import enums.LevelOfAccesses;
+import models.helpers.PopupDialog;
 
 public class User {
     private int id, level_of_access_id, account_status_id, unique_question_id;
@@ -67,26 +68,8 @@ public class User {
         return this.level_of_access_id;
     }
 
-    public String getLevel_of_access_string() {
-        if (this.level_of_access_id == LevelOfAccesses.AccessLevel.ADMIN.getValue())
-            return "Admin";
-        else if (this.level_of_access_id == LevelOfAccesses.AccessLevel.CASHIER.getValue())
-            return "Cashier";
-        else if (this.level_of_access_id == LevelOfAccesses.AccessLevel.KITCHEN_STAFF.getValue())
-            return "Kitchen Staff";
-        return "error";
-    }
-
     public int getAccount_status_id() {
         return this.account_status_id;
-    }
-
-    public String getAccount_status_string() {
-        if (this.account_status_id == AccountStatuses.Status.ACTIVE.getValue())
-            return "Active";
-        else if (this.level_of_access_id == AccountStatuses.Status.DISABLED.getValue())
-            return "Disabled";
-        return "error";
     }
 
     public int getUniqueQuestionID() {
@@ -155,14 +138,18 @@ public class User {
                     switch (field.getName()) {
                         // For account status id
                         case "account_status_id":
-                            changes.add("changed account status" + " from "
-                                    + (field.get(oldUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled")
-                                    + " to "
-                                    + (field.get(newUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled"));
-                            System.out.println("changed account status" + " from "
-                                    + (field.get(oldUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled")
-                                    + " to "
-                                    + (field.get(newUserInfo).toString().compareTo("2") == 0 ? "Disabled" : "Enabled"));
+                            changes.add("changed account status from " + oldUserInfo.getAccount_status_id_string()
+                                    + " to " + newUserInfo.getAccount_status_id_string());
+                            System.out
+                                    .println("changed account status from " + oldUserInfo.getAccount_status_id_string()
+                                            + " to " + newUserInfo.getAccount_status_id_string());
+                            break;
+                        case "level_of_access_id":
+                            changes.add("changed level of access from " + oldUserInfo.getLevel_of_access_id_string()
+                                    + " to " + newUserInfo.getLevel_of_access_id_string());
+                            System.out.println(
+                                    "changed level of access from " + oldUserInfo.getLevel_of_access_id_string()
+                                            + " to " + newUserInfo.getLevel_of_access_id_string());
                             break;
                         // For other attributes
                         default:
@@ -174,14 +161,14 @@ public class User {
                     }
                 }
             } catch (Exception e) {
-                // TODO: handle exception
+                PopupDialog.showErrorDialog(e, "User");
             }
         }
         // Return list of changes in array
         return changes.toArray(new String[changes.size()]);
     }
 
-    public void showValues(){
+    public void showValues() {
         // Load all fields in the class (private included)
         Field[] attributes = this.getClass().getDeclaredFields();
 
@@ -189,7 +176,7 @@ public class User {
             try {
                 System.out.println(field.getName() + ": " + field.get(this));
             } catch (Exception e) {
-                // TODO: handle exception
+                PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
         }
     }

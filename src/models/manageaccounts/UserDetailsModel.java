@@ -71,4 +71,9 @@ public class UserDetailsModel {
                 User.getAccountChangesMessage(oldUserInfo, newUserInfo));
     }
 
+    // Save new user to database
+    public boolean saveNewUser(User newUser) {
+        return this.controller.getDBManager().query.saveNewUser(newUser);
+    }
+
 }

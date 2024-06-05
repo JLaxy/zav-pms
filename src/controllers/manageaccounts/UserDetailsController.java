@@ -1,6 +1,9 @@
 package controllers.manageaccounts;
 
+import javax.swing.JOptionPane;
+
 import controllers.ParentController;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -12,7 +15,7 @@ import models.schemas.User;
 public class UserDetailsController extends ParentController {
 
     @FXML
-    private TextField unameField, passField, emailField, secAnsField;
+    private TextField unameField, passField, emailField, fnameField, lnameField, secAnsField;
 
     @FXML
     private ComboBox<String> accountTypeCBox, secQuesCBox;
@@ -33,7 +36,17 @@ public class UserDetailsController extends ParentController {
     }
 
     @FXML
-    private void update() {
+    private void save() {
+        // If saving new user
+        if (this.selectedUser == null) {
+            saveNewUser();
+            return;
+        }
+
+        // Show confirmation dialog
+        if (PopupDialog.confirmOperationDialog("Do you want to save changes?") != JOptionPane.YES_OPTION)
+            return;
+
         // Retrieve values
         String loa = accountTypeCBox.getSelectionModel().getSelectedItem();
         int secQuesId = secQuesCBox.getSelectionModel().getSelectedIndex();
@@ -41,6 +54,7 @@ public class UserDetailsController extends ParentController {
         // If there is an empty textfield
         if (areFieldsEmpty()) {
             PopupDialog.showCustomErrorDialog("All fields must be filled!");
+            return;
         }
 
         // Check if password is valid
@@ -59,10 +73,13 @@ public class UserDetailsController extends ParentController {
 
         User updatedUserInfo = new User(selectedUser.getId(), unameField.getText(), passField.getText(),
                 emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)),
-                selectedUser.getFName(), selectedUser.getLName(), selectedUser.getAccount_status_id(), secQuesId,
+                fnameField.getText(), lnameField.getText(), selectedUser.getAccount_status_id(), secQuesId,
                 secAnsField.getText());
 
         updatedUserInfo.showValues();
+
+        System.out.println("fname: " + fnameField.getText());
+        System.out.println("lname: " + lnameField.getText());
 
         this.borderPaneRootSwitcher.exitPopUpDialog();
         // If failed to update
@@ -74,6 +91,16 @@ public class UserDetailsController extends ParentController {
         PopupDialog.showInfoDialog("Updated User Info",
                 "Successfully updated user info of user \"" + selectedUser.getUname() + "\"");
         this.manageAccountsController.syncUserTableView();
+
+        // If user edited info of himself, force logout
+        if (updatedUserInfo.getId() == loggedInUserInfo.getId())
+            this.borderPaneRootSwitcher.getPageNavigatorViewController().forceLogout();
+
+    }
+
+    // Will be called when user is registering a new user
+    private void saveNewUser() {
+
     }
 
     // Returns true if fields are not empty
@@ -120,10 +147,13 @@ public class UserDetailsController extends ParentController {
         this.selectedUser = selectedUser;
         this.manageAccountsController = manageAccountsController;
 
+        ObservableList<String> secQuesList = this.model.getSecurityQuestions();
+
         // Initialize combo box
-        this.secQuesCBox.setItems(this.model.getSecurityQuestions());
+        this.secQuesCBox.setItems(secQuesList);
         // Pre-select binded to user account
-        this.secQuesCBox.getSelectionModel().select(this.model.getSecurityQuestion(selectedUser.getUname()));
+        this.secQuesCBox.getSelectionModel()
+                .select(secQuesList.indexOf(this.model.getSecurityQuestion(selectedUser.getUname())) + 1);
 
         // Initialize combo box
         this.accountTypeCBox.setItems(this.model.getLevelOfAccess());
@@ -134,6 +164,8 @@ public class UserDetailsController extends ParentController {
         this.unameField.setText(selectedUser.getUname());
         this.passField.setText(selectedUser.getPass());
         this.emailField.setText(selectedUser.getEmail());
+        this.fnameField.setText(selectedUser.getFName());
+        this.lnameField.setText(selectedUser.getLName());
         this.secAnsField.setText(selectedUser.getUniqueQuestionAnswer());
     }
 }

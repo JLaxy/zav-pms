@@ -197,7 +197,7 @@ public class DBQuery {
             ResultSet result = stmt.getResultSet();
             // Checking if there are any matches
             if (isNoResult(result)) {
-                PopupDialog.showCustomErrorDialog("User \"" + uname + "\" does not exist!");
+                PopupDialog.showCustomErrorDialog("User \"" + uname + "\" does not exist! oo eto yun");
                 result.close();
             } else {
                 result.next();
@@ -303,17 +303,19 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "UPDATE users SET uname = (?), pass = (?), email = (?), level_of_access_id = (?), account_status_id = (?), unique_question_id = (?), unique_question_answer = (?) WHERE BINARY uname = (?);")) {
+                                "UPDATE users SET uname = (?), pass = (?), email = (?), fname = (?), lname = (?), level_of_access_id = (?), account_status_id = (?), unique_question_id = (?), unique_question_answer = (?) WHERE BINARY uname = (?);")) {
 
             // Putting in values
             stmt.setString(1, updatedUserInfo.getUname());
             stmt.setString(2, updatedUserInfo.getPass());
             stmt.setString(3, updatedUserInfo.getEmail());
-            stmt.setInt(4, updatedUserInfo.getLevel_of_access_id());
-            stmt.setInt(5, updatedUserInfo.getAccount_status_id());
-            stmt.setInt(6, updatedUserInfo.getUniqueQuestionID());
-            stmt.setString(7, updatedUserInfo.getUniqueQuestionAnswer());
-            stmt.setString(8, oldUserInfo.getUname());
+            stmt.setString(4, updatedUserInfo.getFName());
+            stmt.setString(5, updatedUserInfo.getLName());
+            stmt.setInt(6, updatedUserInfo.getLevel_of_access_id());
+            stmt.setInt(7, updatedUserInfo.getAccount_status_id());
+            stmt.setInt(8, updatedUserInfo.getUniqueQuestionID());
+            stmt.setString(9, updatedUserInfo.getUniqueQuestionAnswer());
+            stmt.setString(10, oldUserInfo.getUname());
 
             stmt.execute();
 
@@ -334,6 +336,11 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         // Return false if error
+        return false;
+    }
+
+    // Save new user on database
+    public boolean saveNewUser(User newUser) {
         return false;
     }
 

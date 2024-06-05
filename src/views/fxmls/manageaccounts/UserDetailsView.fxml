@@ -51,6 +51,16 @@
                   <Font name="System Bold" size="22.0" />
                </font>
             </Label>
+            <Label text="First Name: " textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label text="Last Name:" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
             <Label text="Account Type:" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="22.0" />
@@ -82,6 +92,16 @@
                <cursor>
                   <Cursor fx:constant="TEXT" />
                </cursor></TextField>
+            <TextField fx:id="fnameField" promptText="first name">
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
+            <TextField fx:id="lnameField" promptText="last name">
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor>
+            </TextField>
             <ComboBox fx:id="accountTypeCBox" prefHeight="25.0" prefWidth="475.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -96,10 +116,6 @@
                </cursor></TextField>
          </children>
       </VBox>
-      <Button fx:id="showSecAnsButton" layoutX="343.0" layoutY="388.0" mnemonicParsing="false" text="B">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
       <Button fx:id="cancelButton" layoutX="322.0" layoutY="554.0" mnemonicParsing="false" onAction="#cancel" text="Cancel">
          <font>
             <Font name="System Bold" size="20.0" />
@@ -108,7 +124,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="updateButton" layoutX="691.0" layoutY="554.0" mnemonicParsing="false" onAction="#update" text="Update">
+      <Button fx:id="saveButton" layoutX="980.0" layoutY="554.0" mnemonicParsing="false" onAction="#save" text="Save">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -116,7 +132,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="deactivateButton" layoutX="794.0" layoutY="554.0" mnemonicParsing="false" onAction="#deactivate" text="Deactivate">
+      <Button fx:id="deactivateButton" layoutX="709.0" layoutY="554.0" mnemonicParsing="false" onAction="#deactivate" text="Deactivate">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -124,7 +140,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="reactivateButton" layoutX="926.0" layoutY="554.0" mnemonicParsing="false" onAction="#reactivate" text="Reactivate">
+      <Button fx:id="reactivateButton" layoutX="846.0" layoutY="554.0" mnemonicParsing="false" onAction="#reactivate" text="Reactivate">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

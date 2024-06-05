@@ -23,7 +23,7 @@ public class ManageAccountsController extends ParentController {
     @FXML
     private TableColumn<User, Integer> userIdCol;
     @FXML
-    private TableColumn<User, String> uNameCol, passCol, loaCol, statusCol;
+    private TableColumn<User, String> uNameCol, passCol, loaCol, statusCol, emailCol;
 
     private ObservableList<User> userList;
     private ManageAccountsModel model;
@@ -41,8 +41,15 @@ public class ManageAccountsController extends ParentController {
                 if (accountsTableView.getSelectionModel().getSelectedItem() != null) {
                     // Set selected user by the user as the selectedUser
                     selectedUser = accountsTableView.getSelectionModel().getSelectedItem();
-                    // Getting index of currently selected user
-                    selectedUser = userList.get(accountsTableView.getItems().indexOf(selectedUser));
+
+                    // Find selected user in userlist
+                    for (User iteratedUser : userList) {
+                        // If found
+                        if (selectedUser.getUname().compareTo(iteratedUser.getUname()) == 0) {
+                            // Select
+                            selectedUser = iteratedUser;
+                        }
+                    }
                 }
             }
 
@@ -57,6 +64,8 @@ public class ManageAccountsController extends ParentController {
         passCol.setCellValueFactory(new PropertyValueFactory<User, String>("pass"));
         loaCol.setCellValueFactory(new PropertyValueFactory<User, String>("level_of_access_id_string"));
         statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("account_status_id_string"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
+
     }
 
     // Returns all of the existing users from database
@@ -97,7 +106,7 @@ public class ManageAccountsController extends ParentController {
 
     @FXML
     private void registernewuser() {
-        System.out.println("registerNewUser");
+        this.initializePopUpDialog("../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
     }
 
     @FXML

@@ -50,6 +50,7 @@
             <TableColumn fx:id="passCol" minWidth="0.0" prefWidth="215.0" text="Password" />
             <TableColumn fx:id="loaCol" minWidth="0.0" prefWidth="215.0" text="Level of Access" />
             <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="200.0" text="Status" />
+            <TableColumn fx:id="emailCol" prefWidth="200.0" text="Email" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

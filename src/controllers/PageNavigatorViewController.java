@@ -62,7 +62,7 @@ public class PageNavigatorViewController extends ParentController {
     private void navigateToHomepage() {
         try {
             // Get level of access
-            String loa = this.loggedInUserInfo.getLevel_of_access_string();
+            String loa = this.loggedInUserInfo.getLevel_of_access_id_string();
             FXMLLoader rootLoader = null;
 
             // Assign FXML file to be loaded according to LOA
@@ -123,6 +123,16 @@ public class PageNavigatorViewController extends ParentController {
             System.out.println("logging out...");
             this.borderPaneRootSwitcher.getPageNavigatorViewController().rootSwitcher.logout();
         }
+    }
+
+    // Forces user to logout
+    public void forceLogout() {
+        PopupDialog.showInfoDialog("Forced Logout", "You will be logged out.");
+        // Logging user logout action to database
+        this.model.logUserLogout(this.loggedInUserInfo.getId(),
+                this.loggedInUserInfo.getUname());
+        System.out.println("logging out...");
+        this.borderPaneRootSwitcher.getPageNavigatorViewController().rootSwitcher.logout();
     }
 
     // Returns main stack pane
