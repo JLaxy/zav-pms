@@ -44,7 +44,8 @@ public class UserDetailsModel {
         updatedUser.toggleAccountStatus();
 
         // Save changes to database
-        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser, User.getAccountChangesMessage(selectedUser, updatedUser));
+        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser,
+                User.getAccountChangesMessage(selectedUser, updatedUser));
     }
 
     // Reactivate current user
@@ -55,12 +56,19 @@ public class UserDetailsModel {
             PopupDialog.showCustomErrorDialog("User account is already disabled!");
             return false;
         }
-        
+
         User updatedUser = selectedUser.getCopy();
         updatedUser.toggleAccountStatus();
 
         // Save changes to database
-        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser, User.getAccountChangesMessage(selectedUser, updatedUser));
+        return this.controller.getDBManager().query.updateUserInfo(selectedUser, updatedUser, loggedInUser,
+                User.getAccountChangesMessage(selectedUser, updatedUser));
+    }
+
+    // Save updated user info
+    public boolean updateUserDetails(User oldUserInfo, User newUserInfo, User loggedInUser) {
+        return this.controller.getDBManager().query.updateUserInfo(oldUserInfo, newUserInfo, loggedInUser,
+                User.getAccountChangesMessage(oldUserInfo, newUserInfo));
     }
 
 }

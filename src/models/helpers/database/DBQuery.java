@@ -324,9 +324,10 @@ public class DBQuery {
             }
 
             // Logging account update to database
-            logAction(loggedInUser.getId(), loggedInUser.getUname(), UserLogActions.Actions.UPDATED_USER_ACCOUNT.getValue(),
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.UPDATED_USER_ACCOUNT.getValue(),
                     DateHelper.getCurrentDateTimeString(),
-                    "updated account details of user " + "\"" + updatedUserInfo.getUname() + "\"; " + changeMessage);
+                    "updated account details of user " + "\"" + oldUserInfo.getUname() + "\"; " + changeMessage);
             // Return true if success
             return true;
         } catch (Exception e) {

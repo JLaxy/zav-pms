@@ -1,6 +1,7 @@
 package models.modules;
 
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Security {
@@ -53,5 +54,12 @@ public class Security {
             return "Password must have a number!";
 
         return "";
+    }
+
+    // Returns true if email is valid
+    public static boolean isEmailValid(String email) {
+        Pattern emailRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher verifier = emailRegex.matcher(email);
+        return verifier.matches();
     }
 }

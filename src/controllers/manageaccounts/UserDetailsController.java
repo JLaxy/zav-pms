@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import models.helpers.PopupDialog;
 import models.manageaccounts.UserDetailsModel;
+import models.modules.Security;
 import models.schemas.User;
 
 public class UserDetailsController extends ParentController {
@@ -33,10 +34,52 @@ public class UserDetailsController extends ParentController {
 
     @FXML
     private void update() {
+        // Retrieve values
         String loa = accountTypeCBox.getSelectionModel().getSelectedItem();
         int secQuesId = secQuesCBox.getSelectionModel().getSelectedIndex();
-        User updatedUserInfo = new User(selectedUser.getId(), unameField.getText(), passField.getText(), emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)), selectedUser.getFName(), selectedUser.getLName(), selectedUser.getAccount_status_id(), secQuesId, secAnsField.getText());
+
+        // If there is an empty textfield
+        if (areFieldsEmpty()) {
+            PopupDialog.showCustomErrorDialog("All fields must be filled!");
+        }
+
+        // Check if password is valid
+        String errorMessage = Security.isNewPasswordValid(passField.getText());
+        // If there is error in password
+        if (errorMessage.length() > 0) {
+            PopupDialog.showCustomErrorDialog(errorMessage);
+            return;
+        }
+
+        // If email is not valid
+        if (!Security.isEmailValid(emailField.getText())) {
+            PopupDialog.showCustomErrorDialog("Invalid email address!");
+            return;
+        }
+
+        User updatedUserInfo = new User(selectedUser.getId(), unameField.getText(), passField.getText(),
+                emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)),
+                selectedUser.getFName(), selectedUser.getLName(), selectedUser.getAccount_status_id(), secQuesId,
+                secAnsField.getText());
+
         updatedUserInfo.showValues();
+
+        this.borderPaneRootSwitcher.exitPopUpDialog();
+        // If failed to update
+        if (!this.model.updateUserDetails(selectedUser, updatedUserInfo, loggedInUserInfo)) {
+            PopupDialog.showCustomErrorDialog("Failed to update user details!");
+            return;
+        }
+        // Else
+        PopupDialog.showInfoDialog("Updated User Info",
+                "Successfully updated user info of user \"" + selectedUser.getUname() + "\"");
+        this.manageAccountsController.syncUserTableView();
+    }
+
+    // Returns true if fields are not empty
+    private boolean areFieldsEmpty() {
+        return unameField.getText().isBlank() || passField.getText().isBlank() || emailField.getText().isBlank()
+                || secAnsField.getText().isBlank();
     }
 
     @FXML
