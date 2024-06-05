@@ -72,8 +72,8 @@ public class UserDetailsModel {
     }
 
     // Save new user to database
-    public boolean saveNewUser(User newUser) {
-        return this.controller.getDBManager().query.saveNewUser(newUser);
+    public boolean saveNewUser(User newUser, User loggedInUser) {
+        return this.controller.getDBManager().query.saveNewUser(newUser, loggedInUser);
     }
 
 }

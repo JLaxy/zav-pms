@@ -197,7 +197,7 @@ public class DBQuery {
             ResultSet result = stmt.getResultSet();
             // Checking if there are any matches
             if (isNoResult(result)) {
-                PopupDialog.showCustomErrorDialog("User \"" + uname + "\" does not exist! oo eto yun");
+                PopupDialog.showCustomErrorDialog("User \"" + uname + "\" does not exist!");
                 result.close();
             } else {
                 result.next();
@@ -214,7 +214,7 @@ public class DBQuery {
     }
 
     // Returns all of the users registered in database in ObservableList
-    public ObservableList<User> getAllUsers() {
+    public ObservableList<User> getAllUsers(String userQuery) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
@@ -236,12 +236,28 @@ public class DBQuery {
                     if (result.getInt("id") == 1)
                         continue;
 
-                    // Add each user in list
-                    myList.add(new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
-                            result.getString("email"),
-                            result.getInt("level_of_access_id"), result.getString("fname"), result.getString("lname"),
-                            result.getInt("account_status_id"), result.getInt("unique_question_id"),
-                            result.getString("unique_question_answer")));
+                    // If user is not searching for user
+                    if (userQuery == null) {
+                        // Add each user in list
+                        myList.add(new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
+                                result.getString("email"),
+                                result.getInt("level_of_access_id"), result.getString("fname"),
+                                result.getString("lname"),
+                                result.getInt("account_status_id"), result.getInt("unique_question_id"),
+                                result.getString("unique_question_answer")));
+                    } else {
+                        // If username matches user search
+                        if (result.getString("uname").compareTo(userQuery) == 0) {
+                            // Add each user in list
+                            myList.add(
+                                    new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
+                                            result.getString("email"),
+                                            result.getInt("level_of_access_id"), result.getString("fname"),
+                                            result.getString("lname"),
+                                            result.getInt("account_status_id"), result.getInt("unique_question_id"),
+                                            result.getString("unique_question_answer")));
+                        }
+                    }
                 }
                 result.close();
                 return myList;
@@ -340,7 +356,33 @@ public class DBQuery {
     }
 
     // Save new user on database
-    public boolean saveNewUser(User newUser) {
+    public boolean saveNewUser(User newUser, User loggedInUserInfo) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO users (uname, pass, email, level_of_access_id, fname, lname, account_status_id, unique_question_id, unique_question_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
+
+            // Setting user info
+            stmt.setString(1, newUser.getUname());
+            stmt.setString(2, newUser.getPass());
+            stmt.setString(3, newUser.getEmail());
+            stmt.setInt(4, newUser.getLevel_of_access_id());
+            stmt.setString(5, newUser.getFName());
+            stmt.setString(6, newUser.getLName());
+            stmt.setInt(7, newUser.getAccount_status_id());
+            stmt.setInt(8, newUser.getUniqueQuestionID());
+            stmt.setString(9, newUser.getUniqueQuestionAnswer());
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_USER.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new user \"" + newUser.getUname() + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
         return false;
     }
 

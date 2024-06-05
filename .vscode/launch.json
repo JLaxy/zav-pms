@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Runner",
+      "request": "launch",
+      "mainClass": "Runner",
+      "projectName": "zav-pms_954a1701"
+    },
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "App",
+      "projectName": "zav-pms_954a1701"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",

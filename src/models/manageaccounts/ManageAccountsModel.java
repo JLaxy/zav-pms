@@ -17,7 +17,12 @@ public class ManageAccountsModel {
 
     // Returns all of the users registered in database in ObservableList
     public ObservableList<User> getAllUsers() {
-        return this.controller.getDBManager().query.getAllUsers();
+        return this.controller.getDBManager().query.getAllUsers(null);
+    }
+
+    // Returns all users matching username
+    public ObservableList<User> getAllUsers(String userQuery) {
+        return this.controller.getDBManager().query.getAllUsers(userQuery);
     }
 
     // Converts all user passwords into asterisk

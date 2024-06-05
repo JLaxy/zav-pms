@@ -20,7 +20,8 @@ public class UserLogActions {
         SUCCESSFUL_LOGIN(8),
         USER_LOGOUT(9),
         VIEWED_ACCOUNT_DETAILS(10),
-        UPDATED_USER_ACCOUNT(11);
+        UPDATED_USER_ACCOUNT(11),
+        REGISTERED_NEW_USER(12);
 
         private final int action_id;
 

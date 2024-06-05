@@ -117,10 +117,12 @@ public class User {
         // If active, then disable
         if (this.account_status_id == AccountStatuses.Status.ACTIVE.getValue()) {
             this.account_status_id = AccountStatuses.Status.DISABLED.getValue();
+            this.updateStringEquivalents();
             return;
         }
         // Activate
         this.account_status_id = AccountStatuses.Status.ACTIVE.getValue();
+        this.updateStringEquivalents();
     }
 
     // Returns string that describes account changes
@@ -138,18 +140,10 @@ public class User {
                     switch (field.getName()) {
                         // For account status id
                         case "account_status_id":
-                            changes.add("changed account status from " + oldUserInfo.getAccount_status_id_string()
-                                    + " to " + newUserInfo.getAccount_status_id_string());
-                            System.out
-                                    .println("changed account status from " + oldUserInfo.getAccount_status_id_string()
-                                            + " to " + newUserInfo.getAccount_status_id_string());
+                            // Empty for string equivalent
                             break;
                         case "level_of_access_id":
-                            changes.add("changed level of access from " + oldUserInfo.getLevel_of_access_id_string()
-                                    + " to " + newUserInfo.getLevel_of_access_id_string());
-                            System.out.println(
-                                    "changed level of access from " + oldUserInfo.getLevel_of_access_id_string()
-                                            + " to " + newUserInfo.getLevel_of_access_id_string());
+                            // Empty for string equivalent
                             break;
                         // For other attributes
                         default:

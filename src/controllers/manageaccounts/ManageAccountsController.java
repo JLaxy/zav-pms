@@ -7,9 +7,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.helpers.PopupDialog;
 import models.manageaccounts.ManageAccountsModel;
@@ -24,6 +26,9 @@ public class ManageAccountsController extends ParentController {
     private TableColumn<User, Integer> userIdCol;
     @FXML
     private TableColumn<User, String> uNameCol, passCol, loaCol, statusCol, emailCol;
+
+    @FXML
+    private TextField searchField;
 
     private ObservableList<User> userList;
     private ManageAccountsModel model;
@@ -68,6 +73,11 @@ public class ManageAccountsController extends ParentController {
 
     }
 
+    @FXML
+    private void search(ActionEvent e) {
+        syncUserTableView();
+    }
+
     // Returns all of the existing users from database
     public void syncUserTableView() {
         try {
@@ -81,7 +91,8 @@ public class ManageAccountsController extends ParentController {
                 protected Void call() throws Exception {
                     Platform.runLater(() -> {
                         // Get retrieved value
-                        userList = model.getAllUsers();
+                        userList = model.getAllUsers(searchField == null ? null
+                                : (searchField.getText().isBlank() ? null : searchField.getText()));
                         // Update table view with list of users where password is muted
                         accountsTableView.setItems(model.mutePasswords(model.copyUserList(userList)));
                         // Exit Loading Screen
@@ -106,7 +117,9 @@ public class ManageAccountsController extends ParentController {
 
     @FXML
     private void registernewuser() {
-        this.initializePopUpDialog("../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
+        UserDetailsController controller = (UserDetailsController) this
+                .initializePopUpDialog("../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
+        controller.initialize(null, this);
     }
 
     @FXML
@@ -120,7 +133,7 @@ public class ManageAccountsController extends ParentController {
             // Configuring controller
             UserDetailsController controller = (UserDetailsController) this.initializePopUpDialog(
                     "../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
-            controller.configureUserInfo(selectedUser, this);
+            controller.initialize(selectedUser, this);
         } catch (Exception e) {
             PopupDialog.showCustomErrorDialog("Please select a user first!");
         }
