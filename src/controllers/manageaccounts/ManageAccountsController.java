@@ -71,6 +71,9 @@ public class ManageAccountsController extends ParentController {
         statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("account_status_id_string"));
         emailCol.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
 
+        accountsTableView.getColumns().forEach(e -> {
+            e.setReorderable(false);
+        });
     }
 
     @FXML

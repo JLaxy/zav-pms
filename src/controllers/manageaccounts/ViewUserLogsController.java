@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -62,18 +63,30 @@ public class ViewUserLogsController extends ParentController {
 
         // Hide userlog details
         this.userLogDetailsVBox.setVisible(false);
-        configureOnClickListener();
+        configureLogClickListener();
+        configureDatePickerListener();
     }
 
     // Configures the listener function to be fired on click of an item in table
-    private void configureOnClickListener() {
+    private void configureLogClickListener() {
         this.logTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserLog>() {
             @Override
             public void changed(ObservableValue<? extends UserLog> arg0, UserLog arg1, UserLog arg2) {
+                // If there is a selection
                 if (logTable.getSelectionModel().getSelectedItem() != null) {
                     selectedLog = logTable.getSelectionModel().getSelectedItem();
                     updateDetailsShown();
                 }
+            }
+        });
+    }
+
+    // Configures the listener function to be fired on change of date in datepicker
+    private void configureDatePickerListener() {
+        this.logDate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                retrieveUserLogs();
             }
         });
     }
@@ -87,7 +100,8 @@ public class ViewUserLogsController extends ParentController {
         this.levelOfAccessLabel.setText(selectedUser.getLevel_of_access_id_string());
         this.actionLabel.setText(this.selectedLog.getActionString());
         this.timestampLabel.setText(this.selectedLog.getDate());
-        this.detailsLabel.setText(this.selectedLog.getParameter());
+        this.detailsLabel.setText(
+                this.selectedLog.getParameter().replace(",", "\n-").replace(";", "\n-"));
 
         // Show
         this.userLogDetailsVBox.setVisible(true);
@@ -99,12 +113,20 @@ public class ViewUserLogsController extends ParentController {
         dateCol.setCellValueFactory(new PropertyValueFactory<UserLog, String>("dateString"));
         unameCol.setCellValueFactory(new PropertyValueFactory<UserLog, String>("uname"));
         actionCol.setCellValueFactory(new PropertyValueFactory<UserLog, String>("actionString"));
+
+        // Disable table reordering
+        logTable.getColumns().forEach(e -> {
+            e.setReorderable(false);
+        });
+
         retrieveUserLogs();
     }
 
     // Retrieve user logs and show on UI
     private void retrieveUserLogs() {
         this.userLogDetailsVBox.setVisible(false);
+        // Removes sort
+        this.logTable.getSortOrder().clear();
         try {
             this.listOfUserLogs = FXCollections.observableArrayList();
 
@@ -126,6 +148,7 @@ public class ViewUserLogsController extends ParentController {
             };
             userLogsRetriever.setOnSucceeded(e -> {
                 borderPaneRootSwitcher.exitLoadingScreen_BP();
+                logTable.getSortOrder().add(logTable.getColumns().get(logTable.getColumns().indexOf(timeCol)));
             });
 
             borderPaneRootSwitcher.showLoadingScreen_BP();
@@ -143,7 +166,7 @@ public class ViewUserLogsController extends ParentController {
 
     @FXML
     private void search(ActionEvent e) {
-        System.out.println("Searching...");
+        retrieveUserLogs();
     }
 
     @FXML
@@ -154,9 +177,6 @@ public class ViewUserLogsController extends ParentController {
         // If left arrow was clicked
         else if ((Button) e.getSource() == this.leftArrowButton)
             this.logDate.setValue(this.logDate.getValue().minusDays(1));
-
-        // Update user logs
-        retrieveUserLogs();
     }
 
 }

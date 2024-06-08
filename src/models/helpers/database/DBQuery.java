@@ -413,7 +413,7 @@ public class DBQuery {
             ResultSet result = stmt.getResultSet();
             // Checking if there are any matches
             if (isNoResult(result)) {
-                PopupDialog.showCustomErrorDialog("No result");
+                System.out.println("no logs for date " + selectedDate);
                 result.close();
             } else {
                 // Iterate through all user logs
