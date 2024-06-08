@@ -19,7 +19,7 @@
             <Image url="@../../../../assets/images/logoTransparent.png" />
          </image>
       </ImageView>
-      <TextField fx:id="unameField" layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username">
+      <TextField fx:id="unameField" layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username" text="mox">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></TextField>
@@ -31,7 +31,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <PasswordField fx:id="passField" layoutX="541.0" layoutY="368.0" prefHeight="45.0" prefWidth="301.0" promptText="Password">
+      <PasswordField fx:id="passField" layoutX="541.0" layoutY="368.0" prefHeight="45.0" prefWidth="301.0" promptText="Password" text="Zavpms@123">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></PasswordField>

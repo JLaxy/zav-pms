@@ -120,6 +120,7 @@ public class RootSwitcher {
 
     // Show Loading Screen above borderpane
     public void showLoadingScreen_BP() {
+        System.out.println("showing...");
         // Show loading screen
         this.pageNavigatorViewController.getMainStackPane().getChildren().add(loadingScreenRoot_BP);
     }
@@ -142,6 +143,7 @@ public class RootSwitcher {
 
     // Remove Loading Screen above borderpane
     public void exitLoadingScreen_BP() {
+        System.out.println("exiting...");
         this.pageNavigatorViewController.getMainStackPane().getChildren().remove(loadingScreenRoot_BP);
     }
 

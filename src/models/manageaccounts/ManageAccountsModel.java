@@ -50,4 +50,10 @@ public class ManageAccountsModel {
                 "viewed account details of \"" + viewedAccountUname + "\"");
     }
 
+    // Logs viewing of details of user logs to database
+    public void logViewingUserLogs(int id, String uname) {
+        this.controller.getDBManager().query.logAction(id, uname, UserLogActions.Actions.VIEWED_USER_LOGS.getValue(),
+                DateHelper.getCurrentDateTimeString(), "");
+    }
+
 }

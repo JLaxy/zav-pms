@@ -18,6 +18,7 @@ import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
 import models.modules.Security;
 import models.schemas.User;
+import models.schemas.UserLog;
 
 public class DBQuery {
 
@@ -384,6 +385,52 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return false;
+    }
+
+    // Returns all of the user logs stored in the database
+    public ObservableList<UserLog> getUserLogs(String uname, String selectedDate) {
+        // Instatiate observable list
+        ObservableList<UserLog> myList = FXCollections.observableArrayList();
+        String query = "";
+        // If not searching for a specific user
+        if (uname == null)
+            query = "SELECT * FROM user_logs WHERE date LIKE '" + selectedDate + "%';";
+        else
+            query = "SELECT * FROM user_logs WHERE date LIKE '" + selectedDate + "%' AND user_id = (?);";
+
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                query)) {
+
+            // If searching for a specific user
+            if (uname != null) {
+                stmt.setInt(1, getUserInfo(uname).getId());
+            }
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("No result");
+                result.close();
+            } else {
+                // Iterate through all user logs
+                while (result.next()) {
+                    UserLog log = new UserLog(result.getInt("id"), result.getInt("user_id"), result.getInt("action_id"),
+                            result.getString("date"), result.getString("parameter"));
+                    // Get the username
+                    log.setUname(getUname(log.getUser_id()));
+                    // Add to list
+                    myList.add(log);
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return myList;
     }
 
 }

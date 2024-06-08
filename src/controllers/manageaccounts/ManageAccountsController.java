@@ -1,11 +1,11 @@
 package controllers.manageaccounts;
 
 import controllers.ParentController;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -86,25 +86,28 @@ public class ManageAccountsController extends ParentController {
             this.borderPaneRootSwitcher.showLoadingScreen_BP();
 
             // Create thread
-            Thread tableViewSyncer = new Thread(new Task<Void>() {
+            Service<Void> userRetriever = new Service<Void>() {
                 @Override
-                protected Void call() throws Exception {
-                    Platform.runLater(() -> {
-                        // Get retrieved value
-                        userList = model.getAllUsers(searchField == null ? null
-                                : (searchField.getText().isBlank() ? null : searchField.getText()));
-                        // Update table view with list of users where password is muted
-                        accountsTableView.setItems(model.mutePasswords(model.copyUserList(userList)));
-                        // Exit Loading Screen
-                        borderPaneRootSwitcher.exitLoadingScreen_BP();
-                    });
-                    return null;
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            // Get retrieved value
+                            userList = model.getAllUsers(searchField == null ? null
+                                    : (searchField.getText().isBlank() ? null : searchField.getText()));
+                            // Update table view with list of users where password is muted
+                            accountsTableView.setItems(model.mutePasswords(model.copyUserList(userList)));
+
+                            return null;
+                        }
+                    };
                 }
+            };
+            userRetriever.setOnSucceeded(e -> {
+                // Exit Loading Screen
+                borderPaneRootSwitcher.exitLoadingScreen_BP();
             });
-
-            tableViewSyncer.setDaemon(true);
-            tableViewSyncer.start();
-
+            userRetriever.start();
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
@@ -112,7 +115,12 @@ public class ManageAccountsController extends ParentController {
 
     @FXML
     private void viewuserlog() {
-        System.out.println("View User Log");
+        // Logs action to database
+        this.model.logViewingUserLogs(this.loggedInUserInfo.getId(), this.loggedInUserInfo.getUname());
+        ViewUserLogsController controller = (ViewUserLogsController) this.initializeNextScreen_BP(
+                "../../views/fxmls/manageaccounts/ViewUserLogsView.fxml", loggedInUserInfo,
+                "USER LOGS");
+        controller.configureUserLogsTable();
     }
 
     @FXML

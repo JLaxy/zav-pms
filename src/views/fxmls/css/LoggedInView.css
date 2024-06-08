@@ -17,3 +17,9 @@
 .progress-indicator {
   -fx-progress-color: #d552a0;
 }
+
+#leftArrowButton,
+#rightArrowButton {
+  -fx-background-color: black;
+  -fx-text-fill: white;
+}
