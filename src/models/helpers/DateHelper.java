@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+import enums.ProgramSettings;
+
 public class DateHelper {
 
     // Easy to change values
@@ -56,6 +58,6 @@ public class DateHelper {
     // Returns the seconds between the cooldown
     public static long getLoginCooldownSecs() {
         return ChronoUnit.SECONDS.between(getCurrentDateTime(),
-                DateHelper.stringToDate(new JSONManager().getLoginCooldown()));
+                DateHelper.stringToDate(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue())));
     }
 }

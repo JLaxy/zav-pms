@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -43,9 +44,16 @@ public class JSONManager {
     private void createSettingsFile() {
         PopupDialog.showInfoDialog("No Settings File", "Creating Settings File for the first time");
         try (Writer myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH))) {
+
             Map<String, Object> settingsFile = new HashMap<String, Object>();
+            Map<String, Object> settings = new HashMap<String, Object>();
+
+            settings.put("cooldown", "2050-10-28 09:18:19");
+            settings.put("backupLocation", "Nothing set.");
+
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
-            settingsFile.put("program_settings", getJSONPair("cooldown", "2002-10-28 09:18:19"));
+            settingsFile.put("program_settings", settings);
+
             new Gson().toJson(settingsFile, myWriter);
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
@@ -79,12 +87,12 @@ public class JSONManager {
         return myJSONPair;
     }
 
-    // Retrieves Login Cooldown stored in settings file
-    public String getLoginCooldown() {
+    // Retrieves value of a setting in the appsettings file
+    public String getSetting(String setting) {
         try (Reader myReader = new BufferedReader(new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
             JsonObject myObject = JsonParser.parseReader(myReader).getAsJsonObject();
             JsonObject program_settings = myObject.getAsJsonObject("program_settings");
-            return program_settings.get("cooldown").getAsString();
+            return program_settings.get(setting).getAsString();
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;

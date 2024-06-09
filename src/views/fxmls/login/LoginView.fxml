@@ -19,7 +19,7 @@
             <Image url="@../../../../assets/images/logoTransparent.png" />
          </image>
       </ImageView>
-      <TextField fx:id="unameField" layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username" text="mox">
+      <TextField fx:id="unameField" layoutX="541.0" layoutY="290.0" prefHeight="45.0" prefWidth="301.0" promptText="Username" text="mocksiest">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></TextField>

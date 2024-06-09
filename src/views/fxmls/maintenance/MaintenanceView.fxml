@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.maintenance.MaintenanceController">
    <children>
-      <Button fx:id="goBackButton" layoutX="1190.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
+      <Button fx:id="goBackButton" layoutX="1195.0" layoutY="546.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="23.0" />
          </font>
