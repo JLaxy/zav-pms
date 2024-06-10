@@ -13,6 +13,8 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void manualbackup() {
         System.out.println("Manual Backup");
+        this.initializeNextScreen_BP("../../views/fxmls/maintenance/ManualBackupView.fxml", loggedInUserInfo,
+                "MAINTENANCE");
     }
 
     @FXML

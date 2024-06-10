@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import models.helpers.PopupDialog;
 import models.login.ForgotPasswordModel;
 import models.schemas.User;
 
@@ -33,7 +34,7 @@ public class ForgotPasswordController extends ParentController {
 
         // If ID is empty; then means user does not exist
 
-        if (userInfo.getId() != 0 && userInfo.getId() != 1) {
+        if (userInfo.getId() != 0 && userInfo.getId() != 1 || userInfo.getUname() != null) {
             // Navigate to next screen
             PasswordQuestionController nextController = (PasswordQuestionController) initializeNextScreen(
                     "../../views/fxmls/login/PasswordQuestionView.fxml", this.loggedInUserInfo);
@@ -46,6 +47,8 @@ public class ForgotPasswordController extends ParentController {
             // Logging Password Reset Action to Database
             this.model.logPasswordReset(String.valueOf(userInfo.getId()), userInfo.getUname());
         }
+
+        PopupDialog.showCustomErrorDialog("User \"" + uName + "\" does not exist!");
     }
 
     // Going back to previous screen

@@ -119,7 +119,6 @@ public class DBQuery {
             ResultSet result = stmt.getResultSet();
             // Checking if there are any matches
             if (isNoResult(result)) {
-                PopupDialog.showCustomErrorDialog("User \"" + uName + "\" does not exist!");
                 result.close();
             } else {
                 result.next();
