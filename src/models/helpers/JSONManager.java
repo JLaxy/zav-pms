@@ -98,6 +98,18 @@ public class JSONManager {
         }
     }
 
+    // Retrieves value of a developer setting in the appsettings file
+    public String getDeveloperSetting(String setting) {
+        try (Reader myReader = new BufferedReader(new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
+            JsonObject myObject = JsonParser.parseReader(myReader).getAsJsonObject();
+            JsonObject program_settings = myObject.getAsJsonObject("developer_settings");
+            return program_settings.get(setting).getAsString();
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+            return null;
+        }
+    }
+
     // Updates Login Cooldown stored in settings file
     public void updateLoginCooldown() {
         // CANNOT READ AND WRITE FILE AT THE SAME

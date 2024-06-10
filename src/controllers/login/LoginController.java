@@ -2,6 +2,7 @@ package controllers.login;
 
 import java.util.Timer;
 
+import controllers.PageNavigatorViewController;
 import controllers.ParentController;
 import enums.AccountStatuses;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import models.login.LoginModel;
 import models.schemas.User;
+import models.helpers.JSONManager;
 import models.helpers.LoginCooldownTimerTask;
 import models.helpers.PopupDialog;
 
@@ -63,6 +65,17 @@ public class LoginController extends ParentController {
                 // Clearing fields
                 this.unameField.clear();
                 this.passField.clear();
+
+                // If Skip OTP is enabled
+                if (new JSONManager().getDeveloperSetting("skipOTP").compareTo("true") == 0) {
+                    PopupDialog.showInfoDialog("Developer Setting", "Skipping OTP");
+                    PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
+                            "../../views/fxmls/PageNavigatorView.fxml", userInfo);
+                    // Sync screen with passed user details
+                    controller.configureScreen();
+                    return;
+                }
+
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
                         "../../views/fxmls/login/OTPLoginView.fxml", userInfo);
