@@ -46,17 +46,11 @@
                               <Insets left="30.0" right="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="unitMeasureField" promptText="Enter Unit Measure" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <font>
-                              <Font size="25.0" />
-                           </font>
+                        <ComboBox fx:id="unitmeasureCBox" prefHeight="56.0" prefWidth="517.0" promptText="--- Select Unit Measure ---" style="-fx-background-color: #D552A0;">
                            <VBox.margin>
-                              <Insets left="30.0" right="30.0" />
+                              <Insets left="30.0" />
                            </VBox.margin>
-                        </TextField>
+                        </ComboBox>
                         <TextField fx:id="criticalLevelField" prefHeight="52.0" prefWidth="258.0" promptText="Enter Critical Level" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
                            <opaqueInsets>
                               <Insets />
@@ -78,7 +72,7 @@
                   </VBox>
                   <VBox prefHeight="373.0" prefWidth="633.0" spacing="10.0">
                      <children>
-                        <ComboBox fx:id="stockTypeComboBox" prefHeight="56.0" prefWidth="454.0" promptText="--- Select Stock Type ---" style="-fx-background-color: #D552A0;">
+                        <ComboBox fx:id="stockTypeCBox" prefHeight="56.0" prefWidth="454.0" promptText="--- Select Stock Type ---" style="-fx-background-color: #D552A0;">
                            <VBox.margin>
                               <Insets left="100.0" top="2.0" />
                            </VBox.margin>

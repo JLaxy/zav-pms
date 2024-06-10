@@ -22,7 +22,9 @@ public class UserLogActions {
         VIEWED_ACCOUNT_DETAILS(10, "Viewed Account Details"),
         UPDATED_USER_ACCOUNT(11, "Updated Account Details"),
         REGISTERED_NEW_USER(12, "Registered New User"),
-        VIEWED_USER_LOGS(13, "Viewed User Logs");
+        VIEWED_USER_LOGS(13, "Viewed User Logs"),
+        REGISTERED_NEW_STOCK_TYPE(14, "Registered New Stock Type"),
+        REGISTERED_NEW_STOCK(15, "Registered New Stock");
 
         private final int action_id;
         private final String action_string;

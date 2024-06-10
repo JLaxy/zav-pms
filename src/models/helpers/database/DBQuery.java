@@ -19,6 +19,8 @@ import models.helpers.PopupDialog;
 import models.modules.Security;
 import models.schemas.User;
 import models.schemas.UserLog;
+import models.schemas.StockType;
+import models.schemas.Stock;
 
 public class DBQuery {
 
@@ -433,4 +435,51 @@ public class DBQuery {
         return myList;
     }
 
+    // Save new stock type on database
+    public boolean saveNewStockType(StockType newStockType, User loggedInUserInfo) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO stock_type (type, default_expiration) VALUES (?, ?);")) {
+
+            // Setting stock type informations
+            stmt.setString(1, newStockType.getType());
+            stmt.setInt(2, newStockType.getDefault_expiration());
+
+            stmt.execute();
+
+            // Log creating new stock type in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new stock type \"" + newStockType.getType() + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    // Save new stock  on database
+    public boolean saveNewStock(Stock newStock, User loggedInUserInfo) {
+        //try (Connection con = this.zavPMSDB.createConnection();
+                //PreparedStatement stmt = con
+                        //.prepareStatement(
+                                //"INSERT INTO stock (type, default_expiration) VALUES (?, ?);")) {
+
+            // Setting stock informations
+            //stmt.setString(1, newStock.getType());
+            //stmt.setInt(2, newStock.getDefault_expiration());
+
+            //stmt.execute();
+
+            // Log creating new stock type in database
+            //logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    //UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
+                    //DateHelper.getCurrentDateTimeString(), "registered new stock type \"" + newStock.getType() + "\"");
+            //return true;
+        //} catch (Exception e) {
+            //PopupDialog.showErrorDialog(e, this.getClass().getName());
+        //}
+        return false;
+    }
 }

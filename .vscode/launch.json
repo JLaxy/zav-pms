@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Runner",
+      "request": "launch",
+      "mainClass": "Runner",
+      "projectName": "zav-pms_dea6d31d"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",

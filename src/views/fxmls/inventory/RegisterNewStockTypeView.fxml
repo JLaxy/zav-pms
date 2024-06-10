@@ -34,7 +34,7 @@
                <children>
                   <VBox prefHeight="307.0" prefWidth="1118.0" spacing="50.0">
                      <children>
-                        <TextField fx:id="stockNameField" promptText="Enter Stock Type" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+                        <TextField fx:id="stockTypeField" promptText="Enter Stock Type" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -45,7 +45,7 @@
                               <Insets left="350.0" right="350.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="unitMeasureField" promptText="Enter Default Expiry Date" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+                        <TextField fx:id="defaultExpiryField" promptText="Enter Default Expiry Date" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
