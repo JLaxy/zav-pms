@@ -2,6 +2,8 @@ package controllers.maintenance;
 
 import controllers.ParentController;
 import javafx.fxml.FXML;
+import models.helpers.JSONManager;
+import models.helpers.PopupDialog;
 
 public class MaintenanceController extends ParentController {
     @FXML
@@ -13,8 +15,16 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void manualbackup() {
         System.out.println("Manual Backup");
-        this.initializeNextScreen_BP("../../views/fxmls/maintenance/ManualBackupView.fxml", loggedInUserInfo,
+
+        if (new JSONManager().getSetting("backupLocation").compareTo("Nothing set.") == 0) {
+            PopupDialog.showCustomErrorDialog("You have not set a backup location!");
+            return;
+        }
+
+        ManualBackupController controller = (ManualBackupController) this.initializeNextScreen_BP(
+                "../../views/fxmls/maintenance/ManualBackupView.fxml", loggedInUserInfo,
                 "MAINTENANCE");
+        controller.retrieveDatabaseLogs();
     }
 
     @FXML
@@ -25,6 +35,8 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void editbackuplocation() {
         System.out.println("Edit Backup Location");
+        initializeNextScreen_BP("../../views/fxmls/maintenance/EditBackupLocationView.fxml", loggedInUserInfo,
+                "EDIT BACKUP LOCATION");
     }
 
     @FXML

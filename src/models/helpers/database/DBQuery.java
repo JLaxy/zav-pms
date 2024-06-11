@@ -20,6 +20,7 @@ import models.modules.Security;
 import models.schemas.User;
 import models.schemas.UserLog;
 import models.schemas.StockType;
+import models.schemas.DatabaseLog;
 import models.schemas.Stock;
 
 public class DBQuery {
@@ -160,6 +161,53 @@ public class DBQuery {
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
+    }
+
+    // Logs database action to database
+    public void logDatabaseAction(User userInfo, String date, int backupTypeId) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO backup_log (user_id, date, system_name, backup_type_id) VALUES (?, ?, ?, ?);")) {
+            // Applying values
+            stmt.setInt(1, userInfo.getId());
+            stmt.setString(2, DateHelper.getCurrentDateTimeString());
+            // Applying Date
+            stmt.setString(3, Security.getSystemName());
+            stmt.setInt(4, backupTypeId);
+            stmt.execute();
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+    }
+
+    public ObservableList<DatabaseLog> getDatabaseLogs() {
+        ObservableList<DatabaseLog> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM backup_log;")) {
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                PopupDialog.showCustomErrorDialog("Error retrieving backup_logs");
+                result.close();
+            } else {
+                while (result.next()) {
+                    myList.add(new DatabaseLog(result.getInt("id"), result.getInt("user_id"),
+                            result.getInt("backup_type_id"), result.getString("date"),
+                            result.getString("system_name")));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
     }
 
     // Updates password of user via Forgot Password
@@ -450,7 +498,8 @@ public class DBQuery {
             // Log creating new stock type in database
             logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
                     UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
-                    DateHelper.getCurrentDateTimeString(), "registered new stock type \"" + newStockType.getType() + "\"");
+                    DateHelper.getCurrentDateTimeString(),
+                    "registered new stock type \"" + newStockType.getType() + "\"");
             return true;
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
@@ -458,27 +507,28 @@ public class DBQuery {
         return false;
     }
 
-    // Save new stock  on database
+    // Save new stock on database
     public boolean saveNewStock(Stock newStock, User loggedInUserInfo) {
-        //try (Connection con = this.zavPMSDB.createConnection();
-                //PreparedStatement stmt = con
-                        //.prepareStatement(
-                                //"INSERT INTO stock (type, default_expiration) VALUES (?, ?);")) {
+        // try (Connection con = this.zavPMSDB.createConnection();
+        // PreparedStatement stmt = con
+        // .prepareStatement(
+        // "INSERT INTO stock (type, default_expiration) VALUES (?, ?);")) {
 
-            // Setting stock informations
-            //stmt.setString(1, newStock.getType());
-            //stmt.setInt(2, newStock.getDefault_expiration());
+        // Setting stock informations
+        // stmt.setString(1, newStock.getType());
+        // stmt.setInt(2, newStock.getDefault_expiration());
 
-            //stmt.execute();
+        // stmt.execute();
 
-            // Log creating new stock type in database
-            //logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
-                    //UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
-                    //DateHelper.getCurrentDateTimeString(), "registered new stock type \"" + newStock.getType() + "\"");
-            //return true;
-        //} catch (Exception e) {
-            //PopupDialog.showErrorDialog(e, this.getClass().getName());
-        //}
+        // Log creating new stock type in database
+        // logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+        // UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
+        // DateHelper.getCurrentDateTimeString(), "registered new stock type \"" +
+        // newStock.getType() + "\"");
+        // return true;
+        // } catch (Exception e) {
+        // PopupDialog.showErrorDialog(e, this.getClass().getName());
+        // }
         return false;
     }
 }

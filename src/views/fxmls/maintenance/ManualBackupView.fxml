@@ -88,10 +88,5 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="96.0" layoutY="198.0" mnemonicParsing="false" onAction="#updateLocation" opacity="0.0" prefHeight="43.0" prefWidth="567.0" text="Button">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
    </children>
 </AnchorPane>

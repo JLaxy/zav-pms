@@ -47,7 +47,7 @@ public class JSONManager {
             Map<String, Object> settingsFile = new HashMap<String, Object>();
             Map<String, Object> settings = new HashMap<String, Object>();
 
-            settings.put("cooldown", "2050-10-28 09:18:19");
+            settings.put("cooldown", "2002-10-28 09:18:19");
             settings.put("backupLocation", "Nothing set.");
 
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
@@ -96,6 +96,26 @@ public class JSONManager {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;
         }
+    }
+
+    // Writes value to settings
+    public boolean writeToSetting(String setting, String value) {
+        try (Reader myReader = new BufferedReader(new InputStreamReader(new FileInputStream(SETTINGS_PATH)))) {
+            JsonObject myObject = JsonParser.parseReader(myReader).getAsJsonObject();
+            JsonObject program_settings = myObject.getAsJsonObject("program_settings");
+            program_settings.addProperty(setting, value);
+
+            // Creating builder
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Writer myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH));
+
+            gson.toJson(myObject, myWriter);
+            myWriter.close();
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
     }
 
     // Retrieves value of a developer setting in the appsettings file

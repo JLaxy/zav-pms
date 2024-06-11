@@ -4,6 +4,7 @@
 
 package models.helpers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -59,5 +60,44 @@ public class DateHelper {
     public static long getLoginCooldownSecs() {
         return ChronoUnit.SECONDS.between(getCurrentDateTime(),
                 DateHelper.stringToDate(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue())));
+    }
+
+    // Returns date in formatted String
+    public static String dateToFormattedDate(LocalDate date) {
+        String[] info = date.toString().split("-");
+        info[1] = DateHelper.intToMonth(Integer.parseInt(info[1]));
+        return info[1] + " " + info[2] + ", " + info[0];
+    }
+
+    // Returns the String equivalent of the month
+    public static String intToMonth(int numberMonth) {
+        switch (numberMonth) {
+            case 1:
+                return "Jan.";
+            case 2:
+                return "Feb.";
+            case 3:
+                return "Mar.";
+            case 4:
+                return "Apr.";
+            case 5:
+                return "May";
+            case 6:
+                return "Jun.";
+            case 7:
+                return "Jul.";
+            case 8:
+                return "Aug.";
+            case 9:
+                return "Sept.";
+            case 10:
+                return "Oct.";
+            case 11:
+                return "Nov.";
+            case 12:
+                return "Dec.";
+            default:
+                return "Error";
+        }
     }
 }

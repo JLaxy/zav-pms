@@ -24,7 +24,9 @@ public class UserLogActions {
         REGISTERED_NEW_USER(12, "Registered New User"),
         VIEWED_USER_LOGS(13, "Viewed User Logs"),
         REGISTERED_NEW_STOCK_TYPE(14, "Registered New Stock Type"),
-        REGISTERED_NEW_STOCK(15, "Registered New Stock");
+        REGISTERED_NEW_STOCK(15, "Registered New Stock"),
+        MANUAL_DATABASE_BACKUP(16, "Manually Backed-Up Database"),
+        AUTO_DATABASE_BACKUP(17, "Automatically Backed-Up Database");
 
         private final int action_id;
         private final String action_string;
