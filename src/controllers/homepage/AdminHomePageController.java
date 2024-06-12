@@ -29,7 +29,6 @@ public class AdminHomePageController extends ParentController {
         } else {
             System.out.println("User info is not set or does not contain 'uname' key."); // Debugging statement
         }
-        showReferences();
     }
 
     // Action methods for buttons

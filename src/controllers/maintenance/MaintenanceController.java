@@ -30,6 +30,12 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void restoredatabase() {
         System.out.println("Restore Database");
+
+        if (new JSONManager().getSetting("backupLocation").compareTo("Nothing set.") == 0) {
+            PopupDialog.showCustomErrorDialog("You have not set a backup location!");
+            return;
+        }
+
         RestoreBackupController controller = (RestoreBackupController) this.initializeNextScreen_BP(
                 "../../views/fxmls/maintenance/RestoreBackupView.fxml", loggedInUserInfo,
                 "RESTORE");
