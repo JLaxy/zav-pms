@@ -6,12 +6,13 @@ package models.schemas;
 
 import java.lang.reflect.Field;
 
+import enums.StockTypeCBox;
+import enums.UnitMeasureCBox;
 import models.helpers.PopupDialog;
 
 public class Stock {
-    private int id, unit_measure_id, stock_type_id, critical_level;
-    private String stock_name;
-    private Float quantity;
+    private int id, quantity, unit_measure_id, stock_type_id, critical_level;
+    private String stock_name, unit_measure_id_string, stock_type_id_string;
     private boolean isVoided;
 
     // Null Stock Constructor
@@ -19,7 +20,7 @@ public class Stock {
 
     }
 
-    public Stock(int id, String stock_name, Float quantity, int unit_measure_id, int stock_type_id, int critical_level, boolean isVoided) {
+    public Stock(int id, String stock_name, int quantity, int unit_measure_id, int stock_type_id, int critical_level, boolean isVoided) {
         this.id = id;
         this.stock_name = stock_name;
         this.quantity = quantity;
@@ -27,6 +28,28 @@ public class Stock {
         this.stock_type_id = stock_type_id;
         this.critical_level = critical_level;
         this.isVoided = isVoided;
+
+        // Updates string equivalents of Unit Measure and Stock Type
+        updateStringEquivalents();
+    }
+
+    // Updates string equivalents of Unit Measure and Stock Type
+    public void updateStringEquivalents() {
+        if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.BOTTLE.getValue())
+            this.unit_measure_id_string = "bottle";
+        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.PACK.getValue())
+        this.unit_measure_id_string = "pack";
+        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.SACHET.getValue())
+        this.unit_measure_id_string = "sachet";
+        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.BOX.getValue())
+        this.unit_measure_id_string = "box";
+
+        if (this.stock_type_id == StockTypeCBox.StockType.VEGETABLE.getValue())
+            this.stock_type_id_string = "vegetable";
+        else if (this.stock_type_id == StockTypeCBox.StockType.MEAT.getValue())
+            this.stock_type_id_string = "meat";
+        else if (this.stock_type_id == StockTypeCBox.StockType.CONDIMENT.getValue())
+            this.stock_type_id_string = "condiment";
     }
 
     public int getId() {
@@ -37,8 +60,16 @@ public class Stock {
         return this.stock_name;
     }
 
-    public Float getQuantity() {
+    public int getQuantity() {
         return this.quantity;
+    }
+
+    public String getUnit_measure_id_string() {
+        return this.unit_measure_id_string;
+    }
+
+    public String getStock_type_id_string() {
+        return this.stock_type_id_string;
     }
 
     public int getUnit_measure_id() {
@@ -53,7 +84,7 @@ public class Stock {
         return this.critical_level;
     }
 
-    public boolean getisVoided() {
+    public boolean getisVoided(){
         return this.isVoided;
     }
 

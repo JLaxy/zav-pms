@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 public class StockInventoryController extends ParentController {
     @FXML
     private void registernewstock() {
-        initializeNextScreen_BP("../../views/fxmls/inventory/RegisterNewStockView.fxml", this.loggedInUserInfo, "STOCK INVENTORY");
+        RegisterNewStockController controller = (RegisterNewStockController) this.initializeNextScreen_BP
+        ("../../views/fxmls/inventory/RegisterNewStockView.fxml", this.loggedInUserInfo, "STOCK INVENTORY");
+        controller.initializeComboBoxes();
         System.out.println("Register New Stock");
     }
 

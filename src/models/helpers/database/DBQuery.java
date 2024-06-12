@@ -17,10 +17,10 @@ import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
 import models.modules.Security;
+import models.schemas.Stock;
+import models.schemas.StockType;
 import models.schemas.User;
 import models.schemas.UserLog;
-import models.schemas.StockType;
-import models.schemas.Stock;
 
 public class DBQuery {
 
@@ -284,6 +284,13 @@ public class DBQuery {
                 break;
             case DatabaseLists.Lists.LEVELS_OF_ACCESS:
                 query = "SELECT level_of_access FROM level_of_access;";
+                break;
+            case DatabaseLists.Lists.UNIT_MEASURE:
+                query = "SELECT unit FROM unit_measure;";
+                break;
+            case DatabaseLists.Lists.STOCK_TYPE:
+                query = "SELECT type FROM stock_type;";
+                break;
             default:
                 break;
         }
@@ -291,8 +298,7 @@ public class DBQuery {
         ObservableList<String> databaseList = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
-                        .prepareStatement(
-                                query)) {
+                        .prepareStatement(query)) {
             // Execute SQL Query
             stmt.execute();
 
@@ -458,27 +464,31 @@ public class DBQuery {
         return false;
     }
 
-    // Save new stock  on database
+    // Save new stock on database
     public boolean saveNewStock(Stock newStock, User loggedInUserInfo) {
-        //try (Connection con = this.zavPMSDB.createConnection();
-                //PreparedStatement stmt = con
-                        //.prepareStatement(
-                                //"INSERT INTO stock (type, default_expiration) VALUES (?, ?);")) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO stock (stock_name, quantity, unit_measure_id, stock_type_id, critical_level, isVoided) VALUES (?, ?, ?, ?, ?, ?);")) {
 
-            // Setting stock informations
-            //stmt.setString(1, newStock.getType());
-            //stmt.setInt(2, newStock.getDefault_expiration());
+            // Setting stock info
+            stmt.setString(1, newStock.getStock_name());
+            stmt.setInt(2, newStock.getQuantity());
+            stmt.setInt(3, newStock.getUnit_measure_id());
+            stmt.setInt(4, newStock.getStock_type_id());
+            stmt.setInt(5, newStock.getCritical_level());
+            stmt.setBoolean(6, newStock.getisVoided());
 
-            //stmt.execute();
+            stmt.execute();
 
-            // Log creating new stock type in database
-            //logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
-                    //UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
-                    //DateHelper.getCurrentDateTimeString(), "registered new stock type \"" + newStock.getType() + "\"");
-            //return true;
-        //} catch (Exception e) {
-            //PopupDialog.showErrorDialog(e, this.getClass().getName());
-        //}
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_STOCK.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new user \"" + newStock.getStock_name() + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
         return false;
     }
 }
