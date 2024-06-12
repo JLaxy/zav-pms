@@ -69,30 +69,6 @@ INSERT INTO `backup_log` VALUES (1,2,'2024-06-11 11:50:40','LAXAMANA-PC',16),(2,
 UNLOCK TABLES;
 
 --
--- Table structure for table `backup_types`
---
-
-DROP TABLE IF EXISTS `backup_types`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `backup_types` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `backup_type` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `backup_types`
---
-
-LOCK TABLES `backup_types` WRITE;
-/*!40000 ALTER TABLE `backup_types` DISABLE KEYS */;
-INSERT INTO `backup_types` VALUES (1,'manual'),(2,'automatic');
-/*!40000 ALTER TABLE `backup_types` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `food_product`
 --
 
@@ -427,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-12 18:22:10
+-- Dump completed on 2024-06-12 18:28:05
