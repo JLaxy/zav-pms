@@ -52,5 +52,9 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void eabackupsettings() {
         System.out.println("Edit Auto Backup Settings");
+        EditAutoBackupSettingsController controller = (EditAutoBackupSettingsController) this.initializeNextScreen_BP(
+                "../../views/fxmls/maintenance/EditAutoBackupSettingsView.fxml", loggedInUserInfo,
+                "EDIT AUTO BACKUP SETTINGS");
+        controller.configureScreen();
     }
 }

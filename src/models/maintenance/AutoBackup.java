@@ -1,24 +1,30 @@
-/*
- * Contains all of the codes used to debug the PMS program
- */
-
-package models.helpers;
+package models.maintenance;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javafx.stage.Stage;
+import models.helpers.JSONManager;
+import models.helpers.PopupDialog;
 
-public class Debugger {
-
+public class AutoBackup {
     // Sets function to execute as program closes
     public static void enableDatabaseSaveOnExit(Stage mainStage) {
+
         mainStage.setOnCloseRequest(e -> {
+            // If autobackup is disabled
+            if (new JSONManager().getSetting("autoBackup").compareTo("false") == 0)
+                return;
+
             try {
-                /*
-                 * COMMENT THE APPROPRIATE CODE
-                 */
+                // String[] COMMAND = new String[] {
+                // "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
+                // "pmsprogram",
+                // "-pzavpms@123", "zav-pms-db",
+                // "-r",
+                // (new JSONManager().getSetting("backupLocation") + "\\"
+                // + DateHelper.getCurrentDateTimeString().replace(":", "-") + ".sql")
+                // };
 
                 // JUNELL
                 String[] COMMAND = new String[] {
@@ -56,11 +62,10 @@ public class Debugger {
                     System.out.println(s);
                 }
 
-                PopupDialog.showInfoDialog("Success", "Sucessfully backed-up database");
-            } catch (IOException e1) {
-                PopupDialog.showErrorDialog(e1, "models.helpers.Debugger.java");
+                PopupDialog.showInfoDialog("Auto Database Backup", "Successfully backed up database");
+            } catch (Exception x) {
+                PopupDialog.showErrorDialog(x, "models.helpers.AutoBackup.java");
             }
         });
     }
-
 }

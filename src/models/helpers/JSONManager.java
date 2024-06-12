@@ -49,6 +49,7 @@ public class JSONManager {
 
             settings.put("cooldown", "2002-10-28 09:18:19");
             settings.put("backupLocation", "Nothing set.");
+            settings.put("autoBackup", "false");
 
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
             settingsFile.put("program_settings", settings);

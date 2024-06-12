@@ -9,11 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import models.helpers.Debugger;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
 import models.helpers.database.DBManager;
+import models.maintenance.AutoBackup;
 
 public class PMS extends Application {
     // Easy to change values
@@ -24,9 +24,8 @@ public class PMS extends Application {
     @Override
     public void start(Stage mainStage) throws Exception {
         try {
-
             // Comment to disable database save on exit
-            Debugger.enableDatabaseSaveOnExit(mainStage);
+            AutoBackup.enableDatabaseSaveOnExit(mainStage);
 
             // Connecting to Database
             DBManager zavPMSDB = connectToDatabase();

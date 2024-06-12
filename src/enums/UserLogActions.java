@@ -28,7 +28,9 @@ public class UserLogActions {
         MANUAL_DATABASE_BACKUP(16, "Manually Backed-Up Database"),
         AUTO_DATABASE_BACKUP(17, "Automatically Backed-Up Database"),
         EDITED_DATABASE_BACKUP_LOCATION(18, "Edited Database Backup Location"),
-        RESTORED_DATABASE(19, "Restored Database using Backup");
+        RESTORED_DATABASE(19, "Restored Database using Backup"),
+        ENABLED_DATABASE_AUTOBACKUP(20, "Enabled Database Auto Backup"),
+        DISABLED_DATABASE_AUTOBACKUP(21, "Disabled Database Auto Backup");
 
         private final int action_id;
         private final String action_string;

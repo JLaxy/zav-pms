@@ -76,4 +76,13 @@ public class UserDetailsModel {
         return this.controller.getDBManager().query.saveNewUser(newUser, loggedInUser);
     }
 
+    // Returns true if user exists
+    public boolean doesUserExist(String uName) {
+        User retrieved = this.controller.getDBManager().query.getUserInfo(uName);
+
+        if (retrieved.getUname() == null)
+            return false;
+        return true;
+    }
+
 }

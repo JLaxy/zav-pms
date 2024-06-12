@@ -125,10 +125,15 @@ public class UserDetailsController extends ParentController {
         if (PopupDialog.confirmOperationDialog("Do you want to save this user?") != JOptionPane.YES_OPTION)
             return;
 
-        // If inputs are not valid
-        if (!areInputsValid()) {
+        // Checks if username is not taken
+        if (this.model.doesUserExist(unameField.getText())) {
+            PopupDialog.showCustomErrorDialog("Username is already taken!");
             return;
         }
+
+        // If inputs are not valid
+        if (!areInputsValid())
+            return;
 
         System.out.println("saving new user...");
 
