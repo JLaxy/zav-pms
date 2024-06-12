@@ -1,12 +1,10 @@
 package controllers.maintenance;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 
 import controllers.ParentController;
 import enums.ProgramSettings;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -65,7 +63,13 @@ public class ManualBackupController extends ParentController {
                     return new Task<Void>() {
                         @Override
                         protected Void call() throws Exception {
-                            backupHistoryTable.setItems(dbLogs);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    backupHistoryTable.setItems(dbLogs);
+                                }
+
+                            });
                             return null;
                         }
                     };
@@ -77,12 +81,18 @@ public class ManualBackupController extends ParentController {
                 try {
                     LocalDateTime latestDate = DateHelper.stringToDate(dbLogs.getLast().getDateTime());
                     latestBackupLabel.setText(
-                            DateHelper.dateToFormattedDate(latestDate.toLocalDate()) + " " + latestDate.toLocalTime());
+                            DateHelper.dateToFormattedDate(latestDate.toLocalDate()) + " "
+                                    + latestDate.toLocalTime());
 
                     LocalDateTime previousDate = DateHelper
                             .stringToDate(dbLogs.get(dbLogs.indexOf(dbLogs.getLast()) - 1).getDateTime());
                     previousBackupLabel.setText(DateHelper.dateToFormattedDate(previousDate.toLocalDate()) + " "
                             + previousDate.toLocalTime());
+
+                    // Sort according to date
+                    backupHistoryTable.getSortOrder()
+                            .add(backupHistoryTable.getColumns()
+                                    .get(backupHistoryTable.getColumns().indexOf(dateCol)));
                 } catch (Exception ex) {
                     System.out.println("no backup date / previous backup date");
                 }
@@ -103,42 +113,16 @@ public class ManualBackupController extends ParentController {
     @FXML
     private void backup(ActionEvent e) {
         System.out.println("backing up...");
-        try {
-            String[] COMMAND = new String[] {
-                    "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
-                    "pmsprogram",
-                    "-pzavpms@123", "zav-pms-db",
-                    "-r",
-                    (new JSONManager().getSetting("backupLocation") + "\\"
-                            + DateHelper.getCurrentDateTimeString().replace(":", "-") + ".sql")
-            };
 
-            Runtime runner = Runtime.getRuntime();
-            // Executing command
-            Process proc = runner.exec(COMMAND);
-
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-            // Read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
-            String s = null;
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
-
-            // Read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-
-            PopupDialog.showInfoDialog("Success", "Sucessfully backed-up database");
-            // Log backup action to database
-            this.model.logBackup(loggedInUserInfo);
-            retrieveDatabaseLogs();
-        } catch (IOException e1) {
-            PopupDialog.showErrorDialog(e1, "models.helpers.Debugger.java");
+        // If sucess
+        if (!this.getDBManager().backupDatabase()) {
+            PopupDialog.showCustomErrorDialog("There has been an error backing up the database");
+            return;
         }
+
+        // Log backup action to database
+        this.model.logBackup(loggedInUserInfo);
+        retrieveDatabaseLogs();
+        PopupDialog.showInfoDialog("Success", "Sucessfully backed-up database");
     }
 }

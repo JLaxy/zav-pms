@@ -78,7 +78,7 @@
             </Label>
             <ScrollPane prefHeight="448.0" prefWidth="648.0">
                <content>
-                  <VBox prefWidth="653.0">
+                  <VBox>
                      <children>
                         <Label text="Username">
                            <font>
@@ -135,7 +135,7 @@
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="detailsLabel" prefWidth="617.0" text="Details">
+                        <Label fx:id="detailsLabel" text="Details">
                            <font>
                               <Font size="14.0" />
                            </font>

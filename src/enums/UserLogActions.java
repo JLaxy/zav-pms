@@ -26,7 +26,9 @@ public class UserLogActions {
         REGISTERED_NEW_STOCK_TYPE(14, "Registered New Stock Type"),
         REGISTERED_NEW_STOCK(15, "Registered New Stock"),
         MANUAL_DATABASE_BACKUP(16, "Manually Backed-Up Database"),
-        AUTO_DATABASE_BACKUP(17, "Automatically Backed-Up Database");
+        AUTO_DATABASE_BACKUP(17, "Automatically Backed-Up Database"),
+        EDITED_DATABASE_BACKUP_LOCATION(18, "Edited Database Backup Location"),
+        RESTORED_DATABASE(19, "Restored Database using Backup");
 
         private final int action_id;
         private final String action_string;

@@ -115,3 +115,12 @@ https://stackoverflow.com/questions/696782/retrieve-column-names-from-java-sql-r
 
 Do task from another thread
 https://stackoverflow.com/questions/44239194/javafx-updating-ui-from-a-thread-java-8
+
+Disable tableview reordering
+https://stackoverflow.com/questions/22202782/how-to-prevent-tableview-from-doing-tablecolumn-re-order-in-javafx-8
+
+Not on fx application thread
+https://stackoverflow.com/questions/21083945/how-to-avoid-not-on-fx-application-thread-currentthread-javafx-application-th
+
+backup sql database
+https://stackoverflow.com/questions/14924770/simple-backup-and-restore-for-mysql-database-from-java

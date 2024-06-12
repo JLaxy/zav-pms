@@ -30,6 +30,10 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void restoredatabase() {
         System.out.println("Restore Database");
+        RestoreBackupController controller = (RestoreBackupController) this.initializeNextScreen_BP(
+                "../../views/fxmls/maintenance/RestoreBackupView.fxml", loggedInUserInfo,
+                "RESTORE");
+        controller.updateLabels();
     }
 
     @FXML

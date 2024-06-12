@@ -4,12 +4,17 @@
 
 package models.helpers.database;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
+import models.helpers.DateHelper;
+import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
 
 public class DBManager {
@@ -68,5 +73,78 @@ public class DBManager {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;
         }
+    }
+
+    public boolean restoreDatabase(String path) {
+        try {
+            String[] cmdString = new String[] { "mysql", DATABASE_NAME, "-u" + USERNAME, "-p" + PASSWORD, "-e",
+                    " source " + path };
+            Runtime runner = Runtime.getRuntime();
+            Process proc = runner.exec(cmdString);
+
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+            // Read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            // Read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            // If there is an error
+            if ((s = stdError.readLine()) == null)
+                return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    // Backups database
+    public boolean backupDatabase() {
+        try {
+            String[] COMMAND = new String[] {
+                    "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
+                    "pmsprogram",
+                    "-pzavpms@123", "zav-pms-db",
+                    "-r",
+                    (new JSONManager().getSetting("backupLocation") + "\\"
+                            + DateHelper.getCurrentDateTimeString().replace(":", "-") + ".sql")
+            };
+
+            Runtime runner = Runtime.getRuntime();
+            // Executing command
+            Process proc = runner.exec(COMMAND);
+
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+            // Read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            // Read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            // If no error
+            if ((s = stdError.readLine()) == null)
+                return true;
+        } catch (IOException e1) {
+            PopupDialog.showErrorDialog(e1, "models.helpers.Debugger.java");
+        }
+        return false;
     }
 }

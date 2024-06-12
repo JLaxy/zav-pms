@@ -9,14 +9,18 @@ import javafx.scene.control.Label;
 import javafx.stage.DirectoryChooser;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
+import models.maintenance.EditBackupLocationModel;
 
 public class EditBackupLocationController extends ParentController {
 
     @FXML
     private Label selectedLocLabel, currentLocLabel;
 
+    private EditBackupLocationModel model;
+
     @FXML
     public void initialize() {
+        this.model = new EditBackupLocationModel(this);
         System.out.println("initialized");
         this.currentLocLabel.setText(new JSONManager().getSetting("backupLocation"));
     }
@@ -52,6 +56,7 @@ public class EditBackupLocationController extends ParentController {
         if (new JSONManager().writeToSetting("backupLocation", selectedLocLabel.getText())) {
             PopupDialog.showInfoDialog("Updated Database Export Location",
                     "Successfully Updated Database Export Location");
+            this.model.logBackupLocationEdit(loggedInUserInfo, selectedLocLabel.getText());
             this.borderPaneRootSwitcher.goBack_BP();
         }
     }
