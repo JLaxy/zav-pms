@@ -85,4 +85,9 @@ public class UserDetailsModel {
         return true;
     }
 
+    // Returns true if email already exists
+    public boolean doesEmailExist(String email) {
+        return this.controller.getDBManager().query.doesEmailExist(email);
+    }
+
 }

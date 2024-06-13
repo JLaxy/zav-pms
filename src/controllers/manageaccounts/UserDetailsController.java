@@ -131,6 +131,11 @@ public class UserDetailsController extends ParentController {
             return;
         }
 
+        if (this.model.doesEmailExist(emailField.getText())) {
+            PopupDialog.showCustomErrorDialog("Email is already taken!");
+            return;
+        }
+
         // If inputs are not valid
         if (!areInputsValid())
             return;

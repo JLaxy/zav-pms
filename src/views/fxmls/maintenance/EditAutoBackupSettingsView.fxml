@@ -49,12 +49,12 @@
             <Font name="Arial Bold" size="28.0" />
          </font>
       </Label>
-      <Label fx:id="latestLabel" layoutX="901.0" layoutY="293.0" text="latest date">
+      <Label fx:id="latestLabel" layoutX="901.0" layoutY="293.0" text="No backup.">
          <font>
             <Font name="Arial" size="19.0" />
          </font>
       </Label>
-      <Label fx:id="previousLabel" layoutX="901.0" layoutY="388.0" text="previous date">
+      <Label fx:id="previousLabel" layoutX="901.0" layoutY="388.0" text="No backup.">
          <font>
             <Font name="Arial" size="19.0" />
          </font>

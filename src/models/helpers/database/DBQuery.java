@@ -105,6 +105,16 @@ public class DBQuery {
         }
     }
 
+    public boolean doesEmailExist(String email) {
+        ObservableList<User> listOfUsers = getAllUsers(null);
+
+        for (User user : listOfUsers) {
+            if (email.compareTo(user.getEmail()) == 0)
+                return true;
+        }
+        return false;
+    }
+
     // Returns info of username
     public User getUserInfo(String uName) {
         try (Connection con = this.zavPMSDB.createConnection();
