@@ -1,6 +1,7 @@
 package controllers.maintenance;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.fxml.FXML;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
@@ -22,7 +23,7 @@ public class MaintenanceController extends ParentController {
         }
 
         ManualBackupController controller = (ManualBackupController) this.initializeNextScreen_BP(
-                "../../views/fxmls/maintenance/ManualBackupView.fxml", loggedInUserInfo,
+                ScreenPaths.Paths.MANUAL_BACKUP.getPath(), loggedInUserInfo,
                 "MAINTENANCE");
         controller.retrieveDatabaseLogs();
     }

@@ -1,6 +1,7 @@
 package controllers.report;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.fxml.FXML;
 
 public class EditAutoReportGenerationController extends ParentController {
@@ -12,14 +13,16 @@ public class EditAutoReportGenerationController extends ParentController {
 
     @FXML
     private void eardestinationemail() {
-        initializeNextScreen_BP("../../views/fxmls/report/EditAutoReportDestinationEmailView.fxml", this.loggedInUserInfo, "REPORT");
+        initializeNextScreen_BP(ScreenPaths.Paths.EDIT_AUTO_REPORT_DESTINATION_EMAIL.getPath(), this.loggedInUserInfo,
+                "REPORT");
         System.out.println("Edit Auto Report Destination Email");
     }
 
     @FXML
     private void eartimeinterval() {
-        initializeNextScreen_BP("../../views/fxmls/report/EditAutoReportTimeIntervalView.fxml", this.loggedInUserInfo, "REPORT");
+        initializeNextScreen_BP(ScreenPaths.Paths.EDIT_AUTO_REPORT_TIME_INTERVAL.getPath(), this.loggedInUserInfo,
+                "REPORT");
         System.out.println("Edit Auto Report Time Interval");
     }
-    
+
 }

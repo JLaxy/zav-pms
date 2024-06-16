@@ -1,6 +1,7 @@
 package controllers.login;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,7 +38,7 @@ public class ForgotPasswordController extends ParentController {
         if (userInfo.getId() != 0 && userInfo.getId() != 1 || userInfo.getUname() != null) {
             // Navigate to next screen
             PasswordQuestionController nextController = (PasswordQuestionController) initializeNextScreen(
-                    "../../views/fxmls/login/PasswordQuestionView.fxml", this.loggedInUserInfo);
+                    ScreenPaths.Paths.PASSWORD_QUESTION.getPath(), this.loggedInUserInfo);
             // Retrieves question details of user (uname, question, answer)
             String[] questionDetails = this.model.getUserQuestions(uName);
             // Passing question details to next controller

@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import controllers.homepage.AdminHomePageController;
 import controllers.homepage.CashierHomePageController;
 import controllers.homepage.KitchenStaffHomePageController;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,16 +70,16 @@ public class PageNavigatorViewController extends ParentController {
             switch (loa) {
                 // Admin
                 case "Admin":
-                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/AdminHomePage.fxml"));
+                    rootLoader = new FXMLLoader(getClass().getResource(ScreenPaths.Paths.ADMIN_HOMEPAGE.getPath()));
                     break;
                 // Kitchen Staff
                 case "Kitchen Staff":
                     rootLoader = new FXMLLoader(
-                            getClass().getResource("../views/fxmls/homepage/KitchenStaffHomePage.fxml"));
+                            getClass().getResource(ScreenPaths.Paths.KITCHEN_STAFF_HOMEPAGE.getPath()));
                     break;
                 // Cashier
                 case "Cashier":
-                    rootLoader = new FXMLLoader(getClass().getResource("../views/fxmls/homepage/CashierHomePage.fxml"));
+                    rootLoader = new FXMLLoader(getClass().getResource(ScreenPaths.Paths.CASHIER_HOMEPAGE.getPath()));
                     break;
                 default:
                     break;

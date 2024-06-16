@@ -5,6 +5,7 @@ import java.util.Timer;
 import controllers.PageNavigatorViewController;
 import controllers.ParentController;
 import enums.AccountStatuses;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -70,7 +71,7 @@ public class LoginController extends ParentController {
                 if (new JSONManager().getDeveloperSetting("skipOTP").compareTo("true") == 0) {
                     PopupDialog.showInfoDialog("Developer Setting", "Skipping OTP");
                     PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
-                            "../../views/fxmls/PageNavigatorView.fxml", userInfo);
+                            ScreenPaths.Paths.PAGE_NAVIGATOR.getPath(), userInfo);
                     // Sync screen with passed user details
                     controller.configureScreen();
                     return;
@@ -78,7 +79,7 @@ public class LoginController extends ParentController {
 
                 // Initiating OTP Process and Passing User ID
                 OTPLoginController nextController = (OTPLoginController) initializeNextScreen(
-                        "../../views/fxmls/login/OTPLoginView.fxml", userInfo);
+                        ScreenPaths.Paths.OTP_LOGIN.getPath(), userInfo);
                 nextController.initialize(userInfo.getEmail());
             } else {
                 System.out.println("does not exists");
@@ -97,8 +98,7 @@ public class LoginController extends ParentController {
     // Forgot Password Action
     public void forgotPasswordAction(ActionEvent e) {
         // Navigate to Forgot Password Screen
-        initializeNextScreen("../../views/fxmls/login/ForgotPasswordView.fxml", loggedInUserInfo);
-        System.out.println("running");
+        initializeNextScreen(ScreenPaths.Paths.FORGOT_PASSWORD.getPath(), loggedInUserInfo);
     }
 
     // Checks if cooldown is active

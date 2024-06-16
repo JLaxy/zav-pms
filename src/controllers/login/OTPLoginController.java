@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import controllers.PageNavigatorViewController;
 import controllers.ParentController;
+import enums.ScreenPaths;
 import enums.UserLogActions;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -62,7 +63,7 @@ public class OTPLoginController extends ParentController {
                     UserLogActions.Actions.SUCCESSFUL_LOGIN);
             // Redirect to NavigatorView
             PageNavigatorViewController controller = (PageNavigatorViewController) initializeNextScreen(
-                    "../../views/fxmls/PageNavigatorView.fxml", this.loggedInUserInfo);
+                    ScreenPaths.Paths.PAGE_NAVIGATOR.getPath(), this.loggedInUserInfo);
             // Sync screen with passed user details
             controller.configureScreen();
         } else {

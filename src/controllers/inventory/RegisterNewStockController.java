@@ -1,6 +1,7 @@
 package controllers.inventory;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -105,7 +106,7 @@ public class RegisterNewStockController extends ParentController {
 
     @FXML
     private void registernewstocktype() {
-        initializeNextScreen_BP("../../views/fxmls/inventory/RegisterNewStockTypeView.fxml", this.loggedInUserInfo,
+        initializeNextScreen_BP(ScreenPaths.Paths.REGISTER_NEW_STOCK_TYPE.getPath(), this.loggedInUserInfo,
                 "STOCK INVENTORY");
         System.out.println("Register New Stock Type");
     }

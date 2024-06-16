@@ -2,6 +2,7 @@ package controllers.homepage;
 
 import controllers.ParentController;
 import controllers.manageaccounts.ManageAccountsController;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,25 +36,25 @@ public class AdminHomePageController extends ParentController {
     @FXML
     private void orderAction(ActionEvent e) {
         if ((Button) e.getSource() == this.orderButton) {
-            this.initializeNextScreen_BP("../../views/fxmls/order/OrderView.fxml", this.loggedInUserInfo, "ORDER");
+            this.initializeNextScreen_BP(ScreenPaths.Paths.ORDER.getPath(), this.loggedInUserInfo, "ORDER");
         } else if ((Button) e.getSource() == this.transactionsButton) {
-            this.initializeNextScreen_BP("../../views/fxmls/transactions/TransactionsView.fxml", this.loggedInUserInfo,
+            this.initializeNextScreen_BP(ScreenPaths.Paths.TRANSACTION.getPath(), this.loggedInUserInfo,
                     "TRANSACTIONS");
         } else if ((Button) e.getSource() == this.inventoryButton) {
-            this.initializeNextScreen_BP("../../views/fxmls/inventory/InventoryView.fxml", this.loggedInUserInfo,
+            this.initializeNextScreen_BP(ScreenPaths.Paths.INVENTORY.getPath(), this.loggedInUserInfo,
                     "INVENTORY");
         } else if ((Button) e.getSource() == this.reportsButton) {
-            this.initializeNextScreen_BP("../../views/fxmls/report/ReportView.fxml", this.loggedInUserInfo, "REPORT");
+            this.initializeNextScreen_BP(ScreenPaths.Paths.REPORT.getPath(), this.loggedInUserInfo, "REPORT");
             System.out.println("reportsButton");
         } else if ((Button) e.getSource() == this.manageAccountButton) {
             ManageAccountsController controller = (ManageAccountsController) this.initializeNextScreen_BP(
-                    "../../views/fxmls/manageaccounts/ManageAccountsView.fxml",
+                    ScreenPaths.Paths.MANAGE_ACCOUNTS.getPath(),
                     this.loggedInUserInfo,
                     "MANAGE ACCOUNTS");
             controller.syncUserTableView();
             System.out.println("manageAccountButton");
         } else if ((Button) e.getSource() == this.maintenanceButton) {
-            this.initializeNextScreen_BP("../../views/fxmls/maintenance/MaintenanceView.fxml", this.loggedInUserInfo,
+            this.initializeNextScreen_BP(ScreenPaths.Paths.MAINTENANCE.getPath(), this.loggedInUserInfo,
                     "MAINTENANCE");
             System.out.println("maintenanceButton");
         } else if ((Button) e.getSource() == this.helpButton) {

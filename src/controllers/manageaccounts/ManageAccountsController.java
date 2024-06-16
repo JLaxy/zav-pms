@@ -1,6 +1,7 @@
 package controllers.manageaccounts;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -121,7 +122,7 @@ public class ManageAccountsController extends ParentController {
         // Logs action to database
         this.model.logViewingUserLogs(this.loggedInUserInfo.getId(), this.loggedInUserInfo.getUname());
         ViewUserLogsController controller = (ViewUserLogsController) this.initializeNextScreen_BP(
-                "../../views/fxmls/manageaccounts/ViewUserLogsView.fxml", loggedInUserInfo,
+                ScreenPaths.Paths.VIEW_USER_LOGS.getPath(), loggedInUserInfo,
                 "USER LOGS");
         controller.configureUserLogsTable();
     }
@@ -129,7 +130,7 @@ public class ManageAccountsController extends ParentController {
     @FXML
     private void registernewuser() {
         UserDetailsController controller = (UserDetailsController) this
-                .initializePopUpDialog("../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
+                .initializePopUpDialog(ScreenPaths.Paths.USER_DETAILS.getPath(), this.loggedInUserInfo);
         controller.initialize(null, this);
     }
 

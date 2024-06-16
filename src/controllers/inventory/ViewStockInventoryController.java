@@ -1,6 +1,7 @@
 package controllers.inventory;
 
 import controllers.ParentController;
+import enums.ScreenPaths;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -116,7 +117,7 @@ public class ViewStockInventoryController extends ParentController {
     public void editStock(ActionEvent e) {
         System.out.println("editing stock...");
         EditStockInventoryController controller = (EditStockInventoryController) this
-                .initializePopUpDialog("../../views/fxmls/inventory/EditStockInventoryView.fxml", loggedInUserInfo);
+                .initializePopUpDialog(ScreenPaths.Paths.EDIT_STOCK.getPath(), loggedInUserInfo);
         // Passing references
         controller.initialize(this.selectedStock, this);
     }

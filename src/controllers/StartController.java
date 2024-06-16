@@ -1,5 +1,6 @@
 package controllers;
 
+import enums.ScreenPaths;
 import models.schemas.User;
 
 public class StartController extends ParentController {
@@ -7,7 +8,7 @@ public class StartController extends ParentController {
     // Get Started Button Action
     public void getStartedAction() {
         testFunc();
-        initializeNextScreen("../views/fxmls/login/LoginView.fxml", new User());
+        initializeNextScreen(ScreenPaths.Paths.LOGIN.getPath(), new User());
     }
 
     // Debug function
