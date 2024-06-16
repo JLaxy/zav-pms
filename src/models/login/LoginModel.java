@@ -31,7 +31,7 @@ public class LoginModel extends ParentModel {
     public Boolean isCooldownActive() {
         // Retrieving Cooldown Date from settings file
         LocalDateTime cooldownDate = DateHelper
-                .stringToDate(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue()));
+                .stringToDateTime(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue()));
         // If cooldown date has not elapsed
         if (!DateHelper.isDateBeforeNow(cooldownDate))
             return true;

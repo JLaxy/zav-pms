@@ -18,7 +18,7 @@ public class DatabaseLog {
     }
 
     private void getStringEquivalents() {
-        LocalDateTime timeObject = DateHelper.stringToDate(this.dateTime);
+        LocalDateTime timeObject = DateHelper.stringToDateTime(this.dateTime);
         this.dateString = timeObject.toLocalDate().toString();
         this.timeString = timeObject.toLocalTime().toString();
     }

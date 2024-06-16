@@ -24,9 +24,6 @@ public class PMS extends Application {
     @Override
     public void start(Stage mainStage) throws Exception {
         try {
-            // Comment to disable database save on exit
-            AutoBackup.enableDatabaseSaveOnExit(mainStage);
-
             // Connecting to Database
             DBManager zavPMSDB = connectToDatabase();
 
@@ -61,6 +58,9 @@ public class PMS extends Application {
             // Configuring controller of next view; passing in DBManager and RootSwitcher
             // References
             nextController.initializeReferences(zavPMSDB, rootSwitcher);
+
+            // Comment to disable database save on exit
+            AutoBackup.enableDatabaseSaveOnExit(mainStage, zavPMSDB);
 
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

@@ -9,6 +9,7 @@ package models.helpers.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 import enums.DatabaseLists;
 import enums.UserLogActions;
@@ -17,11 +18,11 @@ import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
 import models.modules.Security;
+import models.schemas.Stock;
+import models.schemas.StockType;
 import models.schemas.User;
 import models.schemas.UserLog;
-import models.schemas.StockType;
 import models.schemas.DatabaseLog;
-import models.schemas.Stock;
 
 public class DBQuery {
 
@@ -275,10 +276,21 @@ public class DBQuery {
 
     // Returns all of the users registered in database in ObservableList
     public ObservableList<User> getAllUsers(String userQuery) {
+        String query = "";
+
+        if (userQuery == null)
+            query = "SELECT * FROM users;";
+        else
+            query = "SELECT * FROM users WHERE uname LIKE ?";
+
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "SELECT * FROM users;")) {
+                                query)) {
+
+            if (userQuery != null)
+                stmt.setString(1, "%" + userQuery + "%");
+
             // Execute SQL Query
             stmt.execute();
 
@@ -296,28 +308,12 @@ public class DBQuery {
                     if (result.getInt("id") == 1)
                         continue;
 
-                    // If user is not searching for user
-                    if (userQuery == null) {
-                        // Add each user in list
-                        myList.add(new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
-                                result.getString("email"),
-                                result.getInt("level_of_access_id"), result.getString("fname"),
-                                result.getString("lname"),
-                                result.getInt("account_status_id"), result.getInt("unique_question_id"),
-                                result.getString("unique_question_answer")));
-                    } else {
-                        // If username matches user search
-                        if (result.getString("uname").compareTo(userQuery) == 0) {
-                            // Add each user in list
-                            myList.add(
-                                    new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
-                                            result.getString("email"),
-                                            result.getInt("level_of_access_id"), result.getString("fname"),
-                                            result.getString("lname"),
-                                            result.getInt("account_status_id"), result.getInt("unique_question_id"),
-                                            result.getString("unique_question_answer")));
-                        }
-                    }
+                    myList.add(new User(result.getInt("id"), result.getString("uname"), result.getString("pass"),
+                            result.getString("email"),
+                            result.getInt("level_of_access_id"), result.getString("fname"),
+                            result.getString("lname"),
+                            result.getInt("account_status_id"), result.getInt("unique_question_id"),
+                            result.getString("unique_question_answer")));
                 }
                 result.close();
                 return myList;
@@ -342,6 +338,13 @@ public class DBQuery {
                 break;
             case DatabaseLists.Lists.LEVELS_OF_ACCESS:
                 query = "SELECT level_of_access FROM level_of_access;";
+                break;
+            case DatabaseLists.Lists.UNIT_MEASURE:
+                query = "SELECT unit FROM unit_measure;";
+                break;
+            case DatabaseLists.Lists.STOCK_TYPE:
+                query = "SELECT type FROM stock_type;";
+                break;
             default:
                 break;
         }
@@ -349,8 +352,7 @@ public class DBQuery {
         ObservableList<String> databaseList = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
-                        .prepareStatement(
-                                query)) {
+                        .prepareStatement(query)) {
             // Execute SQL Query
             stmt.execute();
 
@@ -455,7 +457,8 @@ public class DBQuery {
         if (uname == null)
             query = "SELECT * FROM user_logs WHERE date LIKE '" + selectedDate + "%';";
         else
-            query = "SELECT * FROM user_logs WHERE date LIKE '" + selectedDate + "%' AND user_id = (?);";
+            query = "SELECT * FROM user_logs INNER JOIN users ON users.id = user_logs.user_id WHERE date LIKE '"
+                    + selectedDate + "%' AND uname LIKE ?;";
 
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
@@ -464,7 +467,7 @@ public class DBQuery {
 
             // If searching for a specific user
             if (uname != null) {
-                stmt.setInt(1, getUserInfo(uname).getId());
+                stmt.setString(1, "%" + uname + "%");
             }
             // Execute SQL Query
             stmt.execute();
@@ -519,26 +522,135 @@ public class DBQuery {
 
     // Save new stock on database
     public boolean saveNewStock(Stock newStock, User loggedInUserInfo) {
-        // try (Connection con = this.zavPMSDB.createConnection();
-        // PreparedStatement stmt = con
-        // .prepareStatement(
-        // "INSERT INTO stock (type, default_expiration) VALUES (?, ?);")) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO stock (stock_name, quantity, unit_measure_id, stock_type_id, critical_level, isVoided) VALUES (?, ?, ?, ?, ?, ?);")) {
 
-        // Setting stock informations
-        // stmt.setString(1, newStock.getType());
-        // stmt.setInt(2, newStock.getDefault_expiration());
+            // Setting stock info
+            stmt.setString(1, newStock.getStock_name());
+            stmt.setInt(2, newStock.getQuantity());
+            stmt.setInt(3, newStock.getUnit_measure_id());
+            stmt.setInt(4, newStock.getStock_type_id());
+            stmt.setInt(5, newStock.getCritical_level());
+            stmt.setBoolean(6, newStock.getisVoided());
 
-        // stmt.execute();
+            stmt.execute();
 
-        // Log creating new stock type in database
-        // logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
-        // UserLogActions.Actions.REGISTERED_NEW_STOCK_TYPE.getValue(),
-        // DateHelper.getCurrentDateTimeString(), "registered new stock type \"" +
-        // newStock.getType() + "\"");
-        // return true;
-        // } catch (Exception e) {
-        // PopupDialog.showErrorDialog(e, this.getClass().getName());
-        // }
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_STOCK.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new user \"" + newStock.getStock_name() + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
         return false;
     }
+
+    public ObservableList<Stock> getStocks(String stockName) {
+        String query = "";
+
+        if (stockName == null)
+            query = "SELECT * FROM stock WHERE isVoided = 0;";
+        else
+            query = "SELECT * FROM stock WHERE isVoided = 0 AND stock_name LIKE ?;";
+
+        ObservableList<Stock> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                query)) {
+
+            if (stockName != null) {
+                stmt.setString(1, ("%" + stockName + "%"));
+            }
+
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    myList.add(new Stock(result.getInt("id"), result.getString("stock_name"), result.getInt("quantity"),
+                            result.getInt("unit_measure_id"), result.getInt("stock_type_id"),
+                            result.getInt("critical_level"), result.getInt("isVoided") == 0 ? false : true));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
+    }
+
+    public boolean editStock(Stock newStock, User loggedInUser, String[] changes) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "UPDATE stock SET stock_name = (?), quantity = (?), unit_measure_id = (?), stock_type_id = (?), critical_level = (?), isVoided = (?) WHERE id = (?);")) {
+
+            // Putting in values
+            stmt.setString(1, newStock.getStock_name());
+            stmt.setInt(2, newStock.getQuantity());
+            stmt.setInt(3, newStock.getUnit_measure_id());
+            stmt.setInt(4, newStock.getStock_type_id());
+            stmt.setInt(5, newStock.getCritical_level());
+            stmt.setInt(6, newStock.getisVoided() ? 1 : 0);
+            stmt.setInt(7, newStock.getId());
+
+            stmt.execute();
+
+            String changeMessage = "";
+            // Getting changes in array
+            for (String change : changes) {
+                changeMessage += (change + ", ");
+            }
+
+            logAction(loggedInUser.getId(), loggedInUser.getUname(), UserLogActions.Actions.EDITED_STOCK.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "updated details of stock \"" + newStock.getStock_name() + "\";" + changeMessage);
+
+            // Return true if success
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return false if error
+        return false;
+    }
+
+    public boolean logStockProductPurchase(Stock selectedStock, int quantity, float totalCost, LocalDate datePurchased,
+            LocalDate expiryDate, int stockProductTypeID, User loggedInUser) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO stock_product_expenses (stock_id, quantity, total_cost, date_purchased, stock_product_type_id, expiry_date) VALUES (?, ?, ?, ?, ?, ?);")) {
+
+            // Setting stock info
+            stmt.setInt(1, selectedStock.getId());
+            stmt.setInt(2, quantity);
+            stmt.setFloat(3, totalCost);
+            stmt.setString(4, DateHelper.dateToString(datePurchased));
+            stmt.setInt(5, stockProductTypeID);
+            stmt.setString(6, DateHelper.dateToString(expiryDate));
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.LOGGED_STOCK_PRODUCT_PURCHASE.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "registered stock/product purchase of \"" + selectedStock.getStock_name() + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
 }

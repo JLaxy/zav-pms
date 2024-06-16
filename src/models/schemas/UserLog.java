@@ -24,7 +24,7 @@ public class UserLog {
 
     // Sets String equivalents of time and date
     private void getEquivalents() {
-        this.dateObject = DateHelper.stringToDate(this.date);
+        this.dateObject = DateHelper.stringToDateTime(this.date);
         this.dateString = dateObject.toLocalDate().toString();
         this.timeString = dateObject.toLocalTime().toString();
         this.actionString = getActionString(this.action_id);

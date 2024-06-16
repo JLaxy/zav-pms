@@ -39,12 +39,12 @@ public class RestoreBackupController extends ParentController {
     public void retrieveDatabaseLogs() {
         ObservableList<DatabaseLog> dbLogs = model.getDatabaseLogs();
 
-        LocalDateTime latestDate = DateHelper.stringToDate(dbLogs.getLast().getDateTime());
+        LocalDateTime latestDate = DateHelper.stringToDateTime(dbLogs.getLast().getDateTime());
         latestLabel.setText(
                 DateHelper.dateToFormattedDate(latestDate.toLocalDate()) + " " + latestDate.toLocalTime());
 
         LocalDateTime previousDate = DateHelper
-                .stringToDate(dbLogs.get(dbLogs.indexOf(dbLogs.getLast()) - 1).getDateTime());
+                .stringToDateTime(dbLogs.get(dbLogs.indexOf(dbLogs.getLast()) - 1).getDateTime());
         previousLabel.setText(DateHelper.dateToFormattedDate(previousDate.toLocalDate()) + " "
                 + previousDate.toLocalTime());
 

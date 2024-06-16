@@ -13,7 +13,6 @@ import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
-import models.helpers.DateHelper;
 import models.helpers.JSONManager;
 import models.helpers.PopupDialog;
 
@@ -108,7 +107,7 @@ public class DBManager {
     }
 
     // Backups database
-    public boolean backupDatabase() {
+    public boolean backupDatabase(String FILE_NAME) {
         try {
             String[] COMMAND = new String[] {
                     "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump", "-u",
@@ -116,7 +115,7 @@ public class DBManager {
                     "-pzavpms@123", "zav-pms-db",
                     "-r",
                     (new JSONManager().getSetting("backupLocation") + "\\"
-                            + DateHelper.getCurrentDateTimeString().replace(":", "-") + ".sql")
+                            + FILE_NAME)
             };
 
             Runtime runner = Runtime.getRuntime();

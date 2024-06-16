@@ -148,7 +148,7 @@ public class JSONManager {
 
             // Updating Cooldown
             cooldown.addProperty("cooldown",
-                    DateHelper.dateToString(DateHelper.addMinutes(DateHelper.getCurrentDateTime(), 5)));
+                    DateHelper.dateTimeToString(DateHelper.addMinutes(DateHelper.getCurrentDateTime(), 5)));
             gson.toJson(root, myWriter);
             myWriter.close();
         } catch (Exception e) {

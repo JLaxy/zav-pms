@@ -11,8 +11,12 @@
   -fx-background-radius: 100;
 }
 
-#cancelButton {
-  -fx-background-color: #d552a0;
+#increaseStockButton,
+#decreaseStockButton,
+#voidButton,
+#cancelButton,
+#updateButton {
   -fx-text-fill: white;
+  -fx-background-color: #d552a0;
   -fx-background-radius: 100;
 }

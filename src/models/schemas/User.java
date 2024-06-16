@@ -175,4 +175,8 @@ public class User {
         }
     }
 
+    public static User getSystemUser() {
+        return new User(1, "SYSTEM", "-", "-", 0, "SYSTEM", "SYSTEM", 0, 0, "-");
+    }
+
 }

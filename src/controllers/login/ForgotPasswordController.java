@@ -46,6 +46,7 @@ public class ForgotPasswordController extends ParentController {
             nextController.configureController(userInfo);
             // Logging Password Reset Action to Database
             this.model.logPasswordReset(String.valueOf(userInfo.getId()), userInfo.getUname());
+            return;
         }
 
         PopupDialog.showCustomErrorDialog("User \"" + uName + "\" does not exist!");

@@ -14,12 +14,23 @@ import enums.ProgramSettings;
 public class DateHelper {
 
     // Easy to change values
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d HH:mm:ss");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d HH:mm:ss");
 
     // Returns the Date Object equivalent of String
-    public static LocalDateTime stringToDate(String date) {
+    public static LocalDateTime stringToDateTime(String date) {
         try {
-            return LocalDateTime.parse(date, DATE_FORMATTER);
+            return LocalDateTime.parse(date, DATE_TIME_FORMATTER);
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, "models.helpers.DateHelper");
+            return null;
+        }
+    }
+
+    // Returns formatted string equivalent of datetime
+    public static String dateTimeToString(LocalDateTime date) {
+        try {
+            return date.format(DATE_TIME_FORMATTER);
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, "models.helpers.DateHelper");
             return null;
@@ -27,7 +38,7 @@ public class DateHelper {
     }
 
     // Returns formatted string equivalent of date
-    public static String dateToString(LocalDateTime date) {
+    public static String dateToString(LocalDate date) {
         try {
             return date.format(DATE_FORMATTER);
         } catch (Exception e) {
@@ -38,7 +49,7 @@ public class DateHelper {
 
     // Returns formatted current date time
     public static String getCurrentDateTimeString() {
-        return dateToString(LocalDateTime.now());
+        return dateTimeToString(LocalDateTime.now());
     }
 
     // Returns true if date supplied has already passed
@@ -59,7 +70,7 @@ public class DateHelper {
     // Returns the seconds between the cooldown
     public static long getLoginCooldownSecs() {
         return ChronoUnit.SECONDS.between(getCurrentDateTime(),
-                DateHelper.stringToDate(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue())));
+                DateHelper.stringToDateTime(new JSONManager().getSetting(ProgramSettings.Setting.COOLDOWN.getValue())));
     }
 
     // Returns date in formatted String

@@ -30,7 +30,9 @@ public class UserLogActions {
         EDITED_DATABASE_BACKUP_LOCATION(18, "Edited Database Backup Location"),
         RESTORED_DATABASE(19, "Restored Database using Backup"),
         ENABLED_DATABASE_AUTOBACKUP(20, "Enabled Database Auto Backup"),
-        DISABLED_DATABASE_AUTOBACKUP(21, "Disabled Database Auto Backup");
+        DISABLED_DATABASE_AUTOBACKUP(21, "Disabled Database Auto Backup"),
+        EDITED_STOCK(22, "Edited Stock"),
+        LOGGED_STOCK_PRODUCT_PURCHASE(23, "Logged New Stock/Product Purchase");
 
         private final int action_id;
         private final String action_string;

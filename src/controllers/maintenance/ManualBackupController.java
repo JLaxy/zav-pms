@@ -79,13 +79,13 @@ public class ManualBackupController extends ParentController {
             datebaseLogsRetriever.setOnSucceeded(e -> {
                 borderPaneRootSwitcher.exitLoadingScreen_BP();
                 try {
-                    LocalDateTime latestDate = DateHelper.stringToDate(dbLogs.getLast().getDateTime());
+                    LocalDateTime latestDate = DateHelper.stringToDateTime(dbLogs.getLast().getDateTime());
                     latestBackupLabel.setText(
                             DateHelper.dateToFormattedDate(latestDate.toLocalDate()) + " "
                                     + latestDate.toLocalTime());
 
                     LocalDateTime previousDate = DateHelper
-                            .stringToDate(dbLogs.get(dbLogs.indexOf(dbLogs.getLast()) - 1).getDateTime());
+                            .stringToDateTime(dbLogs.get(dbLogs.indexOf(dbLogs.getLast()) - 1).getDateTime());
                     previousBackupLabel.setText(DateHelper.dateToFormattedDate(previousDate.toLocalDate()) + " "
                             + previousDate.toLocalTime());
 
@@ -114,14 +114,16 @@ public class ManualBackupController extends ParentController {
     private void backup(ActionEvent e) {
         System.out.println("backing up...");
 
+        final String FILE_NAME = DateHelper.getCurrentDateTimeString().replace(":", "-") + ".sql";
+
         // If sucess
-        if (!this.getDBManager().backupDatabase()) {
+        if (!this.getDBManager().backupDatabase(FILE_NAME)) {
             PopupDialog.showCustomErrorDialog("There has been an error backing up the database");
             return;
         }
 
         // Log backup action to database
-        this.model.logBackup(loggedInUserInfo);
+        this.model.logBackup(loggedInUserInfo, FILE_NAME);
         retrieveDatabaseLogs();
         PopupDialog.showInfoDialog("Success", "Sucessfully backed-up database");
     }

@@ -52,6 +52,12 @@ public class MaintenanceController extends ParentController {
     @FXML
     private void eabackupsettings() {
         System.out.println("Edit Auto Backup Settings");
+
+        if (new JSONManager().getSetting("backupLocation").compareTo("Nothing set.") == 0) {
+            PopupDialog.showCustomErrorDialog("You have not set a backup location!");
+            return;
+        }
+
         EditAutoBackupSettingsController controller = (EditAutoBackupSettingsController) this.initializeNextScreen_BP(
                 "../../views/fxmls/maintenance/EditAutoBackupSettingsView.fxml", loggedInUserInfo,
                 "EDIT AUTO BACKUP SETTINGS");
