@@ -16,11 +16,21 @@ public class DateHelper {
     // Easy to change values
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d HH:mm:ss");
+    private static final DateTimeFormatter READABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMMM d, Y");
 
     // Returns the Date Object equivalent of String
     public static LocalDateTime stringToDateTime(String date) {
         try {
             return LocalDateTime.parse(date, DATE_TIME_FORMATTER);
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, "models.helpers.DateHelper");
+            return null;
+        }
+    }
+
+    public static LocalDate stringToDate(String date) {
+        try {
+            return LocalDate.parse(date, DATE_FORMATTER);
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, "models.helpers.DateHelper");
             return null;
@@ -75,40 +85,7 @@ public class DateHelper {
 
     // Returns date in formatted String
     public static String dateToFormattedDate(LocalDate date) {
-        String[] info = date.toString().split("-");
-        info[1] = DateHelper.intToMonth(Integer.parseInt(info[1]));
-        return info[1] + " " + info[2] + ", " + info[0];
+        return date.format(READABLE_DATE_FORMATTER);
     }
 
-    // Returns the String equivalent of the month
-    public static String intToMonth(int numberMonth) {
-        switch (numberMonth) {
-            case 1:
-                return "Jan.";
-            case 2:
-                return "Feb.";
-            case 3:
-                return "Mar.";
-            case 4:
-                return "Apr.";
-            case 5:
-                return "May";
-            case 6:
-                return "Jun.";
-            case 7:
-                return "Jul.";
-            case 8:
-                return "Aug.";
-            case 9:
-                return "Sept.";
-            case 10:
-                return "Oct.";
-            case 11:
-                return "Nov.";
-            case 12:
-                return "Dec.";
-            default:
-                return "Error";
-        }
-    }
 }

@@ -25,6 +25,7 @@ public class ScreenPaths {
 
         // // Inventory
         INVENTORY("../../views/fxmls/inventory/InventoryView.fxml"),
+        INVENTORY_REFILL_HISTORY("../../views/fxmls/inventory/InventoryRefillHistoryView.fxml"),
         // Product
         PRODUCT_INVENTORY("../../views/fxmls/inventory/ProductInventoryView.fxml"),
         REGISTER_NEW_FOOD_PRODUCT("../../views/fxmls/inventory/RegisterNewFoodProductView.fxml"),

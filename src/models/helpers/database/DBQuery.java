@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 
 import enums.DatabaseLists;
 import enums.UserLogActions;
@@ -23,6 +25,7 @@ import models.schemas.StockType;
 import models.schemas.User;
 import models.schemas.UserLog;
 import models.schemas.DatabaseLog;
+import models.schemas.PurchasedInventoryItem;
 
 public class DBQuery {
 
@@ -651,6 +654,94 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return false;
+    }
+
+    public ObservableList<PurchasedInventoryItem> getInventoryPurchaseHistory(String inventoryItem) {
+        // Query for stocks
+        String stockQuery = "";
+        // Query for beverage product
+        String beverageQuery = "";
+
+        if (inventoryItem == null) {
+            stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id ORDER BY date_purchased DESC;";
+        } else {
+            stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE stock_name LIKE ? ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id WHERE product_name LIKE ? ORDER BY date_purchased DESC;";
+        }
+
+        ObservableList<PurchasedInventoryItem> resultList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                stockQuery);
+                PreparedStatement stmt2 = con
+                        .prepareStatement(
+                                beverageQuery)) {
+
+            if (inventoryItem != null) {
+                stmt.setString(1, ("%" + inventoryItem + "%"));
+                stmt2.setString(1, ("%" + inventoryItem + "%"));
+            }
+            // Execute SQL Query
+            stmt.execute();
+            stmt2.execute();
+
+            // Retrieving results
+            ResultSet stockResult = stmt.getResultSet();
+            ResultSet beverageResult = stmt2.getResultSet();
+
+            // If has no result, close then skip
+            if (isNoResult(stockResult)) {
+                System.out.println("no result for stocks");
+                stockResult.close();
+            }
+            // Else, process
+            else {
+                // Processing Stock Result
+                while (stockResult.next()) {
+                    // If inventory item is a stock
+                    if (stockResult.getInt("stock_product_type_id") == 2) {
+                        // Add to list
+                        resultList.add(new PurchasedInventoryItem(stockResult.getInt("id"),
+                                stockResult.getInt("stock_id"), stockResult.getInt("quantity"),
+                                stockResult.getFloat("total_cost"), stockResult.getString("date_purchased"),
+                                stockResult.getInt("stock_product_type_id"), stockResult.getString("expiry_date"),
+                                stockResult.getString("stock_name"), stockResult.getString("unit"), 0));
+                    }
+                }
+                stockResult.close();
+            }
+
+            // If has no result, close then skip
+            if (isNoResult(beverageResult)) {
+                System.out.println("no result for beverage");
+                beverageResult.close();
+            } else {
+                // Processing beverage result
+                while (beverageResult.next()) {
+                    // If inventory item is a beverage
+                    if (beverageResult.getInt("stock_product_type_id") == 2) {
+                        // Add to list
+                        resultList.add(new PurchasedInventoryItem(beverageResult.getInt(1),
+                                beverageResult.getInt(2), beverageResult.getInt("quantity"),
+                                beverageResult.getFloat("total_cost"), beverageResult.getString("date_purchased"),
+                                beverageResult.getInt("stock_product_type_id"), beverageResult.getString("expiry_date"),
+                                beverageResult.getString("product_name"), "bottle", beverageResult.getFloat("size")));
+                    }
+                }
+                beverageResult.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+
+        // Sort by date descending
+        Comparator<PurchasedInventoryItem> sorter = Comparator.comparing(PurchasedInventoryItem::getDate_purchased);
+        Collections.sort(resultList, sorter.reversed());
+
+        // Return list
+        return resultList;
     }
 
 }

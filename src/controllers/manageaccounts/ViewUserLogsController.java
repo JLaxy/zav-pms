@@ -125,6 +125,7 @@ public class ViewUserLogsController extends ParentController {
     // Retrieve user logs and show on UI
     private void retrieveUserLogs() {
         this.userLogDetailsVBox.setVisible(false);
+
         // Removes sort
         this.logTable.getSortOrder().clear();
         try {
@@ -148,6 +149,7 @@ public class ViewUserLogsController extends ParentController {
             };
             userLogsRetriever.setOnSucceeded(e -> {
                 borderPaneRootSwitcher.exitLoadingScreen_BP();
+                // Configure Sort
                 logTable.getSortOrder().add(logTable.getColumns().get(logTable.getColumns().indexOf(timeCol)));
             });
 

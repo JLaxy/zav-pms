@@ -139,3 +139,5 @@ UserLogActions.java - contains all of the predefined values of action_ids in dat
 When designing new views, dimensions are 1366 x 614 (accounting for the topbar)
 
 when switching views for borderpane views, use "this.borderPaneRootSwitcher" or any function that has "_BP"
+
+when adding new screen, put it on screenpaths enum

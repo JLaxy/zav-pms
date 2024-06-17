@@ -27,7 +27,10 @@ public class InventoryController extends ParentController {
 
     @FXML
     private void viewrefillhistory() {
-        System.out.println("View Refill History");
+        InventoryRefillHistoryController controller = (InventoryRefillHistoryController) this.initializeNextScreen_BP(
+                ScreenPaths.Paths.INVENTORY_REFILL_HISTORY.getPath(), loggedInUserInfo,
+                "INVENTORY REFILL HISTORY");
+        controller.retrieveInventoryHistory(null);
     }
 
     @FXML
