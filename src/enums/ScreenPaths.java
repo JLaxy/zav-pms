@@ -29,7 +29,9 @@ public class ScreenPaths {
         // Product
         PRODUCT_INVENTORY("../../views/fxmls/inventory/ProductInventoryView.fxml"),
         REGISTER_NEW_FOOD_PRODUCT("../../views/fxmls/inventory/RegisterNewFoodProductView.fxml"),
-        REGISTER_NEW_BEVERAGE_PRODUCT("../../views/fxmls/inventory/RegisterNewBeverageProductView.fxml"),
+        REGISTER_NEW_BEVERAGE_VARIANT("../../views/fxmls/inventory/RegisterNewBeverageVariantView.fxml"),
+        REGISTER_NEW_BEVERAGE_POPUP("../../views/fxmls/inventory/RegisterNewBeveragePopupView.fxml"),
+        REGISTER_NEW_BEVERAGE_VARIANT_DETAILS("../../views/fxmls/inventory/RegisterNewBeverageVariantDetailsView.fxml"),
         // Stock
         STOCK_INVENTORY("../../views/fxmls/inventory/StockInventoryView.fxml"),
         REGISTER_NEW_STOCK("../../views/fxmls/inventory/RegisterNewStockView.fxml"),

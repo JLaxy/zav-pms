@@ -11,7 +11,8 @@ public class StockProductType {
         // STOCKPRODUCTTYPE(id, type)
 
         BEVERAGE(1, "Beverage"),
-        STOCK(2, "Stock");
+        STOCK(2, "Stock"),
+        FOOD(3, "Food");
 
         private final String type;
         private final int id;

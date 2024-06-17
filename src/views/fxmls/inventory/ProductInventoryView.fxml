@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ProductInventoryController">
    <children>
-      <Button fx:id="registernewfoodproductButton" layoutX="95.0" layoutY="115.0" mnemonicParsing="false" onAction="#registernewfood" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Register New Food &#10;Product" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="registernewfoodproductButton" layoutX="95.0" layoutY="115.0" mnemonicParsing="false" onAction="#registerNewFoodVariant" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Register New Food &#10;Variant" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="40.0" />
          </font>
@@ -15,7 +15,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="registernewbeverageproductButton" layoutX="712.0" layoutY="115.0" mnemonicParsing="false" onAction="#registernewbeverage" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Register New &#10;Beverage Product" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="registernewbeveragevariantButton" layoutX="712.0" layoutY="115.0" mnemonicParsing="false" onAction="#registerNewBeverageVariant" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Register New &#10;Beverage Variant" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="40.0" />
          </font>
@@ -31,7 +31,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="viewfoodproductButton" layoutX="96.0" layoutY="319.0" mnemonicParsing="false" onAction="#viewfoodproduct" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="View Food&#10;Product" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="viewfoodproductButton" layoutX="96.0" layoutY="319.0" mnemonicParsing="false" onAction="#viewfoodproduct" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="View Food&#10;Products" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="40.0" />
          </font>
@@ -39,7 +39,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="viewbeverageproductButton" layoutX="711.0" layoutY="319.0" mnemonicParsing="false" onAction="#viewbeverageproduct" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="View Beverage&#10;Product" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="viewbeverageproductButton" layoutX="711.0" layoutY="319.0" mnemonicParsing="false" onAction="#viewbeverageproduct" prefHeight="176.0" prefWidth="578.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="View Beverage&#10;Products" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="40.0" />
          </font>

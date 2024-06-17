@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import enums.DatabaseLists;
+import enums.StockProductType;
 import enums.UserLogActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,7 @@ import models.schemas.StockType;
 import models.schemas.User;
 import models.schemas.UserLog;
 import models.schemas.DatabaseLog;
+import models.schemas.DrinkVariant;
 import models.schemas.PurchasedInventoryItem;
 
 public class DBQuery {
@@ -664,10 +666,10 @@ public class DBQuery {
 
         if (inventoryItem == null) {
             stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id ORDER BY date_purchased DESC;";
-            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id ORDER BY date_purchased DESC;";
         } else {
             stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE stock_name LIKE ? ORDER BY date_purchased DESC;";
-            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id WHERE product_name LIKE ? ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id WHERE product_name LIKE ? ORDER BY date_purchased DESC;";
         }
 
         ObservableList<PurchasedInventoryItem> resultList = FXCollections.observableArrayList();
@@ -742,6 +744,113 @@ public class DBQuery {
 
         // Return list
         return resultList;
+    }
+
+    // Returns list of beverage products
+    public ObservableList<String> getBeverageProducts() {
+        ObservableList<String> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM products_name WHERE stock_product_type_id = 1;")) {
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                // Iterate through result then add to list
+                while (result.next()) {
+                    myList.add(result.getString("product_name"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
+    }
+
+    // Register new product in database
+    public boolean registerNewProduct(User loggedInUserInfo, String newProduct, StockProductType.Type type) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO products_name (product_name, stock_product_type_id) VALUES (?, ?);")) {
+
+            // Setting user info
+            stmt.setString(1, newProduct);
+            stmt.setInt(2, type.getValue());
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_USER.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new product \"" + newProduct + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    // Register new variant of product in database
+    public boolean registerNewDrinkVariant(User loggedInUserInfo, DrinkVariant drinkProduct, String productName) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO drink_product (products_name_id, size, price, available_count, critical_level, isVoided) VALUES (?, ?, ?, ?, ?, ?);")) {
+
+            // Setting user info
+            stmt.setInt(1, drinkProduct.getProducts_name_id());
+            stmt.setFloat(2, drinkProduct.getSize());
+            stmt.setFloat(3, drinkProduct.getPrice());
+            stmt.setInt(4, drinkProduct.getAvailable_count());
+            stmt.setInt(5, drinkProduct.getCritical_level());
+            stmt.setBoolean(6, drinkProduct.isVoided());
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_USER.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new product variant of \"" + productName + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    // Retrieves id of product name; returns -1 if already exists
+    public int getProductNameId(String productName) {
+        int retrievedID = -1;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM products_name WHERE product_name = ?")) {
+            stmt.setString(1, productName);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                retrievedID = result.getInt("id");
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return retrievedID;
     }
 
 }
