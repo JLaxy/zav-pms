@@ -60,6 +60,8 @@ public class ViewUserLogsController extends ParentController {
 
         // Set default date as current date
         this.logDate.setValue(LocalDate.now());
+        // Disable right arrow
+        this.rightArrowButton.setDisable(true);
 
         // Hide userlog details
         this.userLogDetailsVBox.setVisible(false);
@@ -179,6 +181,12 @@ public class ViewUserLogsController extends ParentController {
         // If left arrow was clicked
         else if ((Button) e.getSource() == this.leftArrowButton)
             this.logDate.setValue(this.logDate.getValue().minusDays(1));
+
+        // If date is current date, disable right arrow button
+        if (this.logDate.getValue().isEqual(LocalDate.now()))
+            rightArrowButton.setDisable(true);
+        else
+            rightArrowButton.setDisable(false);
     }
 
 }

@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import models.helpers.PopupDialog;
+import models.helpers.StringHelper;
 import models.inventory.RegisterNewBeverageVariantModel;
 
 public class RegisterNewBeverageVariantController extends ParentController {
@@ -76,6 +77,10 @@ public class RegisterNewBeverageVariantController extends ParentController {
 
     @FXML
     public void select(ActionEvent e) {
-        System.out.println("selected");
+        RegisterNewBeverageVariantDetailsController controller = (RegisterNewBeverageVariantDetailsController) this
+                .initializeNextScreen_BP(ScreenPaths.Paths.REGISTER_NEW_BEVERAGE_VARIANT_DETAILS.getPath(),
+                        loggedInUserInfo, "NEW BEVERAGE");
+        controller.initialize(StringHelper.toTitleCase(beverageProductCBox.getSelectionModel().getSelectedItem()),
+                false);
     }
 }

@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import models.helpers.PopupDialog;
+import models.helpers.StringHelper;
 import models.inventory.RegisterNewBeveragePopupModel;
 
 public class RegisterNewBeveragePopupController extends ParentController {
@@ -43,6 +44,6 @@ public class RegisterNewBeveragePopupController extends ParentController {
         RegisterNewBeverageVariantDetailsController controller = (RegisterNewBeverageVariantDetailsController) this
                 .initializeNextScreen_BP(ScreenPaths.Paths.REGISTER_NEW_BEVERAGE_VARIANT_DETAILS.getPath(),
                         loggedInUserInfo, "NEW BEVERAGE");
-        controller.initialize(beverageNameField.getText());
+        controller.initialize(StringHelper.toTitleCase(beverageNameField.getText()), true);
     }
 }

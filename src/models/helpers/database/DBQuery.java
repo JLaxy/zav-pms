@@ -787,9 +787,16 @@ public class DBQuery {
 
             stmt.execute();
 
+            UserLogActions.Actions action = null;
+
+            if (type == StockProductType.Type.BEVERAGE)
+                action = UserLogActions.Actions.REGISTERED_NEW_BEVERAGE_PRODUCT;
+            else if (type == StockProductType.Type.FOOD)
+                action = UserLogActions.Actions.REGISTERED_NEW_FOOD_PRODUCT;
+
             // Log creating new user in database
             logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
-                    UserLogActions.Actions.REGISTERED_NEW_USER.getValue(),
+                    action.getValue(),
                     DateHelper.getCurrentDateTimeString(), "registered new product \"" + newProduct + "\"");
             return true;
         } catch (Exception e) {
@@ -803,21 +810,23 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "INSERT INTO drink_product (products_name_id, size, price, available_count, critical_level, isVoided) VALUES (?, ?, ?, ?, ?, ?);")) {
+                                "INSERT INTO drink_product (products_name_id, size, price, available_count, critical_level, isVoided, discounted_price, preferred_unit_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
 
             // Setting user info
             stmt.setInt(1, drinkProduct.getProducts_name_id());
-            stmt.setFloat(2, drinkProduct.getSize());
-            stmt.setFloat(3, drinkProduct.getPrice());
+            stmt.setDouble(2, drinkProduct.getSize());
+            stmt.setDouble(3, drinkProduct.getPrice());
             stmt.setInt(4, drinkProduct.getAvailable_count());
             stmt.setInt(5, drinkProduct.getCritical_level());
             stmt.setBoolean(6, drinkProduct.isVoided());
+            stmt.setDouble(7, drinkProduct.getDiscounted_price());
+            stmt.setDouble(8, drinkProduct.getPreferred_unit_id());
 
             stmt.execute();
 
             // Log creating new user in database
             logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
-                    UserLogActions.Actions.REGISTERED_NEW_USER.getValue(),
+                    UserLogActions.Actions.REGISTERED_NEW_BEVERAGE_PRODUCT_VARIANT.getValue(),
                     DateHelper.getCurrentDateTimeString(), "registered new product variant of \"" + productName + "\"");
             return true;
         } catch (Exception e) {

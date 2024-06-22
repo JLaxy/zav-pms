@@ -6,12 +6,12 @@ package models.schemas;
 
 public class PurchasedInventoryItem {
     private int id, stock_id, quantity, stock_product_type_id;
-    private float total_cost, size;
+    private double total_cost, size;
     private String date_purchased, expiry_date, inventory_item_name, unit_measure;
 
-    public PurchasedInventoryItem(int id, int stock_id, int quantity, float total_cost, String date_purchased,
+    public PurchasedInventoryItem(int id, int stock_id, int quantity, double total_cost, String date_purchased,
             int stock_product_type_id, String expiry_date, String inventory_item_name, String unit_measure,
-            float size) {
+            double size) {
         this.id = id;
         this.stock_id = stock_id;
         this.quantity = quantity;
@@ -36,7 +36,7 @@ public class PurchasedInventoryItem {
         return this.quantity;
     }
 
-    public float getTotal_cost() {
+    public double getTotal_cost() {
         return this.total_cost;
     }
 
@@ -60,7 +60,7 @@ public class PurchasedInventoryItem {
         return this.unit_measure;
     }
 
-    public float getSize() {
+    public double getSize() {
         return this.size;
     }
 }

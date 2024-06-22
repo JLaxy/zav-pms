@@ -32,7 +32,12 @@ public class UserLogActions {
         ENABLED_DATABASE_AUTOBACKUP(20, "Enabled Database Auto Backup"),
         DISABLED_DATABASE_AUTOBACKUP(21, "Disabled Database Auto Backup"),
         EDITED_STOCK(22, "Edited Stock"),
-        LOGGED_STOCK_PRODUCT_PURCHASE(23, "Logged New Stock/Product Purchase");
+        LOGGED_STOCK_PRODUCT_PURCHASE(23, "Logged New Stock/Product Purchase"),
+        REGISTERED_NEW_BEVERAGE_PRODUCT(24,
+                "Registered New Beverage Product"),
+        REGISTERED_NEW_BEVERAGE_PRODUCT_VARIANT(25, "Registered New Beverage Product Variant"),
+        REGISTERED_NEW_FOOD_PRODUCT(26, "Registered New Food Product"),
+        REGISTERED_NEW_FOOD_PRODUCT_VARIANT(27, " Registered New Food Product Variant");
 
         private final int action_id;
         private final String action_string;

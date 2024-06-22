@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
+import models.helpers.UnitConverter;
 import models.inventory.InventoryRefillHistoryModel;
 import models.schemas.PurchasedInventoryItem;
 
@@ -68,7 +69,7 @@ public class InventoryRefillHistoryController extends ParentController {
                             refillHistoryDetailsBox.setVisible(true);
                             inventoryItemLabel.setText(selectedItem.getInventory_item_name());
                             quantityLabel.setText(String.valueOf(selectedItem.getQuantity()));
-                            totalCostLabel.setText(String.valueOf(selectedItem.getTotal_cost()));
+                            totalCostLabel.setText(UnitConverter.toTwoDecimalPlaces(selectedItem.getTotal_cost()));
                             datePurchasedLabel.setText(DateHelper
                                     .dateToFormattedDate(DateHelper.stringToDate(selectedItem.getDate_purchased())));
                             expiryDateLabel.setText(DateHelper

@@ -1,11 +1,19 @@
 package controllers.inventory;
 
 import controllers.ParentController;
+import enums.PreferredUnits;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import models.helpers.PopupDialog;
+import models.helpers.UnitConverter;
+import models.inventory.RegisterNewBeverageVariantDetailsModel;
+import models.schemas.DrinkVariant;
 
 public class RegisterNewBeverageVariantDetailsController extends ParentController {
 
@@ -13,12 +21,26 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
     private Rectangle sliderRect;
     @FXML
     private Label literLabel, mililiterLabel;
+    @FXML
+    private TextField regularPriceField, discountedPriceField, sizeField, criticalLevelField;
 
     private String productName, unitMeasurement = "mL";
+    private boolean isNewBeverageProduct;
+    private RegisterNewBeverageVariantDetailsModel model;
 
     @FXML
-    public void initialize(String productName) {
+    public void initialize(String productName, boolean isNewBeverageProduct) {
+        this.model = new RegisterNewBeverageVariantDetailsModel(this);
         this.productName = productName;
+        this.isNewBeverageProduct = isNewBeverageProduct;
+
+        // Configure fields to only accept numbers
+        convertToNumberField(this.regularPriceField);
+        convertToNumberField(this.discountedPriceField);
+        convertToNumberField(this.sizeField);
+        convertToNumberField(this.criticalLevelField);
+
+        System.out.println("product name: " + this.productName);
     }
 
     @FXML
@@ -28,7 +50,59 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
 
     @FXML
     private void register(ActionEvent e) {
-        System.out.println("registering...");
+        if (!areFieldsValid())
+            return;
+
+        Double size = Double.valueOf(sizeField.getText());
+
+        // Converting if needed
+        if (this.unitMeasurement.compareTo("L") == 0)
+            size = UnitConverter.literToMililiter(size);
+
+        int product_name_id = this.model.getProductNameId(productName);
+
+        // If registered new beverage
+        if (isNewBeverageProduct) {
+            if (this.model.registerNewBeverage(loggedInUserInfo, productName)) {
+                product_name_id = this.model.getProductNameId(productName);
+                if (registerNewBeverageVariant(product_name_id, size))
+                    return;
+
+            }
+        } else {
+            if (registerNewBeverageVariant(product_name_id, size))
+                return;
+        }
+        PopupDialog.showCustomErrorDialog("Failed to register beverage variant!");
+        this.borderPaneRootSwitcher.goBack_BP(2);
+    }
+
+    // Register new beverage variant
+    private boolean registerNewBeverageVariant(int product_name_id, double size) {
+        if (this.model.registerNewBeverageVariant(loggedInUserInfo,
+                new DrinkVariant(product_name_id, size, Float.valueOf(this.regularPriceField.getText()), 0,
+                        Integer.valueOf(this.criticalLevelField.getText()), isNewBeverageProduct,
+                        Float.valueOf(this.discountedPriceField.getText()),
+                        this.unitMeasurement.compareTo("L") == 0 ? PreferredUnits.Units.LITERS.getValue()
+                                : PreferredUnits.Units.MILILITERS.getValue()),
+                productName)) {
+            PopupDialog.showInfoDialog("Success", "Successfully registered new beverage variant");
+            this.borderPaneRootSwitcher.goBack_BP(2);
+            return true;
+        }
+        return false;
+    }
+
+    // Configures Cost field; Prevents letters from textfield
+    private void convertToNumberField(TextField field) {
+        field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("^\\d+(\\.\\d*)?$"))
+                    field.setText(newValue.replaceAll("[^0-9.]", ""));
+            }
+        });
     }
 
     @FXML
@@ -40,6 +114,45 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
 
         System.out.println(this.unitMeasurement);
         updateButtonState();
+    }
+
+    // Returns true if all fields are valid
+    private boolean areFieldsValid() {
+        // Checking regular
+        if (!isFloat(this.regularPriceField.getText(), "Regular Price"))
+            return false;
+        // Checking discounted price
+        else if (!isFloat(this.discountedPriceField.getText(), "Discounted Price"))
+            return false;
+        // Checking size
+        else if (!isFloat(this.sizeField.getText(), "Size"))
+            return false;
+        else if (!isInt(this.criticalLevelField.getText(), "Critical Level"))
+            return false;
+
+        return true;
+    }
+
+    // Returns false if supplied is not float
+    private boolean isFloat(String floatText, String fieldName) {
+        try {
+            Float.valueOf(floatText);
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showCustomErrorDialog(fieldName + " field is not valid!");
+        }
+        return false;
+    }
+
+    // Returns false if supplied is not integer
+    private boolean isInt(String intText, String fieldName) {
+        try {
+            Integer.valueOf(intText);
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showCustomErrorDialog(fieldName + " field is not valid!");
+        }
+        return false;
     }
 
     // Updates state of custom button element according to selected unitmeasurement
