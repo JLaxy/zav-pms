@@ -124,6 +124,11 @@ public class IncrementStockInventoryController extends ParentController {
             PopupDialog.showCustomErrorDialog("Date purchased is not valid!");
             return false;
         }
+
+        if (dateExpiryPicker.getValue().isAfter(LocalDate.now())) {
+            PopupDialog.showCustomErrorDialog("Expiry purchased is not valid!");
+            return false;
+        }
         return true;
     }
 }

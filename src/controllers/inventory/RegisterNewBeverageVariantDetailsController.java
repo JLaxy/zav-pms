@@ -80,8 +80,9 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
     // Register new beverage variant
     private boolean registerNewBeverageVariant(int product_name_id, double size) {
         if (this.model.registerNewBeverageVariant(loggedInUserInfo,
-                new DrinkVariant(product_name_id, size, Float.valueOf(this.regularPriceField.getText()), 0,
-                        Integer.valueOf(this.criticalLevelField.getText()), isNewBeverageProduct,
+                new DrinkVariant(-1, productName, product_name_id, size,
+                        Float.valueOf(this.regularPriceField.getText()), 0,
+                        Integer.valueOf(this.criticalLevelField.getText()), false,
                         Float.valueOf(this.discountedPriceField.getText()),
                         this.unitMeasurement.compareTo("L") == 0 ? PreferredUnits.Units.LITERS.getValue()
                                 : PreferredUnits.Units.MILILITERS.getValue()),

@@ -23,15 +23,20 @@ public class ScreenPaths {
         KITCHEN_STAFF_HOMEPAGE("../views/fxmls/homepage/KitchenStaffHomePage.fxml"),
         CASHIER_HOMEPAGE("../views/fxmls/homepage/CashierHomePage.fxml"),
 
-        // // Inventory
+        /// // // Inventory
         INVENTORY("../../views/fxmls/inventory/InventoryView.fxml"),
         INVENTORY_REFILL_HISTORY("../../views/fxmls/inventory/InventoryRefillHistoryView.fxml"),
-        // Product
+        // // Product
         PRODUCT_INVENTORY("../../views/fxmls/inventory/ProductInventoryView.fxml"),
+        // Food
         REGISTER_NEW_FOOD_PRODUCT("../../views/fxmls/inventory/RegisterNewFoodProductView.fxml"),
+        // Beverage
         REGISTER_NEW_BEVERAGE_VARIANT("../../views/fxmls/inventory/RegisterNewBeverageVariantView.fxml"),
         REGISTER_NEW_BEVERAGE_POPUP("../../views/fxmls/inventory/RegisterNewBeveragePopupView.fxml"),
         REGISTER_NEW_BEVERAGE_VARIANT_DETAILS("../../views/fxmls/inventory/RegisterNewBeverageVariantDetailsView.fxml"),
+        VIEW_BEVERAGE_PRODUCT("../../views/fxmls/inventory/ViewBeverageProductView.fxml"),
+        EDIT_BEVERAGE_PRODUCT("../../views/fxmls/inventory/EditBeveragePopup.fxml"),
+        INCREASE_BEVERAGE_PRODUCT("../../views/fxmls/inventory/IncreaseBeveragePopup.fxml"),
         // Stock
         STOCK_INVENTORY("../../views/fxmls/inventory/StockInventoryView.fxml"),
         REGISTER_NEW_STOCK("../../views/fxmls/inventory/RegisterNewStockView.fxml"),

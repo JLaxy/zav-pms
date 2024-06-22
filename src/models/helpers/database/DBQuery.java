@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
+import models.helpers.UnitConverter;
 import models.modules.Security;
 import models.schemas.Stock;
 import models.schemas.StockType;
@@ -629,17 +630,17 @@ public class DBQuery {
         return false;
     }
 
-    public boolean logStockProductPurchase(Stock selectedStock, int quantity, float totalCost, LocalDate datePurchased,
-            LocalDate expiryDate, int stockProductTypeID, User loggedInUser) {
+    public boolean logStockProductPurchase(int stockProductID, int quantity, double totalCost, LocalDate datePurchased,
+            LocalDate expiryDate, int stockProductTypeID, User loggedInUser, String stockProductName) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
                                 "INSERT INTO stock_product_expenses (stock_id, quantity, total_cost, date_purchased, stock_product_type_id, expiry_date) VALUES (?, ?, ?, ?, ?, ?);")) {
 
             // Setting stock info
-            stmt.setInt(1, selectedStock.getId());
+            stmt.setInt(1, stockProductID);
             stmt.setInt(2, quantity);
-            stmt.setFloat(3, totalCost);
+            stmt.setDouble(3, totalCost);
             stmt.setString(4, DateHelper.dateToString(datePurchased));
             stmt.setInt(5, stockProductTypeID);
             stmt.setString(6, DateHelper.dateToString(expiryDate));
@@ -650,7 +651,7 @@ public class DBQuery {
             logAction(loggedInUser.getId(), loggedInUser.getUname(),
                     UserLogActions.Actions.LOGGED_STOCK_PRODUCT_PURCHASE.getValue(),
                     DateHelper.getCurrentDateTimeString(),
-                    "registered stock/product purchase of \"" + selectedStock.getStock_name() + "\"");
+                    "registered stock/product purchase of \"" + stockProductName + "\"");
             return true;
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
@@ -666,10 +667,10 @@ public class DBQuery {
 
         if (inventoryItem == null) {
             stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id ORDER BY date_purchased DESC;";
-            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size, drink_product.preferred_unit_id FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id ORDER BY date_purchased DESC;";
         } else {
             stockQuery = "SELECT stock_product_expenses.id, stock_id, stock_product_expenses.quantity, total_cost, date_purchased, stock_product_type_id, expiry_date, unit_measure.unit, stock_name FROM `zav-pms-db`.stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE stock_name LIKE ? ORDER BY date_purchased DESC;";
-            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id WHERE product_name LIKE ? ORDER BY date_purchased DESC;";
+            beverageQuery = "SELECT stock_product_expenses.id, drink_product.id, stock_product_expenses.quantity, total_cost, date_purchased, products_name.stock_product_type_id, expiry_date, product_name, size, drink_product.preferred_unit_id FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id JOIN stock_product_expenses ON stock_product_expenses.stock_id = drink_product.id WHERE product_name LIKE ? ORDER BY date_purchased DESC;";
         }
 
         ObservableList<PurchasedInventoryItem> resultList = FXCollections.observableArrayList();
@@ -709,7 +710,7 @@ public class DBQuery {
                                 stockResult.getInt("stock_id"), stockResult.getInt("quantity"),
                                 stockResult.getFloat("total_cost"), stockResult.getString("date_purchased"),
                                 stockResult.getInt("stock_product_type_id"), stockResult.getString("expiry_date"),
-                                stockResult.getString("stock_name"), stockResult.getString("unit"), 0));
+                                stockResult.getString("stock_name"), stockResult.getString("unit"), null));
                     }
                 }
                 stockResult.close();
@@ -723,13 +724,21 @@ public class DBQuery {
                 // Processing beverage result
                 while (beverageResult.next()) {
                     // If inventory item is a beverage
-                    if (beverageResult.getInt("stock_product_type_id") == 2) {
+                    if (beverageResult.getInt("stock_product_type_id") == 1) {
+
+                        // Format size into string
+                        String size = beverageResult.getInt("size") + "mL";
+                        if (beverageResult.getInt("preferred_unit_id") == 3)
+                            size = UnitConverter.mililiterToLiter(beverageResult.getInt("size")) + "L";
+
                         // Add to list
                         resultList.add(new PurchasedInventoryItem(beverageResult.getInt(1),
                                 beverageResult.getInt(2), beverageResult.getInt("quantity"),
                                 beverageResult.getFloat("total_cost"), beverageResult.getString("date_purchased"),
-                                beverageResult.getInt("stock_product_type_id"), beverageResult.getString("expiry_date"),
-                                beverageResult.getString("product_name"), "bottle", beverageResult.getFloat("size")));
+                                beverageResult.getInt("stock_product_type_id"),
+                                beverageResult.getString("expiry_date"),
+                                beverageResult.getString("product_name"), "bottle",
+                                size));
                     }
                 }
                 beverageResult.close();
@@ -746,7 +755,7 @@ public class DBQuery {
         return resultList;
     }
 
-    // Returns list of beverage products
+    // Returns list of beverage products; used for combobox
     public ObservableList<String> getBeverageProducts() {
         ObservableList<String> myList = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
@@ -764,6 +773,50 @@ public class DBQuery {
                 // Iterate through result then add to list
                 while (result.next()) {
                     myList.add(result.getString("product_name"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
+    }
+
+    // Returns list of beverage product object; used in beverage product view;
+    // overloaded method
+    public ObservableList<DrinkVariant> getBeverageProducts(String beverage) {
+        String query = "";
+
+        if (beverage == null)
+            query = "SELECT * FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id WHERE isVoided = 0;";
+        else
+            query = "SELECT * FROM `zav-pms-db`.drink_product JOIN products_name ON drink_product.products_name_id = products_name.id WHERE isVoided = 0 AND products_name.product_name LIKE ?;";
+
+        ObservableList<DrinkVariant> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                query)) {
+            // Apply if there is a query
+            if (beverage != null)
+                stmt.setString(1, "%" + beverage + "%");
+
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                // Iterate through result then add to list
+                while (result.next()) {
+                    myList.add(new DrinkVariant(result.getInt("id"), result.getString("product_name"),
+                            result.getInt("products_name_id"),
+                            result.getDouble("size"), result.getDouble("price"), result.getInt("available_count"),
+                            result.getInt("critical_level"), result.getBoolean("isVoided"),
+                            result.getDouble("discounted_price"), result.getInt("preferred_unit_id")));
                 }
                 result.close();
             }
@@ -832,6 +885,41 @@ public class DBQuery {
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
+        return false;
+    }
+
+    public boolean editBeverage(DrinkVariant oldBeverage, DrinkVariant newBeverage, User loggedInUser,
+            String[] changes) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "UPDATE drink_product SET available_count = (?), isVoided = (?) WHERE id = (?);")) {
+
+            // Putting in values
+            stmt.setInt(1, newBeverage.getAvailable_count());
+            stmt.setInt(2, newBeverage.isVoided() ? 1 : 0);
+            stmt.setInt(3, newBeverage.getId());
+
+            stmt.execute();
+
+            String changeMessage = "";
+            // Getting changes in array
+            for (String change : changes) {
+                changeMessage += (change + ", ");
+            }
+
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.EDITED_BEVERAGE_VARIANT.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "updated details of beverage variant \"" + oldBeverage.getProduct_name()
+                            + " " + newBeverage.getSize_string() + "\";" + changeMessage);
+
+            // Return true if success
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return false if error
         return false;
     }
 
