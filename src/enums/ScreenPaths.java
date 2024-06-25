@@ -32,6 +32,8 @@ public class ScreenPaths {
         REGISTER_NEW_FOOD_VARIANT("../../views/fxmls/inventory/RegisterNewFoodVariantView.fxml"),
         REGISTER_NEW_FOOD_POPUP("../../views/fxmls/inventory/RegisterNewFoodPopupView.fxml"),
         REGISTER_NEW_FOOD_VARIANT_DETAILS("../../views/fxmls/inventory/RegisterNewFoodVariantDetailsView.fxml"),
+        VIEW_FOOD_PRODUCT("../../views/fxmls/inventory/ViewFoodProductView.fxml"),
+        EDIT_FOOD_PRODUCT("../../views/fxmls/inventory/EditFoodPopup.fxml"),
         // Beverage
         REGISTER_NEW_BEVERAGE_VARIANT("../../views/fxmls/inventory/RegisterNewBeverageVariantView.fxml"),
         REGISTER_NEW_BEVERAGE_POPUP("../../views/fxmls/inventory/RegisterNewBeveragePopupView.fxml"),

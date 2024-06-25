@@ -30,7 +30,9 @@ public class ProductInventoryController extends ParentController {
 
     @FXML
     private void viewfoodproduct() {
-        System.out.println("View Food Product");
+        ViewFoodProductController controller = (ViewFoodProductController) this.initializeNextScreen_BP(
+                ScreenPaths.Paths.VIEW_FOOD_PRODUCT.getPath(), loggedInUserInfo, "FOOD PRODUCTS");
+        controller.retrieveFoodProducts();
     }
 
     @FXML

@@ -1049,6 +1049,7 @@ public class DBQuery {
         return productName;
     }
 
+    // Returns specific food variant object
     public FoodVariant getFoodVariant(int products_name_id, int serving_size_id) {
         FoodVariant retrievedFoodVariant = null;
         try (Connection con = this.zavPMSDB.createConnection();
@@ -1077,6 +1078,43 @@ public class DBQuery {
         return retrievedFoodVariant;
     }
 
+    public ObservableList<FoodVariant> getFoodProducts(String product) {
+        ObservableList<FoodVariant> listOfFood = FXCollections.observableArrayList();
+        String query = "";
+
+        if (product == null)
+            query = "SELECT food_product.id, products_name_id, regular_price, serving_size_id, available_count, discounted_price, isVoided, products_name.product_name FROM `zav-pms-db`.food_product JOIN products_name ON products_name_id = products_name.id  WHERE isVoided = 0;";
+        else
+            query = "SELECT food_product.id, products_name_id, regular_price, serving_size_id, available_count, discounted_price, isVoided, products_name.product_name FROM `zav-pms-db`.food_product JOIN products_name ON products_name_id = products_name.id  WHERE isVoided = 0 AND product_name LIKE ?";
+
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(query)) {
+            if (product != null)
+                stmt.setString(1, "%" + product + "%");
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    FoodVariant newItem = new FoodVariant(result.getInt("id"), result.getInt("products_name_id"),
+                            result.getDouble("regular_price"), result.getInt("serving_size_id"),
+                            result.getInt("available_count"), result.getDouble("discounted_price"), false);
+                    newItem.setFood_name(result.getString("product_name"));
+                    listOfFood.add(newItem);
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return listOfFood;
+    }
+
     // Retrieves id of product name; returns -1 if does not exist
     public int getProductNameId(String productName) {
         int retrievedID = -1;
@@ -1101,6 +1139,41 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return retrievedID;
+    }
+
+    public boolean editFoodVariant(FoodVariant selectedFood, FoodVariant updatedFood, User loggedInUser,
+            String[] changes) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "UPDATE food_product SET available_count = (?), isVoided = (?) WHERE id = (?);")) {
+
+            // Putting in values
+            stmt.setInt(1, updatedFood.getAvailable_count());
+            stmt.setInt(2, updatedFood.getIs_voided() ? 1 : 0);
+            stmt.setInt(3, selectedFood.getId());
+
+            stmt.execute();
+
+            String changeMessage = "";
+            // Getting changes in array
+            for (String change : changes) {
+                changeMessage += (change + ", ");
+            }
+
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.EDITED_FOOD_VARIANT.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "updated details of food variant \"" + selectedFood.getFood_name()
+                            + " " + updatedFood.getServing_size_id_string() + "\";" + changeMessage);
+
+            // Return true if success
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return false if error
+        return false;
     }
 
 }

@@ -141,3 +141,7 @@ When designing new views, dimensions are 1366 x 614 (accounting for the topbar)
 when switching views for borderpane views, use "this.borderPaneRootSwitcher" or any function that has "_BP"
 
 when adding new screen, put it on screenpaths enum
+
+Hamachi credentials:
+networkID = zavpmsconnection
+password = zavpms@123

@@ -143,7 +143,6 @@ public class ViewUserLogsController extends ParentController {
                                     .getUserLogs(searchField.getText().isBlank() ? null : searchField.getText(),
                                             logDate.getValue().toString());
                             logTable.setItems(listOfUserLogs);
-                            System.out.println("size::" + listOfUserLogs.size());
                             return null;
                         }
                     };
