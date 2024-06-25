@@ -40,6 +40,11 @@ public class Stock {
                 this.critical_level, this.isVoided);
     }
 
+    // Updates quantity of stock; used in stock seletion
+    public void setSelectedQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     // Updates string equivalents of Unit Measure and Stock Type
     public void updateStringEquivalents() {
         if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.BOTTLE.getValue())

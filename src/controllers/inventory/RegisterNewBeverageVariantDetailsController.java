@@ -1,5 +1,7 @@
 package controllers.inventory;
 
+import javax.swing.JOptionPane;
+
 import controllers.ParentController;
 import enums.PreferredUnits;
 import javafx.beans.value.ChangeListener;
@@ -11,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import models.helpers.PopupDialog;
-import models.helpers.UnitConverter;
+import models.helpers.NumberHelper;
 import models.inventory.RegisterNewBeverageVariantDetailsModel;
 import models.schemas.DrinkVariant;
 
@@ -45,6 +47,11 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
 
     @FXML
     private void goBack(ActionEvent e) {
+        // Show confirmation dialog
+        if (PopupDialog
+                .confirmOperationDialog("Are you sure you want to cancel this operation?") != JOptionPane.YES_OPTION)
+            return;
+
         this.borderPaneRootSwitcher.goBack_BP();
     }
 
@@ -57,7 +64,7 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
 
         // Converting if needed
         if (this.unitMeasurement.compareTo("L") == 0)
-            size = UnitConverter.literToMililiter(size);
+            size = NumberHelper.literToMililiter(size);
 
         int product_name_id = this.model.getProductNameId(productName);
 

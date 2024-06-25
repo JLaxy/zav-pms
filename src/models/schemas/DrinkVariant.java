@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import enums.PreferredUnits;
 import models.helpers.PopupDialog;
-import models.helpers.UnitConverter;
+import models.helpers.NumberHelper;
 
 public class DrinkVariant {
     private int id, products_name_id, available_count, critical_level, preferred_unit_id;
@@ -46,9 +46,9 @@ public class DrinkVariant {
 
     private void updateStringEquivalents() {
         if (preferred_unit_id == PreferredUnits.Units.LITERS.getValue())
-            this.size_string = UnitConverter.toTwoDecimalPlaces(UnitConverter.mililiterToLiter(size)) + "L";
+            this.size_string = NumberHelper.toTwoDecimalPlaces(NumberHelper.mililiterToLiter(size)) + "L";
         else if (preferred_unit_id == PreferredUnits.Units.MILILITERS.getValue())
-            this.size_string = UnitConverter.toTwoDecimalPlaces(size) + "mL";
+            this.size_string = NumberHelper.toTwoDecimalPlaces(size) + "mL";
     }
 
     public int getProducts_name_id() {

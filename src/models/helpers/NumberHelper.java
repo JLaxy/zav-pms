@@ -3,7 +3,7 @@ package models.helpers;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class UnitConverter {
+public class NumberHelper {
     // Returns conversion of liter to mililiter rounded in 2 decimal places
     public static double literToMililiter(double number) {
         return (Math.round((number * 1000.0) * 100.0)) / 100.0;
@@ -20,5 +20,10 @@ public class UnitConverter {
         DecimalFormat decfor = new DecimalFormat("0.00");
         decfor.setRoundingMode(RoundingMode.HALF_UP);
         return decfor.format(number);
+    }
+
+    // Returns 20% discount of supplied price
+    public static double getDiscountPrice(double price) {
+        return (double) price - (price * 0.20);
     }
 }

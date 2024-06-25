@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -20,7 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
 import models.helpers.PopupDialog;
-import models.helpers.UnitConverter;
+import models.helpers.NumberHelper;
 import models.modules.Security;
 import models.schemas.Stock;
 import models.schemas.StockType;
@@ -28,6 +29,7 @@ import models.schemas.User;
 import models.schemas.UserLog;
 import models.schemas.DatabaseLog;
 import models.schemas.DrinkVariant;
+import models.schemas.FoodVariant;
 import models.schemas.PurchasedInventoryItem;
 
 public class DBQuery {
@@ -350,6 +352,9 @@ public class DBQuery {
                 break;
             case DatabaseLists.Lists.STOCK_TYPE:
                 query = "SELECT type FROM stock_type;";
+                break;
+            case DatabaseLists.Lists.PRODUCT_SERVING_SIZE:
+                query = "SELECT size FROM product_serving_size";
                 break;
             default:
                 break;
@@ -729,7 +734,7 @@ public class DBQuery {
                         // Format size into string
                         String size = beverageResult.getInt("size") + "mL";
                         if (beverageResult.getInt("preferred_unit_id") == 3)
-                            size = UnitConverter.mililiterToLiter(beverageResult.getInt("size")) + "L";
+                            size = NumberHelper.mililiterToLiter(beverageResult.getInt("size")) + "L";
 
                         // Add to list
                         resultList.add(new PurchasedInventoryItem(beverageResult.getInt(1),
@@ -762,6 +767,33 @@ public class DBQuery {
                 PreparedStatement stmt = con
                         .prepareStatement(
                                 "SELECT * FROM products_name WHERE stock_product_type_id = 1;")) {
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                // Iterate through result then add to list
+                while (result.next()) {
+                    myList.add(result.getString("product_name"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
+    }
+
+    public ObservableList<String> getFoodProducts() {
+        ObservableList<String> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM products_name WHERE stock_product_type_id = 3;")) {
             // Execute SQL Query
             stmt.execute();
 
@@ -923,7 +955,129 @@ public class DBQuery {
         return false;
     }
 
-    // Retrieves id of product name; returns -1 if already exists
+    public boolean registerNewFoodVariant(User loggedInUser, FoodVariant foodProduct, String productName) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO food_product (products_name_id, regular_price, serving_size_id, available_count, discounted_price, isVoided) VALUES (?, ?, ?, ?, ?, ?);")) {
+
+            // Setting user info
+            stmt.setInt(1, foodProduct.getProduct_name_id());
+            stmt.setDouble(2, foodProduct.getRegular_price());
+            stmt.setInt(3, foodProduct.getServing_size_id());
+            stmt.setInt(4, foodProduct.getAvailable_count());
+            stmt.setDouble(5, foodProduct.getDiscounted_price());
+            stmt.setBoolean(6, foodProduct.getIs_voided());
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.REGISTERED_NEW_FOOD_PRODUCT_VARIANT.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "registered new product variant of \"" + productName + "\"");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    public boolean registerRequiredStocks(User loggedInUser, ObservableList<Stock> requiredStocks,
+            FoodVariant foodVariant) {
+        ArrayList<String> addedStocks = new ArrayList<String>();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO stock_required (food_product_id, stock_id, quantity) VALUES (?, ?, ?);")) {
+
+            for (Stock requiredStock : requiredStocks) {
+                stmt.setInt(1, foodVariant.getId());
+                stmt.setInt(2, requiredStock.getId());
+                stmt.setInt(3, requiredStock.getQuantity());
+                stmt.execute();
+
+                addedStocks.add(requiredStock.getStock_name());
+            }
+
+            String stocksInComma = "";
+
+            // Put into string separted by commas
+            for (int i = 0; i < addedStocks.size(); i++) {
+                if (i == 0) {
+                    stocksInComma += addedStocks.get(i);
+                    continue;
+                }
+                stocksInComma += ", " + addedStocks.get(i);
+            }
+
+            // Log creating new user in database
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.ADDED_STOCKS_REQUIRED_ON_FOOD_PRODUCT_VARIANT.getValue(),
+                    DateHelper.getCurrentDateTimeString(),
+                    "added stock(s) required on new food product variant \""
+                            + getProductName(foodVariant.getProduct_name_id()) + "\"; " + stocksInComma);
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    public String getProductName(int id) {
+        String productName = null;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM products_name WHERE id = (?);")) {
+            stmt.setInt(1, id);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                productName = result.getString("product_name");
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return productName;
+    }
+
+    public FoodVariant getFoodVariant(int products_name_id, int serving_size_id) {
+        FoodVariant retrievedFoodVariant = null;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM food_product WHERE products_name_id = (?) AND serving_size_id = (?) AND isVoided = 0")) {
+            stmt.setInt(1, products_name_id);
+            stmt.setInt(2, serving_size_id);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                retrievedFoodVariant = new FoodVariant(result.getInt("id"), result.getInt("products_name_id"),
+                        result.getDouble("regular_price"), result.getInt("serving_size_id"),
+                        result.getInt("available_count"), result.getDouble("discounted_price"), false);
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return retrievedFoodVariant;
+    }
+
+    // Retrieves id of product name; returns -1 if does not exist
     public int getProductNameId(String productName) {
         int retrievedID = -1;
         try (Connection con = this.zavPMSDB.createConnection();
@@ -946,7 +1100,6 @@ public class DBQuery {
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
-        // Return list
         return retrievedID;
     }
 

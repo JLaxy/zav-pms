@@ -16,6 +16,7 @@
 #increaseBeverageButton,
 #decreaseBeverageButton,
 #voidButton,
+#confirmButton,
 #cancelButton,
 #updateButton {
   -fx-text-fill: white;

@@ -11,9 +11,10 @@ public class DatabaseLists {
         // LIST(action_id_in_database)
         SECURITY_QUESTIONS(1),
         ACCOUNT_STATUSES(2),
-        LEVELS_OF_ACCESS(3), 
+        LEVELS_OF_ACCESS(3),
         UNIT_MEASURE(4),
-        STOCK_TYPE(5);
+        STOCK_TYPE(5),
+        PRODUCT_SERVING_SIZE(6);
 
         private final int database_list;
 

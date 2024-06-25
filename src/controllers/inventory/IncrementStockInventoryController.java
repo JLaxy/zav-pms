@@ -125,8 +125,9 @@ public class IncrementStockInventoryController extends ParentController {
             return false;
         }
 
-        if (dateExpiryPicker.getValue().isAfter(LocalDate.now())) {
-            PopupDialog.showCustomErrorDialog("Expiry purchased is not valid!");
+        // Expiry date must be before current date
+        if (dateExpiryPicker.getValue().isBefore(LocalDate.now())) {
+            PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
             return false;
         }
         return true;

@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import models.helpers.PopupDialog;
-import models.helpers.UnitConverter;
+import models.helpers.NumberHelper;
 import models.inventory.ViewBeverageProductModel;
 import models.schemas.DrinkVariant;
 
@@ -59,8 +59,8 @@ public class ViewBeverageProductController extends ParentController {
                     // Updating values
                     productNameLabel.setText(selectedItem.getProduct_name());
                     sizeLabel.setText(selectedItem.getSize_string());
-                    priceLabel.setText(UnitConverter.toTwoDecimalPlaces(selectedItem.getPrice()));
-                    discountedPriceLabel.setText(UnitConverter.toTwoDecimalPlaces(selectedItem.getDiscounted_price()));
+                    priceLabel.setText(NumberHelper.toTwoDecimalPlaces(selectedItem.getPrice()));
+                    discountedPriceLabel.setText(NumberHelper.toTwoDecimalPlaces(selectedItem.getDiscounted_price()));
                     inventoryCountLabel.setText(String.valueOf(selectedItem.getAvailable_count()));
                     criticalLevelLabel.setText(String.valueOf(selectedItem.getCritical_level()));
 

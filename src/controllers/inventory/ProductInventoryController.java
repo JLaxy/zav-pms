@@ -7,9 +7,10 @@ import javafx.fxml.FXML;
 public class ProductInventoryController extends ParentController {
     @FXML
     private void registerNewFoodVariant() {
-        initializeNextScreen_BP(ScreenPaths.Paths.REGISTER_NEW_FOOD_PRODUCT.getPath(), this.loggedInUserInfo,
+        RegisterNewFoodVariantController controller = (RegisterNewFoodVariantController) initializeNextScreen_BP(
+                ScreenPaths.Paths.REGISTER_NEW_FOOD_VARIANT.getPath(), this.loggedInUserInfo,
                 "PRODUCT INVENTORY");
-        System.out.println("Register New Food Variant");
+        controller.configureComboBox();
     }
 
     @FXML

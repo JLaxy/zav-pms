@@ -29,7 +29,9 @@ public class ScreenPaths {
         // // Product
         PRODUCT_INVENTORY("../../views/fxmls/inventory/ProductInventoryView.fxml"),
         // Food
-        REGISTER_NEW_FOOD_PRODUCT("../../views/fxmls/inventory/RegisterNewFoodProductView.fxml"),
+        REGISTER_NEW_FOOD_VARIANT("../../views/fxmls/inventory/RegisterNewFoodVariantView.fxml"),
+        REGISTER_NEW_FOOD_POPUP("../../views/fxmls/inventory/RegisterNewFoodPopupView.fxml"),
+        REGISTER_NEW_FOOD_VARIANT_DETAILS("../../views/fxmls/inventory/RegisterNewFoodVariantDetailsView.fxml"),
         // Beverage
         REGISTER_NEW_BEVERAGE_VARIANT("../../views/fxmls/inventory/RegisterNewBeverageVariantView.fxml"),
         REGISTER_NEW_BEVERAGE_POPUP("../../views/fxmls/inventory/RegisterNewBeveragePopupView.fxml"),
@@ -44,6 +46,7 @@ public class ScreenPaths {
         VIEW_STOCK("../../views/fxmls/inventory/ViewStockInventoryView.fxml"),
         EDIT_STOCK("../../views/fxmls/inventory/EditStockInventoryView.fxml"),
         INCREMENT_STOCK_INVENTORY("../../views/fxmls/inventory/IncrementStockInventoryView.fxml"),
+        SELECT_STOCK("../../views/fxmls/inventory/SelectStockView.fxml"),
 
         // Report
         REPORT("../../views/fxmls/report/ReportView.fxml"),
@@ -65,7 +68,10 @@ public class ScreenPaths {
         TRANSACTION("../../views/fxmls/transactions/TransactionsView.fxml"),
 
         // Order
-        ORDER("../../views/fxmls/order/OrderView.fxml");
+        ORDER("../../views/fxmls/order/OrderView.fxml"),
+
+        // Reusable
+        SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml");
 
         private final String path;
 
