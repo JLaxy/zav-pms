@@ -8,5 +8,6 @@
     "lib/JavaMailAPI/activation.jar",
     "lib/JavaMailAPI/javax.mail-1.6.2.jar",
     "lib/javamailapi/javax.mail-1.6.2.jar"
-  ]
+  ],
+  "java.debug.settings.onBuildFailureProceed": true
 }
