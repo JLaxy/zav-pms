@@ -9,6 +9,13 @@
       "name": "Runner",
       "request": "launch",
       "mainClass": "Runner",
+      "projectName": "zav-pms_32989c7c"
+    },
+    {
+      "type": "java",
+      "name": "Runner",
+      "request": "launch",
+      "mainClass": "Runner",
       "projectName": "zav-pms_954a1701"
     },
     {

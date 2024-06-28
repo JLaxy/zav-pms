@@ -71,6 +71,14 @@ public class ScreenPaths {
 
         // Order
         ORDER("../../views/fxmls/order/OrderView.fxml"),
+        CREATE_ORDER("../../views/fxmls/order/CreateOrder.fxml"),
+        VIEW_ORDER("../../views/fxmls/order/ViewOrder.fxml"),
+        ADDING_ORDER_PROMPT("../../views/fxmls/order/AddingOrderPrompt.fxml"),
+        DISCOUNT_ORDERS("../../views/fxmls/order/DiscountOrders.fxml"),
+        SELECT_DISCOUNT_CARD("../../views/fxmls/order/SelectDiscountCard.fxml"),
+        NEW_DISCOUNT_CARD("../../views/fxmls/order/NewDiscountCard.fxml"),
+        VIEW_BACKORDER("../../views/fxmls/order/ViewBackorder.fxml"),
+        SELECT_SIZE("../../views/fxmls/order/SelectSize.fxml"),
 
         // Reusable
         SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml");

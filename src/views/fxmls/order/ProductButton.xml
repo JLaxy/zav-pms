@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<Button fx:id="productButton" mnemonicParsing="false" prefHeight="132.0" prefWidth="140.0">
+    <graphic>
+        <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <Label fx:id="productNameLabel" text="Product Name">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+                <Label fx:id="movingStatusLabel" text="Moving Status">
+                    <font>
+                        <Font size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="stockStatusLabel" text="Stock Status">
+                    <font>
+                        <Font size="12.0" />
+                    </font>
+                </Label>
+            </children>
+        </VBox>
+    </graphic>
+</Button>

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
+
 import enums.DatabaseLists;
 import enums.StockProductType;
 import enums.UserLogActions;
@@ -1173,6 +1175,29 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         // Return false if error
+        return false;
+    }
+
+    public boolean createOrder(ObservableList<Order> orders, User loggedInUser) {
+        try (Connection con = this.zavPMSDB.createConnection()) {
+            for (@SuppressWarnings("unused") Order order : orders) {
+                try (PreparedStatement stmt = con.prepareStatement(
+                    "INSERT INTO orders (user_id, product_name, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)")) {
+                    stmt.setInt(1, loggedInUser.getId());
+                    // stmt.setString(2, order.getProductName());
+                    // stmt.setInt(3, order.getQuantity());
+                    // stmt.setDouble(4, order.getTotalPrice());
+                    stmt.setString(5, DateHelper.getCurrentDateTimeString()); 
+                    stmt.execute();
+                }
+            }
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.CREATED_ORDER.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "created orders");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
         return false;
     }
 

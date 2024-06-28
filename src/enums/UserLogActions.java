@@ -41,7 +41,8 @@ public class UserLogActions {
                 "Registered New Food Product Variant"),
         EDITED_BEVERAGE_VARIANT(28, "Edited Beverage Variant"),
         ADDED_STOCKS_REQUIRED_ON_FOOD_PRODUCT_VARIANT(29, "Added Stock(s) Required on New Food Product Variant"),
-        EDITED_FOOD_VARIANT(30, "Edited Food Variant");
+        EDITED_FOOD_VARIANT(30, "Edited Food Variant"),
+        CREATED_ORDER(31, "Create Order");
 
         private final int action_id;
         private final String action_string;

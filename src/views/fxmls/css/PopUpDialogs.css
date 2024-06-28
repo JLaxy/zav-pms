@@ -20,6 +20,7 @@
 #voidButton,
 #confirmButton,
 #cancelButton,
+#selectButton,
 #updateButton {
   -fx-text-fill: white;
   -fx-background-color: #d552a0;
