@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1366.0" stylesheets="@../css/PopUpDialogs.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.RegisterNewBeveragePopupController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1366.0" stylesheets="@../css/PopUpDialogs.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.order.NewDiscountCardController">
    <children>
       <Rectangle fx:id="backgroundRect" arcHeight="5.0" arcWidth="5.0" fill="#2197ff4f" height="720.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1366.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="352.0" layoutX="306.0" layoutY="184.0" strokeType="INSIDE" strokeWidth="0.0" width="755.0">
