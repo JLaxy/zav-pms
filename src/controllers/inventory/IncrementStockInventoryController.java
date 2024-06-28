@@ -110,11 +110,6 @@ public class IncrementStockInventoryController extends ParentController {
             return false;
         }
 
-        if (dateExpiryPicker.getValue() == null) {
-            PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
-            return false;
-        }
-
         if (datePurchasedPicker.getValue() == null) {
             PopupDialog.showCustomErrorDialog("Date purchased is not valid!");
             return false;
@@ -125,11 +120,17 @@ public class IncrementStockInventoryController extends ParentController {
             return false;
         }
 
+        if (dateExpiryPicker.getValue() == null) {
+            PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
+            return false;
+        }
+
         // Expiry date must be before current date
         if (dateExpiryPicker.getValue().isBefore(LocalDate.now())) {
             PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
             return false;
         }
+
         return true;
     }
 }

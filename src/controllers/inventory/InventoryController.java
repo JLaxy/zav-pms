@@ -35,7 +35,9 @@ public class InventoryController extends ParentController {
 
     @FXML
     private void expiringitems() {
-        System.out.println("Expiring Items");
+        ViewExpiringItemsController controller = (ViewExpiringItemsController) this
+                .initializePopUpDialog(ScreenPaths.Paths.EXPIRING_ITEMS.getPath(), loggedInUserInfo);
+        controller.retrieveExpiringItems();
     }
 
     @FXML

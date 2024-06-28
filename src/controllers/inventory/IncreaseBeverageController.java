@@ -70,6 +70,12 @@ public class IncreaseBeverageController extends ParentController {
             return false;
         }
 
+        // Expiry date must be before current date
+        if (dateExpiryPicker.getValue().isBefore(LocalDate.now())) {
+            PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
+            return false;
+        }
+
         if (datePurchasedPicker.getValue() == null) {
             PopupDialog.showCustomErrorDialog("Date purchased is not valid!");
             return false;
@@ -79,12 +85,6 @@ public class IncreaseBeverageController extends ParentController {
             PopupDialog.showCustomErrorDialog("Date purchased is not valid!");
             return false;
         }
-
-        if (dateExpiryPicker.getValue().isAfter(LocalDate.now())) {
-            PopupDialog.showCustomErrorDialog("Expiry purchased is not valid!");
-            return false;
-        }
-
         return true;
     }
 

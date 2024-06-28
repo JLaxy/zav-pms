@@ -62,9 +62,9 @@ public class JSONManager {
 
     // Returns a key-value pair which is used in JSON Files; number of arguments
     // must be even!
-    private Map<String, Object> getJSONPair(Object... values) throws Exception {
+    public static Map<String, Object> getJSONPair(Object... values) throws Exception {
         if (!(values.length % 2 == 0))
-            throw new Exception("Invalid custom JSONPairs in " + getClass().getName());
+            throw new Exception("Invalid custom JSONPairs in jsonmanager");
 
         Map<String, Object> myJSONPair = new HashMap<String, Object>();
 
