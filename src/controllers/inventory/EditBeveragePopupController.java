@@ -21,6 +21,7 @@ public class EditBeveragePopupController extends ParentController {
         this.model = new EditBeveragePopupModel(this);
         this.viewBeverageProductController = viewBeverageProductController;
         this.selectedBeverage = selectedBeverage;
+        System.out.println("passed " + this.viewBeverageProductController + " at editpopupcontroller");
     }
 
     @FXML

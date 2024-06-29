@@ -1,5 +1,7 @@
 package controllers.inventory;
 
+import java.util.HashMap;
+
 import controllers.ParentController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.helpers.DateHelper;
+import models.helpers.UIElementsBuilderHelper;
 import models.inventory.ViewExpiringItemsModel;
 import models.schemas.ExpiringItems;
 
@@ -21,6 +24,8 @@ public class ViewExpiringItemsController extends ParentController {
 
     @FXML
     private VBox expiringItemsVBox, expiredItemsVBox;
+    @FXML
+    private Label nearlyExpItemsLabel, expItemsLabel;
 
     private ViewExpiringItemsModel model;
     private ObservableList<ExpiringItems> expiringItemsList, expiredItemsList;
@@ -40,20 +45,22 @@ public class ViewExpiringItemsController extends ParentController {
                     protected Void call() throws Exception {
                         expiringItemsList = FXCollections.observableArrayList();
                         expiringItemsList.addAll(model.getExpiringBeverages());
+                        expiringItemsList.addAll(model.getExpiringStock());
 
                         expiredItemsList = FXCollections.observableArrayList();
                         expiredItemsList = model.getExpiredBeverages();
-
-                        expiringItemsList.addAll(model.getExpiringStock());
                         expiredItemsList.addAll(model.getExpiredStock());
 
                         for (ExpiringItems expiringItem : expiringItemsList) {
+                            // if (expiringItem.getQuantity() < 1) {
+                            // continue;
+                            // }
                             // Get hbox entry
                             HBox hBoxEntry = getExpiryEntry(String.valueOf(expiringItem.getQuantity()),
                                     expiringItem.getInventory_item(),
                                     DateHelper.dateToFormattedDate(expiringItem.getExpiry_date()));
                             // Apply styles to label
-                            applyLabelStyles(hBoxEntry.getChildren());
+                            UIElementsBuilderHelper.applyPopUpDialogLabelStyles(hBoxEntry.getChildren());
 
                             // Add to screen thread
                             Platform.runLater(new Runnable() {
@@ -67,12 +74,15 @@ public class ViewExpiringItemsController extends ParentController {
                         }
 
                         for (ExpiringItems expiredItem : expiredItemsList) {
+                            // if (expiredItem.getQuantity() < 1) {
+                            // continue;
+                            // }
                             // Get hbox entry
                             HBox hBoxEntry = getExpiryEntry(String.valueOf(expiredItem.getQuantity()),
                                     expiredItem.getInventory_item(),
                                     DateHelper.dateToFormattedDate(expiredItem.getExpiry_date()));
                             // Apply styles to label
-                            applyLabelStyles(hBoxEntry.getChildren());
+                            UIElementsBuilderHelper.applyPopUpDialogLabelStyles(hBoxEntry.getChildren());
 
                             // Add to screen thread
                             Platform.runLater(new Runnable() {
@@ -84,6 +94,14 @@ public class ViewExpiringItemsController extends ParentController {
                                 }
                             });
                         }
+
+                        // Hide Label if empty
+                        Platform.runLater(() -> {
+                            if (expiringItemsList.size() == 0)
+                                nearlyExpItemsLabel.setVisible(false);
+                            if (expiredItemsList.size() == 0)
+                                expItemsLabel.setVisible(false);
+                        });
 
                         return null;
                     }
@@ -119,13 +137,6 @@ public class ViewExpiringItemsController extends ParentController {
 
         entryHBox.getChildren().addAll((Node) quantityLabel, (Node) itemLabel, (Node) expiryLabel);
         return entryHBox;
-    }
-
-    // Applying styles to label
-    private void applyLabelStyles(ObservableList<Node> labelsList) {
-        for (Node node : labelsList) {
-            node.setStyle("-fx-font-size: 20");
-        }
     }
 
 }

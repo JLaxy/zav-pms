@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
@@ -1184,99 +1185,111 @@ public class DBQuery {
 
     // Returns all expiring beverages
     public ObservableList<ExpiringItems> getExpiringBeverages() {
+        // Final List
         ObservableList<ExpiringItems> myList = FXCollections.observableArrayList();
+        // Placeholder
         Map<String, Object> beverageItems = new HashMap<String, Object>();
         Map<String, Object> beverageItemsDetails = new HashMap<String, Object>();
 
-        // Retrieving beverage products that are nearly expiring on
-        // stock_product_expenses
-        try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con
-                        .prepareStatement(
-                                "SELECT stock_product_expenses.id, product_name, size, preferred_unit_id, quantity, expiry_date FROM `zav-pms-db`.stock_product_expenses JOIN drink_product ON drink_product.id = stock_id JOIN products_name ON products_name.id = products_name_id WHERE datediff(expiry_date, now()) < 3 AND datediff(expiry_date, now()) > 0 AND isVoided = 0 AND stock_product_expenses.stock_product_type_id = "
-                                        + StockProductType.Type.BEVERAGE.getValue())) {
-
-            // Putting in values
-            stmt.execute();
-            ResultSet result = stmt.getResultSet();
-
-            // If no expiring beverage, then return empty
-            if (isNoResult(result)) {
-                result.close();
-                return myList;
-            } else {
-                while (result.next()) {
-                    beverageItemsDetails.put("product_name", result.getString("product_name"));
-                    beverageItemsDetails.put("size", result.getInt("size"));
-                    beverageItemsDetails.put("preferred_unit_id", result.getInt("preferred_unit_id"));
-                    beverageItemsDetails.put("quantity", result.getInt("quantity"));
-                    beverageItemsDetails.put("expiry_date", result.getString("expiry_date"));
-
-                    beverageItems.put(result.getString("id"), beverageItemsDetails);
-                }
-                result.close();
-            }
-        } catch (Exception e) {
-            PopupDialog.showErrorDialog(e, this.getClass().getName());
-        }
-
-        Map<String, Object> myMap = new HashMap<String, Object>();
-
-        // Iterating through each expiring inventory item and then subtracting what is
-        // left
-        for (String stock_product_expenses_id : beverageItems.keySet()) {
-            // Retrieve subtracted quantity then subtract to original quantity
+        try {
+            // Retrieving beverage products that are nearly expiring on
+            // stock_product_expenses
             try (Connection con = this.zavPMSDB.createConnection();
                     PreparedStatement stmt = con
                             .prepareStatement(
-                                    "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction JOIN drink_product ON drink_product.id = stock_product_reduction.stock_product_id WHERE drink_product.isVoided = 0 AND stock_product_expenses_id = ? AND stock_product_type_id = 1 GROUP BY stock_product_expenses_id;")) {
+                                    "SELECT stock_product_expenses.id, product_name, size, preferred_unit_id, quantity, expiry_date FROM `zav-pms-db`.stock_product_expenses JOIN drink_product ON drink_product.id = stock_id JOIN products_name ON products_name.id = products_name_id WHERE datediff(expiry_date, now()) < 3 AND datediff(expiry_date, now()) > 0 AND isVoided = 0 AND stock_product_expenses.stock_product_type_id = "
+                                            + StockProductType.Type.BEVERAGE.getValue())) {
 
-                // Apply parameter to Query then execute
-                stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                // Putting in values
                 stmt.execute();
-                // Get result
                 ResultSet result = stmt.getResultSet();
 
-                myMap = (Map<String, Object>) beverageItems.get(stock_product_expenses_id);
-
-                // If no result, skip
+                // If no expiring beverage, then return empty
                 if (isNoResult(result)) {
                     result.close();
+                    return myList;
                 } else {
-                    // Modify quantity
-                    result.next();
-                    myMap.put("quantity",
-                            Integer.valueOf(String.valueOf(myMap.get("quantity"))) - result.getInt("sum"));
-                    result.close();
+                    while (result.next()) {
+                        beverageItemsDetails.put("product_name", result.getString("product_name"));
+                        beverageItemsDetails.put("size", result.getInt("size"));
+                        beverageItemsDetails.put("preferred_unit_id", result.getInt("preferred_unit_id"));
+                        beverageItemsDetails.put("quantity", result.getInt("quantity"));
+                        beverageItemsDetails.put("expiry_date", result.getString("expiry_date"));
 
-                    // If quantity is less than 1, remove from list
-                    if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
-                        beverageItems.remove(stock_product_expenses_id);
-                        continue;
+                        beverageItems.put(result.getString("id"), beverageItemsDetails);
                     }
+                    result.close();
                 }
-
             } catch (Exception e) {
                 PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
 
-            String formattedBeverageName = String.valueOf(beverageItemsDetails.get("product_name"))
-                    + " "
-                    // Converting size if needed
-                    + (Integer.valueOf(String.valueOf(
-                            beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS.getValue()
-                                    ? NumberHelper.mililiterToLiter(
-                                            Double.valueOf(String.valueOf(beverageItemsDetails.get("size"))))
-                                    : String.valueOf(beverageItemsDetails.get("size")))
-                    // Converting unit
-                    + (Integer.valueOf(String.valueOf(
-                            beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS.getValue()
-                                    ? "L"
-                                    : "mL");
+            Map<String, Object> myMap = new HashMap<String, Object>();
 
-            myList.add(new ExpiringItems(formattedBeverageName,
-                    Integer.parseInt(String.valueOf(myMap.get("quantity"))),
-                    DateHelper.stringToDate(String.valueOf(beverageItemsDetails.get("expiry_date")))));
+            // Iterating through each expiring inventory item and then subtracting what is
+            // left
+            Iterator<Map.Entry<String, Object>> iterator = beverageItems.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+                // Retrieve subtracted quantity then subtract to original quantity
+                try (Connection con = this.zavPMSDB.createConnection();
+                        PreparedStatement stmt = con
+                                .prepareStatement(
+                                        "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction JOIN drink_product ON drink_product.id = stock_product_reduction.stock_product_id WHERE drink_product.isVoided = 0 AND stock_product_expenses_id = ? AND stock_product_type_id = 1 GROUP BY stock_product_expenses_id;")) {
+
+                    // Apply parameter to Query then execute
+                    stmt.setInt(1, Integer.valueOf(entry.getKey()));
+                    stmt.execute();
+                    // Get result
+                    ResultSet result = stmt.getResultSet();
+
+                    myMap = (Map<String, Object>) beverageItems.get(entry.getKey());
+
+                    // If no result, skip
+                    if (isNoResult(result)) {
+                        result.close();
+                    } else {
+                        // Modify quantity
+                        result.next();
+                        myMap.put("quantity",
+                                Integer.valueOf(String.valueOf(myMap.get("quantity"))) - result.getInt("sum"));
+                        result.close();
+
+                        // If quantity is less than 1, remove from list
+                        if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
+                            // COMMENTING SINCE PRODUCES ERROR
+                            // beverageItems.remove(entry.getKey());
+                            continue;
+                        }
+                    }
+
+                } catch (Exception e) {
+                    PopupDialog.showErrorDialog(e, this.getClass().getName());
+                }
+
+                String formattedBeverageName = String.valueOf(beverageItemsDetails.get("product_name"))
+                        + " "
+                        // Converting size if needed
+                        + (Integer.valueOf(String.valueOf(
+                                beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS
+                                        .getValue()
+                                                ? NumberHelper.mililiterToLiter(
+                                                        Double.valueOf(
+                                                                String.valueOf(beverageItemsDetails.get("size"))))
+                                                : String.valueOf(beverageItemsDetails.get("size")))
+                        // Converting unit
+                        + (Integer.valueOf(String.valueOf(
+                                beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS
+                                        .getValue()
+                                                ? "L"
+                                                : "mL");
+
+                myList.add(new ExpiringItems(formattedBeverageName,
+                        Integer.parseInt(String.valueOf(myMap.get("quantity"))),
+                        DateHelper.stringToDate(String.valueOf(beverageItemsDetails.get("expiry_date"))), 0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         // Return false if
         return myList;
@@ -1288,87 +1301,92 @@ public class DBQuery {
         Map<String, Object> stockItems = new HashMap<String, Object>();
         Map<String, Object> stockItemDetails = new HashMap<String, Object>();
 
-        // Retrieving beverage products that are nearly expiring on
-        // stock_product_expenses
-        try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con
-                        .prepareStatement(
-                                "SELECT stock_product_expenses.id AS expense_id, stock_id, stock_name, unit_measure.unit, stock_product_expenses.quantity, expiry_date FROM stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE datediff(expiry_date, now()) < 3 AND datediff(expiry_date, now()) > 0 AND isVoided = 0;")) {
-
-            // Putting in values
-            stmt.execute();
-            ResultSet result = stmt.getResultSet();
-
-            // If no expiring beverage, then return empty
-            if (isNoResult(result)) {
-                result.close();
-                return myList;
-            } else {
-                while (result.next()) {
-                    stockItemDetails = new HashMap<String, Object>();
-                    stockItemDetails.put("stock_name", result.getString("stock_name"));
-                    stockItemDetails.put("stock_id", result.getString("stock_id"));
-                    stockItemDetails.put("unit", result.getString("unit"));
-                    stockItemDetails.put("quantity", result.getString("quantity"));
-                    stockItemDetails.put("expiry_date", result.getString("expiry_date"));
-                    stockItems.put(result.getString("expense_id"), stockItemDetails);
-                }
-                result.close();
-            }
-        } catch (Exception e) {
-            PopupDialog.showErrorDialog(e, this.getClass().getName());
-        }
-
-        Map<String, Object> myMap;
-
-        // Iterating through each expiring inventory item and then subtracting what is
-        // left
-        for (String stock_product_expenses_id : stockItems.keySet()) {
-            myMap = new HashMap<String, Object>();
-            // Retrieve subtracted quantity then subtract to original quantity
+        try {
+            // Retrieving beverage products that are nearly expiring on
+            // stock_product_expenses
             try (Connection con = this.zavPMSDB.createConnection();
                     PreparedStatement stmt = con
                             .prepareStatement(
-                                    "SELECT SUM(quantity), stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? GROUP BY stock_product_expenses_id;")) {
+                                    "SELECT stock_product_expenses.id AS expense_id, stock_id, stock_name, unit_measure.unit, stock_product_expenses.quantity, expiry_date FROM stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE datediff(expiry_date, now()) < 3 AND datediff(expiry_date, now()) > 0 AND isVoided = 0;")) {
 
-                // Apply parameter to Query then execute
-                stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                // Putting in values
                 stmt.execute();
-                // Get result
                 ResultSet result = stmt.getResultSet();
 
-                myMap = (Map<String, Object>) stockItems.get(stock_product_expenses_id);
-
-                // If no result, skip
+                // If no expiring beverage, then return empty
                 if (isNoResult(result)) {
                     result.close();
+                    return myList;
                 } else {
-                    // Modify quantity
-                    result.next();
-
-                    myMap.put("quantity",
-                            Integer.valueOf(String.valueOf(myMap.get("quantity"))) -
-                                    result.getInt("sum"));
-
-                    result.close();
-
-                    // If quantity is less than 1, remove from list
-                    if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
-                        stockItems.remove(stock_product_expenses_id);
-                        continue;
+                    while (result.next()) {
+                        stockItemDetails = new HashMap<String, Object>();
+                        stockItemDetails.put("stock_name", result.getString("stock_name"));
+                        stockItemDetails.put("stock_id", result.getString("stock_id"));
+                        stockItemDetails.put("unit", result.getString("unit"));
+                        stockItemDetails.put("quantity", result.getString("quantity"));
+                        stockItemDetails.put("expiry_date", result.getString("expiry_date"));
+                        stockItems.put(result.getString("expense_id"), stockItemDetails);
                     }
+                    result.close();
                 }
-
             } catch (Exception e) {
                 PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
 
-            myList.add(new ExpiringItems(
-                    String.valueOf(myMap.get("unit")) + " : " + String.valueOf(myMap.get("stock_name")),
-                    (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))),
-                    DateHelper.stringToDate(String.valueOf(myMap.get("expiry_date")))));
-        }
+            Map<String, Object> myMap;
 
+            // Iterating through each expiring inventory item and then subtracting what is
+            // left
+            for (String stock_product_expenses_id : stockItems.keySet()) {
+                myMap = new HashMap<String, Object>();
+                // Retrieve subtracted quantity then subtract to original quantity
+                try (Connection con = this.zavPMSDB.createConnection();
+                        PreparedStatement stmt = con
+                                .prepareStatement(
+                                        "SELECT SUM(quantity), stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? GROUP BY stock_product_expenses_id;")) {
+
+                    // Apply parameter to Query then execute
+                    stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                    stmt.execute();
+                    // Get result
+                    ResultSet result = stmt.getResultSet();
+
+                    myMap = (Map<String, Object>) stockItems.get(stock_product_expenses_id);
+
+                    // If no result, skip
+                    if (isNoResult(result)) {
+                        result.close();
+                    } else {
+                        // Modify quantity
+                        result.next();
+
+                        myMap.put("quantity",
+                                Integer.valueOf(String.valueOf(myMap.get("quantity"))) -
+                                        result.getInt("sum"));
+
+                        result.close();
+
+                        // If quantity is less than 1, remove from list
+                        if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
+                            // COMMENTING SINCE PRODUCES ERROR
+                            // stockItems.remove(stock_product_expenses_id);
+                            continue;
+                        }
+                    }
+
+                } catch (Exception e) {
+                    PopupDialog.showErrorDialog(e, this.getClass().getName());
+                }
+
+                myList.add(new ExpiringItems(
+                        String.valueOf(myMap.get("unit")) + " : " + String.valueOf(myMap.get("stock_name")),
+                        (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))),
+                        DateHelper.stringToDate(String.valueOf(myMap.get("expiry_date"))), 0));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Return false if
         return myList;
 
@@ -1379,96 +1397,104 @@ public class DBQuery {
         ObservableList<ExpiringItems> myList = FXCollections.observableArrayList();
         Map<String, Object> beverageItems = new HashMap<String, Object>();
         Map<String, Object> beverageItemsDetails = new HashMap<String, Object>();
+        try {
 
-        // Retrieving beverage products that are nearly expiring on
-        // stock_product_expenses
-        try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con
-                        .prepareStatement(
-                                "SELECT stock_product_expenses.id, product_name, size, preferred_unit_id, quantity, expiry_date FROM `zav-pms-db`.stock_product_expenses JOIN drink_product ON drink_product.id = stock_id JOIN products_name ON products_name.id = products_name_id WHERE datediff(expiry_date, now()) < 1 AND isVoided = 0 AND stock_product_expenses.stock_product_type_id = "
-                                        + StockProductType.Type.BEVERAGE.getValue())) {
-
-            // Putting in values
-            stmt.execute();
-            ResultSet result = stmt.getResultSet();
-
-            // If no expiring beverage, then return empty
-            if (isNoResult(result)) {
-                result.close();
-                return myList;
-            } else {
-                while (result.next()) {
-                    beverageItemsDetails.put("product_name", result.getString("product_name"));
-                    beverageItemsDetails.put("size", result.getInt("size"));
-                    beverageItemsDetails.put("preferred_unit_id", result.getInt("preferred_unit_id"));
-                    beverageItemsDetails.put("quantity", result.getInt("quantity"));
-                    beverageItemsDetails.put("expiry_date", result.getString("expiry_date"));
-
-                    beverageItems.put(result.getString("id"), beverageItemsDetails);
-                }
-                result.close();
-            }
-        } catch (Exception e) {
-            PopupDialog.showErrorDialog(e, this.getClass().getName());
-        }
-
-        Map<String, Object> myMap = new HashMap<String, Object>();
-
-        // Iterating through each expiring inventory item and then subtracting what is
-        // left
-        for (String stock_product_expenses_id : beverageItems.keySet()) {
-            // Retrieve subtracted quantity then subtract to original quantity
+            // Retrieving beverage products that are nearly expiring on
+            // stock_product_expenses
             try (Connection con = this.zavPMSDB.createConnection();
                     PreparedStatement stmt = con
                             .prepareStatement(
-                                    "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction JOIN drink_product ON drink_product.id = stock_product_reduction.stock_product_id WHERE drink_product.isVoided = 0 AND stock_product_expenses_id = ? AND stock_product_type_id = 1 GROUP BY stock_product_expenses_id;")) {
+                                    "SELECT stock_product_expenses.id, product_name, size, preferred_unit_id, quantity, expiry_date FROM `zav-pms-db`.stock_product_expenses JOIN drink_product ON drink_product.id = stock_id JOIN products_name ON products_name.id = products_name_id WHERE datediff(expiry_date, now()) < 1 AND isVoided = 0 AND stock_product_expenses.stock_product_type_id = "
+                                            + StockProductType.Type.BEVERAGE.getValue())) {
 
-                // Apply parameter to Query then execute
-                stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                // Putting in values
                 stmt.execute();
-                // Get result
                 ResultSet result = stmt.getResultSet();
 
-                myMap = (Map<String, Object>) beverageItems.get(stock_product_expenses_id);
-
-                // If no result, skip
+                // If no expiring beverage, then return empty
                 if (isNoResult(result)) {
                     result.close();
+                    return myList;
                 } else {
-                    // Modify quantity
-                    result.next();
-                    myMap.put("quantity",
-                            Integer.valueOf(String.valueOf(myMap.get("quantity"))) - result.getInt("sum"));
-                    result.close();
+                    while (result.next()) {
+                        beverageItemsDetails.put("product_name", result.getString("product_name"));
+                        beverageItemsDetails.put("size", result.getInt("size"));
+                        beverageItemsDetails.put("preferred_unit_id", result.getInt("preferred_unit_id"));
+                        beverageItemsDetails.put("quantity", result.getInt("quantity"));
+                        beverageItemsDetails.put("expiry_date", result.getString("expiry_date"));
 
-                    // If quantity is less than 1, remove from list
-                    if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
-                        beverageItems.remove(stock_product_expenses_id);
-                        continue;
+                        beverageItems.put(result.getString("id"), beverageItemsDetails);
                     }
+                    result.close();
                 }
-
             } catch (Exception e) {
                 PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
 
-            String formattedBeverageName = String.valueOf(beverageItemsDetails.get("product_name"))
-                    + " "
-                    // Converting size if needed
-                    + (Integer.valueOf(String.valueOf(
-                            beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS.getValue()
-                                    ? NumberHelper.mililiterToLiter(
-                                            Double.valueOf(String.valueOf(beverageItemsDetails.get("size"))))
-                                    : String.valueOf(beverageItemsDetails.get("size")))
-                    // Converting unit
-                    + (Integer.valueOf(String.valueOf(
-                            beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS.getValue()
-                                    ? "L"
-                                    : "mL");
+            Map<String, Object> myMap = new HashMap<String, Object>();
 
-            myList.add(new ExpiringItems(formattedBeverageName,
-                    Integer.parseInt(String.valueOf(myMap.get("quantity"))),
-                    DateHelper.stringToDate(String.valueOf(beverageItemsDetails.get("expiry_date")))));
+            // Iterating through each expiring inventory item and then subtracting what is
+            // left
+            for (String stock_product_expenses_id : beverageItems.keySet()) {
+                // Retrieve subtracted quantity then subtract to original quantity
+                try (Connection con = this.zavPMSDB.createConnection();
+                        PreparedStatement stmt = con
+                                .prepareStatement(
+                                        "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction JOIN drink_product ON drink_product.id = stock_product_reduction.stock_product_id WHERE drink_product.isVoided = 0 AND stock_product_expenses_id = ? AND stock_product_type_id = 1 GROUP BY stock_product_expenses_id;")) {
+
+                    // Apply parameter to Query then execute
+                    stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                    stmt.execute();
+                    // Get result
+                    ResultSet result = stmt.getResultSet();
+
+                    myMap = (Map<String, Object>) beverageItems.get(stock_product_expenses_id);
+
+                    // If no result, skip
+                    if (isNoResult(result)) {
+                        result.close();
+                    } else {
+                        // Modify quantity
+                        result.next();
+                        myMap.put("quantity",
+                                Integer.valueOf(String.valueOf(myMap.get("quantity"))) - result.getInt("sum"));
+                        result.close();
+
+                        // If quantity is less than 1, remove from list
+                        if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
+                            // COMMENTING SINCE PRODUCES ERROR
+                            // beverageItems.remove(stock_product_expenses_id);
+                            continue;
+                        }
+                    }
+
+                } catch (Exception e) {
+                    PopupDialog.showErrorDialog(e, this.getClass().getName());
+                }
+
+                String formattedBeverageName = String.valueOf(beverageItemsDetails.get("product_name"))
+                        + " "
+                        // Converting size if needed
+                        + (Integer.valueOf(String.valueOf(
+                                beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS
+                                        .getValue()
+                                                ? NumberHelper.mililiterToLiter(
+                                                        Double.valueOf(
+                                                                String.valueOf(beverageItemsDetails.get("size"))))
+                                                : String.valueOf(beverageItemsDetails.get("size")))
+                        // Converting unit
+                        + (Integer.valueOf(String.valueOf(
+                                beverageItemsDetails.get("preferred_unit_id"))) == PreferredUnits.Units.LITERS
+                                        .getValue()
+                                                ? "L"
+                                                : "mL");
+
+                myList.add(new ExpiringItems(formattedBeverageName,
+                        Integer.parseInt(String.valueOf(myMap.get("quantity"))),
+                        DateHelper.stringToDate(String.valueOf(beverageItemsDetails.get("expiry_date"))), 0));
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
         }
         // Return false if
         return myList;
@@ -1479,88 +1505,92 @@ public class DBQuery {
         ObservableList<ExpiringItems> myList = FXCollections.observableArrayList();
         Map<String, Object> stockItems = new HashMap<String, Object>();
         Map<String, Object> stockItemDetails = new HashMap<String, Object>();
-
-        // Retrieving beverage products that are nearly expiring on
-        // stock_product_expenses
-        try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con
-                        .prepareStatement(
-                                "SELECT stock_product_expenses.id AS expense_id, stock_id, stock_name, unit_measure.unit, stock_product_expenses.quantity, expiry_date FROM stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE datediff(expiry_date, now()) < 1 AND isVoided = 0;")) {
-
-            // Putting in values
-            stmt.execute();
-            ResultSet result = stmt.getResultSet();
-
-            // If no expiring beverage, then return empty
-            if (isNoResult(result)) {
-                result.close();
-                return myList;
-            } else {
-                while (result.next()) {
-                    stockItemDetails = new HashMap<String, Object>();
-                    stockItemDetails.put("stock_name", result.getString("stock_name"));
-                    stockItemDetails.put("stock_id", result.getString("stock_id"));
-                    stockItemDetails.put("unit", result.getString("unit"));
-                    stockItemDetails.put("quantity", result.getString("quantity"));
-                    stockItemDetails.put("expiry_date", result.getString("expiry_date"));
-                    stockItems.put(result.getString("expense_id"), stockItemDetails);
-                }
-                result.close();
-            }
-        } catch (Exception e) {
-            PopupDialog.showErrorDialog(e, this.getClass().getName());
-        }
-
-        Map<String, Object> myMap;
-
-        // Iterating through each expiring inventory item and then subtracting what is
-        // left
-        for (String stock_product_expenses_id : stockItems.keySet()) {
-            myMap = new HashMap<String, Object>();
-            // Retrieve subtracted quantity then subtract to original quantity
+        try {
+            // Retrieving beverage products that are nearly expiring on
+            // stock_product_expenses
             try (Connection con = this.zavPMSDB.createConnection();
                     PreparedStatement stmt = con
                             .prepareStatement(
-                                    "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? GROUP BY stock_product_expenses_id;")) {
+                                    "SELECT stock_product_expenses.id AS expense_id, stock_id, stock_name, unit_measure.unit, stock_product_expenses.quantity, expiry_date FROM stock_product_expenses JOIN stock ON stock.id = stock_product_expenses.stock_id JOIN unit_measure ON unit_measure.id = stock.unit_measure_id WHERE datediff(expiry_date, now()) < 1 AND isVoided = 0;")) {
 
-                // Apply parameter to Query then execute
-                stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                // Putting in values
                 stmt.execute();
-                // Get result
                 ResultSet result = stmt.getResultSet();
 
-                myMap = (Map<String, Object>) stockItems.get(stock_product_expenses_id);
-
-                // If no result, skip
+                // If no expiring beverage, then return empty
                 if (isNoResult(result)) {
                     result.close();
+                    return myList;
                 } else {
-                    // Modify quantity
-                    result.next();
-
-                    myMap.put("quantity",
-                            (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) -
-                                    result.getInt("sum"));
-
-                    // If quantity is less than 1, remove from list
-                    if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
-                        stockItems.remove(stock_product_expenses_id);
-                        continue;
+                    while (result.next()) {
+                        stockItemDetails = new HashMap<String, Object>();
+                        stockItemDetails.put("stock_name", result.getString("stock_name"));
+                        stockItemDetails.put("stock_id", result.getString("stock_id"));
+                        stockItemDetails.put("unit", result.getString("unit"));
+                        stockItemDetails.put("quantity", result.getString("quantity"));
+                        stockItemDetails.put("expiry_date", result.getString("expiry_date"));
+                        stockItems.put(result.getString("expense_id"), stockItemDetails);
                     }
-
                     result.close();
                 }
-
             } catch (Exception e) {
                 PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
 
-            myList.add(new ExpiringItems(
-                    String.valueOf(myMap.get("unit")) + " : " + String.valueOf(myMap.get("stock_name")),
-                    (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))),
-                    DateHelper.stringToDate(String.valueOf(myMap.get("expiry_date")))));
-        }
+            Map<String, Object> myMap;
 
+            // Iterating through each expiring inventory item and then subtracting what is
+            // left
+            for (String stock_product_expenses_id : stockItems.keySet()) {
+                myMap = new HashMap<String, Object>();
+                // Retrieve subtracted quantity then subtract to original quantity
+                try (Connection con = this.zavPMSDB.createConnection();
+                        PreparedStatement stmt = con
+                                .prepareStatement(
+                                        "SELECT SUM(quantity) AS sum, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? GROUP BY stock_product_expenses_id;")) {
+
+                    // Apply parameter to Query then execute
+                    stmt.setInt(1, Integer.valueOf(stock_product_expenses_id));
+                    stmt.execute();
+                    // Get result
+                    ResultSet result = stmt.getResultSet();
+
+                    myMap = (Map<String, Object>) stockItems.get(stock_product_expenses_id);
+
+                    // If no result, skip
+                    if (isNoResult(result)) {
+                        result.close();
+                    } else {
+                        // Modify quantity
+                        result.next();
+
+                        myMap.put("quantity",
+                                (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) -
+                                        result.getInt("sum"));
+
+                        // If quantity is less than 1, remove from list
+                        if ((int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))) < 1) {
+                            // COMMENTING SINCE PRODUCES ERROR
+                            // stockItems.remove(stock_product_expenses_id);
+                            continue;
+                        }
+
+                        result.close();
+                    }
+
+                } catch (Exception e) {
+                    PopupDialog.showErrorDialog(e, this.getClass().getName());
+                }
+
+                myList.add(new ExpiringItems(
+                        String.valueOf(myMap.get("unit")) + " : " + String.valueOf(myMap.get("stock_name")),
+                        (int) Math.round(Double.valueOf(String.valueOf(myMap.get("quantity")))),
+                        DateHelper.stringToDate(String.valueOf(myMap.get("expiry_date"))), 0));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Return false if
         return myList;
     }
@@ -1587,6 +1617,44 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return false;
+    }
+
+    // Returns inventory items in critical level
+    public ObservableList<ExpiringItems> getItemsInCriticalLevel() {
+        String[] queries = {
+                "SELECT * FROM `zav-pms-db`.drink_product WHERE isVoided = 0 AND critical_level >= available_count;",
+                "SELECT * FROM `zav-pms-db`.stock WHERE isVoided = 0 AND critical_level >= quantity;" };
+        ObservableList<ExpiringItems> criticalLevelItems = FXCollections.observableArrayList();
+
+        for (String query : queries) {
+            try (Connection con = this.zavPMSDB.createConnection();
+                    PreparedStatement stmt = con.prepareStatement(query)) {
+                // Execute SQL Query
+                stmt.execute();
+
+                ResultSet result = stmt.getResultSet();
+                // Checking if there are any matches
+                if (isNoResult(result)) {
+                    result.close();
+                } else {
+                    while (result.next()) {
+                        // If first query
+                        if (query.compareTo(queries[0]) == 0)
+                            criticalLevelItems.add(new ExpiringItems(getProductName(result.getInt("products_name_id")),
+                                    result.getInt("available_count"), null,
+                                    result.getInt("critical_level")));
+                        else if (query.compareTo(queries[1]) == 0)
+                            criticalLevelItems.add(new ExpiringItems(result.getString("stock_name"),
+                                    result.getInt("quantity"), null,
+                                    result.getInt("critical_level")));
+                    }
+                    result.close();
+                }
+            } catch (Exception e) {
+                PopupDialog.showErrorDialog(e, this.getClass().getName());
+            }
+        }
+        return criticalLevelItems;
     }
 
 }

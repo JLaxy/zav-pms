@@ -34,6 +34,7 @@ public class IncreaseBeverageController extends ParentController {
     @FXML
     public void initialize(DrinkVariant selectedBeverage, ViewBeverageProductController viewBeverageProductController) {
         this.model = new IncreaseBeverageModel(this);
+        this.viewBeverageProductController = viewBeverageProductController;
         this.selectedBeverage = selectedBeverage;
         this.quantitySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000000000, 0));
         configureCostField();

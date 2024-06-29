@@ -27,6 +27,7 @@ public class ScreenPaths {
         INVENTORY("../../views/fxmls/inventory/InventoryView.fxml"),
         INVENTORY_REFILL_HISTORY("../../views/fxmls/inventory/InventoryRefillHistoryView.fxml"),
         EXPIRING_ITEMS("../../views/fxmls/inventory/ViewExpiringItemsView.fxml"),
+        CRITICAL_ITEMS("../../views/fxmls/inventory/ViewCriticalLevelsView.fxml"),
         // // Product
         PRODUCT_INVENTORY("../../views/fxmls/inventory/ProductInventoryView.fxml"),
         // Food
