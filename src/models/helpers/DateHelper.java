@@ -63,8 +63,16 @@ public class DateHelper {
     }
 
     // Returns true if date supplied has already passed
-    public static Boolean isDateBeforeNow(LocalDateTime date1) {
+    public static Boolean isDateTimeBeforeNow(LocalDateTime date1) {
         return date1.isBefore(LocalDateTime.now());
+    }
+
+    public static Boolean isDateBeforeNow(LocalDate date1) {
+        return date1.isBefore(LocalDate.now());
+    }
+
+    public static Boolean isDateNow(LocalDate date1) {
+        return date1.isEqual(LocalDate.now());
     }
 
     // Returns current date time

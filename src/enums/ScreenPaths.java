@@ -51,6 +51,7 @@ public class ScreenPaths {
         EDIT_STOCK("../../views/fxmls/inventory/EditStockInventoryView.fxml"),
         INCREMENT_STOCK_INVENTORY("../../views/fxmls/inventory/IncrementStockInventoryView.fxml"),
         SELECT_STOCK("../../views/fxmls/inventory/SelectStockView.fxml"),
+        SELECT_STOCK_DECREASE("../../views/fxmls/inventory/SelectStockDecrease.fxml"),
 
         // Report
         REPORT("../../views/fxmls/report/ReportView.fxml"),

@@ -48,6 +48,11 @@ public class PMS extends Application {
             mainStage.setResizable(false);
             mainStage.setScene(scene);
 
+            // Checks if app should run in fullscreen
+            if (Boolean.valueOf(new JSONManager().getSetting("runInFullScreen"))) {
+                mainStage.setFullScreen(true);
+            }
+
             // Makes stage visible
             mainStage.show();
 

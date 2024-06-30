@@ -14,4 +14,12 @@ public class UIElementsBuilderHelper {
             node.setStyle("-fx-font-size: 20");
         }
     }
+
+    public static void applyRedToText(Node textLabel) {
+        textLabel.setStyle("-fx-text-fill: red");
+    }
+
+    public static void applyBlackToText(Node textLabel) {
+        textLabel.setStyle("-fx-text-fill: black");
+    }
 }

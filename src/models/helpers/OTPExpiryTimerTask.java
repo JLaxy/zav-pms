@@ -25,7 +25,7 @@ public class OTPExpiryTimerTask extends TimerTask {
     public void run() {
         Platform.runLater(() -> {
             // If it is expiry date
-            if (DateHelper.isDateBeforeNow(this.expiryDate)) {
+            if (DateHelper.isDateTimeBeforeNow(this.expiryDate)) {
                 // Telling controller OTP has expired
                 this.controller.otpHasExpired();
                 // Self Destruct

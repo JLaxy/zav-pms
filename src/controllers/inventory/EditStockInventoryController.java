@@ -32,7 +32,12 @@ public class EditStockInventoryController extends ParentController {
 
     @FXML
     private void decreaseStock(ActionEvent e) {
-        System.out.println("decreasing...");
+        System.out.println("decreasing quantity of stock with id: " + this.selectedStock.getId());
+        this.borderPaneRootSwitcher.exitPopUpDialog();
+        SelectStockDecreaseController controller = (SelectStockDecreaseController) this.initializeNextScreen_BP(
+                ScreenPaths.Paths.SELECT_STOCK_DECREASE.getPath(), this.loggedInUserInfo,
+                "SELECT STOCK");
+        controller.initialize(this.selectedStock.getId());
     }
 
     // Void currently selected stock

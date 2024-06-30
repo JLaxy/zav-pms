@@ -41,16 +41,18 @@ public class JSONManager {
 
     // Creating settings file if it does not exist
     private void createSettingsFile() {
-        PopupDialog.showInfoDialog("No Settings File", "Creating Settings File for the first time");
+        PopupDialog.showInfoDialog("Settings File not found", "Creating Settings File");
         try (Writer myWriter = new BufferedWriter(new FileWriter(SETTINGS_PATH))) {
 
             Map<String, Object> settingsFile = new HashMap<String, Object>();
             Map<String, Object> settings = new HashMap<String, Object>();
 
+            // Add settings here
             settings.put("cooldown", "2002-10-28 09:18:19");
             settings.put("backupLocation", "Nothing set.");
-            settings.put("autoBackup", "false");
-            settings.put("autoCheckExpiredItems", "true");
+            settings.put("autoBackup", false);
+            settings.put("autoCheckExpiredItems", true);
+            settings.put("runInFullScreen", false);
 
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
             settingsFile.put("program_settings", settings);

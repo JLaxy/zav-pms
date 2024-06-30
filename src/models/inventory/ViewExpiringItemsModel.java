@@ -40,11 +40,12 @@ public class ViewExpiringItemsModel {
 
                 // Calulating remaining items; stock_product_expenses_quantity -
                 // stock_product_reduction_quantity
-                double remainingQuantity = Double.valueOf(String.valueOf(expiringItemDetails.get("quantity")))
-                        - this.controller.getDBManager().query
-                                .getTotalReducedOfSPE(Integer.valueOf(expiringItem.getKey()));
+                double remainingQuantity = Double.valueOf(NumberHelper
+                        .toTwoDecimalPlaces(Double.valueOf(String.valueOf(expiringItemDetails.get("quantity")))
+                                - this.controller.getDBManager().query
+                                        .getTotalReducedOfSPE(Integer.valueOf(expiringItem.getKey()))));
                 // No more remaining quantity
-                if (remainingQuantity < 1)
+                if (remainingQuantity < 0.1)
                     continue;
 
                 // if beverage
