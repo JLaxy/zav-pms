@@ -1331,7 +1331,7 @@ public class DBQuery {
     public ObservableList<DeprecatedItem> getItemsInCriticalLevel() {
         String[] queries = {
                 "SELECT * FROM `zav-pms-db`.drink_product WHERE isVoided = 0 AND critical_level >= available_count;",
-                "SELECT * FROM `zav-pms-db`.stock WHERE isVoided = 0 AND critical_level >= quantity;" };
+                "SELECT * FROM `zav-pms-db`.stock JOIN unit_measure ON stock.unit_measure_id = unit_measure.id WHERE isVoided = 0 AND critical_level >= quantity;" };
         ObservableList<DeprecatedItem> criticalLevelItems = FXCollections.observableArrayList();
 
         for (String query : queries) {
@@ -1346,15 +1346,29 @@ public class DBQuery {
                     result.close();
                 } else {
                     while (result.next()) {
-                        // If first query
-                        if (query.compareTo(queries[0]) == 0)
-                            criticalLevelItems.add(new DeprecatedItem(getProductName(result.getInt("products_name_id")),
+                        String inventory_item_name = "";
+
+                        // If beverage
+                        if (query.compareTo(queries[0]) == 0) {
+                            // If Liters
+                            if (result.getInt("preferred_unit_id") == PreferredUnits.Units.LITERS.getValue())
+                                inventory_item_name = getProductName(result.getInt("products_name_id")) + " "
+                                        + NumberHelper.mililiterToLiter(result.getInt("size")) + "L";
+                            else if (result.getInt("preferred_unit_id") == PreferredUnits.Units.MILILITERS.getValue())
+                                inventory_item_name = getProductName(result.getInt("products_name_id")) + " "
+                                        + result.getInt("size") + "mL";
+
+                            criticalLevelItems.add(new DeprecatedItem(inventory_item_name,
                                     result.getInt("available_count"), null,
                                     result.getInt("critical_level")));
-                        else if (query.compareTo(queries[1]) == 0)
-                            criticalLevelItems.add(new DeprecatedItem(result.getString("stock_name"),
+                        } else if (query.compareTo(queries[1]) == 0) {
+                            inventory_item_name = result.getString("stock_name") + " : "
+                                    + getUnitMeasure(result.getInt("unit_measure_id"));
+
+                            criticalLevelItems.add(new DeprecatedItem(inventory_item_name,
                                     result.getInt("quantity"), null,
                                     result.getInt("critical_level")));
+                        }
                     }
                     result.close();
                 }
@@ -1362,7 +1376,35 @@ public class DBQuery {
                 PopupDialog.showErrorDialog(e, this.getClass().getName());
             }
         }
+
+        Comparator<DeprecatedItem> sorter = Comparator.comparing(DeprecatedItem::getInventory_item);
+        Collections.sort(criticalLevelItems, sorter);
+
         return criticalLevelItems;
+    }
+
+    // Returns unit measure by id
+    public String getUnitMeasure(int id) {
+        String unitMeasure = null;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.unit_measure WHERE id = ?;")) {
+            stmt.setInt(1, id);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                unitMeasure = result.getString("unit");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return unitMeasure;
     }
 
 }

@@ -1,7 +1,5 @@
 package controllers.inventory;
 
-import java.util.HashMap;
-
 import controllers.ParentController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
