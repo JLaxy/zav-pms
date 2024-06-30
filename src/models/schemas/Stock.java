@@ -7,9 +7,8 @@ package models.schemas;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import enums.StockTypeCBox;
-import enums.UnitMeasureCBox;
 import models.helpers.PopupDialog;
+import models.helpers.database.DBManager;
 
 public class Stock {
     private int id, unit_measure_id, stock_type_id, critical_level;
@@ -47,22 +46,10 @@ public class Stock {
     }
 
     // Updates string equivalents of Unit Measure and Stock Type
-    public void updateStringEquivalents() {
-        if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.BOTTLE.getValue())
-            this.unit_measure_id_string = "bottle";
-        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.PACK.getValue())
-            this.unit_measure_id_string = "pack";
-        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.SACHET.getValue())
-            this.unit_measure_id_string = "sachet";
-        else if (this.unit_measure_id == UnitMeasureCBox.UnitMeasure.BOX.getValue())
-            this.unit_measure_id_string = "box";
-
-        if (this.stock_type_id == StockTypeCBox.StockType.VEGETABLE.getValue())
-            this.stock_type_id_string = "vegetable";
-        else if (this.stock_type_id == StockTypeCBox.StockType.MEAT.getValue())
-            this.stock_type_id_string = "meat";
-        else if (this.stock_type_id == StockTypeCBox.StockType.CONDIMENT.getValue())
-            this.stock_type_id_string = "condiment";
+    private void updateStringEquivalents() {
+        DBManager database = new DBManager();
+        this.unit_measure_id_string = database.query.getUnitMeasure(this.unit_measure_id);
+        this.stock_type_id_string = database.query.getStockType(this.stock_type_id);
     }
 
     public int getId() {
@@ -105,7 +92,7 @@ public class Stock {
         this.isVoided = !this.isVoided;
     }
 
-    public void incrementQuantity(int count) {
+    public void incrementQuantity(double count) {
         this.quantity += count;
     }
 

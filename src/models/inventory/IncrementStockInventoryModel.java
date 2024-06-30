@@ -14,13 +14,14 @@ public class IncrementStockInventoryModel {
         this.controller = controller;
     }
 
-    public boolean logStockProductPurchase(Stock selectedStock, int quantity, float totalCost, LocalDate datePurchased,
+    public boolean logStockProductPurchase(Stock selectedStock, double quantity, double totalCost,
+            LocalDate datePurchased,
             LocalDate expiryDate, int stockProductTypeID, User loggedInUser) {
         return this.controller.getDBManager().query.logStockProductPurchase(selectedStock.getId(), quantity, totalCost,
                 datePurchased, expiryDate, stockProductTypeID, loggedInUser, selectedStock.getStock_name());
     }
 
-    public boolean incrementStock(Stock selectedStock, int quantity, User loggedInUser) {
+    public boolean incrementStock(Stock selectedStock, double quantity, User loggedInUser) {
         // Create copy then increment
         Stock updatedStock = selectedStock.getCopy();
         updatedStock.incrementQuantity(quantity);

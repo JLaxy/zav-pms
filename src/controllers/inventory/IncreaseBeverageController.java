@@ -37,11 +37,17 @@ public class IncreaseBeverageController extends ParentController {
         this.viewBeverageProductController = viewBeverageProductController;
         this.selectedBeverage = selectedBeverage;
         this.quantitySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000000000, 0));
-        configureCostField();
+        configureFields();
     }
 
     // Configures Cost field; Prevents letters from textfield
-    private void configureCostField() {
+    private void configureFields() {
+        quantitySpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^[1-9]\\d*$")) {
+                quantitySpinner.getEditor().setText(oldValue);
+            }
+        });
+
         costField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,

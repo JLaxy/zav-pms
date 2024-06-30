@@ -5,11 +5,11 @@
 package models.schemas;
 
 public class PurchasedInventoryItem {
-    private int id, stock_id, quantity, stock_product_type_id;
-    private double total_cost;
+    private int id, stock_id, stock_product_type_id;
+    private double total_cost, quantity;
     private String date_purchased, expiry_date, inventory_item_name, unit_measure, size;
 
-    public PurchasedInventoryItem(int id, int stock_id, int quantity, double total_cost, String date_purchased,
+    public PurchasedInventoryItem(int id, int stock_id, double quantity, double total_cost, String date_purchased,
             int stock_product_type_id, String expiry_date, String inventory_item_name, String unit_measure,
             String size) {
         this.id = id;
@@ -32,7 +32,7 @@ public class PurchasedInventoryItem {
         return this.stock_id;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return this.quantity;
     }
 

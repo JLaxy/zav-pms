@@ -20,7 +20,7 @@ import models.schemas.Stock;
 
 public class IncrementStockInventoryController extends ParentController {
     @FXML
-    private Spinner<Integer> quantitySpinner;
+    private Spinner<Double> quantitySpinner;
     @FXML
     private TextField costField;
     @FXML
@@ -34,9 +34,11 @@ public class IncrementStockInventoryController extends ParentController {
     public void initialize(Stock selectedStock, ViewStockInventoryController viewStockInventoryController) {
         this.model = new IncrementStockInventoryModel(this);
         this.selectedStock = selectedStock;
-        this.quantitySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000000000, 0));
+        this.quantitySpinner
+                .setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1.0, 1000000000.0, 1.0, 0.1));
+        System.out.println("called");
         this.viewStockInventoryController = viewStockInventoryController;
-        this.configureCostField();
+        this.configureFields();
     }
 
     @FXML
@@ -55,10 +57,10 @@ public class IncrementStockInventoryController extends ParentController {
         if (!inputsAreValid())
             return;
 
-        float cost = Float.valueOf(costField.getText());
+        double cost = Double.valueOf(costField.getText());
         LocalDate purchaseDate = datePurchasedPicker.getValue();
         LocalDate expiryDate = dateExpiryPicker.getValue();
-        int quantity = quantitySpinner.getValue();
+        double quantity = quantitySpinner.getValue();
 
         // Log Purchase
         if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
@@ -85,7 +87,14 @@ public class IncrementStockInventoryController extends ParentController {
     }
 
     // Configures Cost field; Prevents letters from textfield
-    private void configureCostField() {
+    private void configureFields() {
+        // Configuring quantity spinner
+        quantitySpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d+(\\.\\d*)?$")) {
+                quantitySpinner.getEditor().setText(oldValue);
+            }
+        });
+
         costField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -98,13 +107,15 @@ public class IncrementStockInventoryController extends ParentController {
 
     // Returns true if all inputs are valid
     private boolean inputsAreValid() {
+        System.out.println("checking..");
+
         if (costField.getText().isBlank()) {
             PopupDialog.showCustomErrorDialog("Stock cost is not valid!");
             return false;
         }
 
         try {
-            Float.valueOf(costField.getText());
+            Double.valueOf(costField.getText());
         } catch (Exception e) {
             PopupDialog.showCustomErrorDialog("Stock cost is not valid!");
             return false;

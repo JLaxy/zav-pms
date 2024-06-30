@@ -593,9 +593,10 @@ public class DBQuery {
                 result.close();
             } else {
                 while (result.next()) {
-                    myList.add(new Stock(result.getInt("id"), result.getString("stock_name"), result.getInt("quantity"),
-                            result.getInt("unit_measure_id"), result.getInt("stock_type_id"),
-                            result.getInt("critical_level"), result.getInt("isVoided") == 0 ? false : true));
+                    myList.add(
+                            new Stock(result.getInt("id"), result.getString("stock_name"), result.getDouble("quantity"),
+                                    result.getInt("unit_measure_id"), result.getInt("stock_type_id"),
+                                    result.getInt("critical_level"), result.getInt("isVoided") == 0 ? false : true));
                 }
                 result.close();
             }
@@ -642,7 +643,8 @@ public class DBQuery {
         return false;
     }
 
-    public boolean logStockProductPurchase(int stockProductID, int quantity, double totalCost, LocalDate datePurchased,
+    public boolean logStockProductPurchase(int stockProductID, double quantity, double totalCost,
+            LocalDate datePurchased,
             LocalDate expiryDate, int stockProductTypeID, User loggedInUser, String stockProductName) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
@@ -651,7 +653,7 @@ public class DBQuery {
 
             // Setting stock info
             stmt.setInt(1, stockProductID);
-            stmt.setInt(2, quantity);
+            stmt.setDouble(2, quantity);
             stmt.setDouble(3, totalCost);
             stmt.setString(4, DateHelper.dateToString(datePurchased));
             stmt.setInt(5, stockProductTypeID);
@@ -719,7 +721,7 @@ public class DBQuery {
                     if (stockResult.getInt("stock_product_type_id") == 2) {
                         // Add to list
                         resultList.add(new PurchasedInventoryItem(stockResult.getInt("id"),
-                                stockResult.getInt("stock_id"), stockResult.getInt("quantity"),
+                                stockResult.getInt("stock_id"), stockResult.getDouble("quantity"),
                                 stockResult.getFloat("total_cost"), stockResult.getString("date_purchased"),
                                 stockResult.getInt("stock_product_type_id"), stockResult.getString("expiry_date"),
                                 stockResult.getString("stock_name"), stockResult.getString("unit"), null));
@@ -1366,7 +1368,7 @@ public class DBQuery {
                                     + getUnitMeasure(result.getInt("unit_measure_id"));
 
                             criticalLevelItems.add(new DeprecatedItem(inventory_item_name,
-                                    result.getInt("quantity"), null,
+                                    result.getDouble("quantity"), null,
                                     result.getInt("critical_level")));
                         }
                     }
@@ -1405,6 +1407,76 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return unitMeasure;
+    }
+
+    public int getUnitMeasureID(String unitMeasure) {
+        int unitMeasureID = -1;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.unit_measure WHERE unit = ?;")) {
+            stmt.setString(1, unitMeasure);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                unitMeasureID = result.getInt("id");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return unitMeasureID;
+    }
+
+    // Returns unit measure by id
+    public String getStockType(int id) {
+        String stockType = null;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.stock_type WHERE id = ?;")) {
+            stmt.setInt(1, id);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                stockType = result.getString("type");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return stockType;
+    }
+
+    public int getStockTypeID(String stockType) {
+        int stockTypeID = -1;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.stock_type WHERE type = ?;")) {
+            stmt.setString(1, stockType);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                stockTypeID = result.getInt("id");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return stockTypeID;
     }
 
 }

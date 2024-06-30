@@ -51,10 +51,10 @@ public class RegisterNewStockController extends ParentController {
         String unitMeasureString = unitmeasureCBox.getSelectionModel().getSelectedItem();
         String stockTypeString = stockTypeCBox.getSelectionModel().getSelectedItem();
 
+        int unitMeasureID = getDBManager().query.getUnitMeasureID(unitMeasureString);
+
         Stock newStock = new Stock(0, stockNameField.getText(), 0,
-                (unitMeasureString.compareTo("bottle") == 0 ? 1
-                        : (unitMeasureString.compareTo("pack") == 0 ? 2
-                                : (unitMeasureString.compareTo("sachet") == 0 ? 3 : 4))),
+                unitMeasureID,
                 (stockTypeString.compareTo("vegetable") == 0 ? 1 : (stockTypeString.compareTo("meat") == 0 ? 2 : 3)),
                 criticalLevel, false);
 
