@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.helpers.UIElementsBuilderHelper;
 import models.inventory.ViewCriticalLevelsModel;
-import models.schemas.ExpiringItems;
+import models.schemas.DeprecatedItem;
 
 public class ViewCriticalLevelsController extends ParentController {
 
@@ -18,7 +18,7 @@ public class ViewCriticalLevelsController extends ParentController {
     private VBox criticalLevelItemsVBox;
 
     private ViewCriticalLevelsModel model;
-    private ObservableList<ExpiringItems> criticalLevelItems;
+    private ObservableList<DeprecatedItem> criticalLevelItems;
 
     @FXML
     private void initialize() {
@@ -56,7 +56,7 @@ public class ViewCriticalLevelsController extends ParentController {
 
     // Displays all of the retrieved elements on screen
     private void showItemsOnScreen() {
-        for (ExpiringItems criticalItem : criticalLevelItems) {
+        for (DeprecatedItem criticalItem : criticalLevelItems) {
             // Create Labels
             Label inventoryItemNameLabel = new Label(criticalItem.getInventory_item());
             inventoryItemNameLabel.setAlignment(Pos.CENTER_LEFT);

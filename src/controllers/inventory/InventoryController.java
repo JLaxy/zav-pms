@@ -16,8 +16,6 @@ public class InventoryController extends ParentController {
     public void initialize() {
         System.out.println("REMEMBER TO CALL INITIALIZE SEPARATELY!");
         this.model = new InventoryModel(this);
-        // Check if there are expiring items
-        this.checkForExpiringItems();
     }
 
     @FXML
@@ -62,37 +60,4 @@ public class InventoryController extends ParentController {
         controller.retrieveCriticalLevelItems();
     }
 
-    // Checks if there expiring items
-    private void checkForExpiringItems() {
-        // Task<Void> checkingForExpiringItems = new Task<Void>() {
-        // @Override
-        // protected Void call() throws Exception {
-        // // If has expiring items in inventory
-        // if (model.hasExpiringItems()) {
-        // Platform.runLater(() -> {
-        // borderPaneRootSwitcher.exitLoadingScreen_BP();
-        // // Show Error dialog
-        // PopupDialog.showCustomErrorDialog("You have deprecated items in the
-        // inventory!");
-        // // Navigate to expiring items view
-        // expiringitems();
-        // });
-        // }
-        // return null;
-        // }
-        // };
-
-        // // Show loading screen
-        // checkingForExpiringItems.setOnRunning(e -> {
-        // this.borderPaneRootSwitcher.showLoadingScreen_BP();
-        // });
-
-        // checkingForExpiringItems.setOnFailed(e -> {
-        // System.out.println(e.toString());
-        // });
-
-        // Thread expiryThread = new Thread(checkingForExpiringItems);
-        // expiryThread.setDaemon(true);
-        // expiryThread.start();
-    }
 }

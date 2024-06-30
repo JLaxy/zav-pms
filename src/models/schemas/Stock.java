@@ -12,16 +12,17 @@ import enums.UnitMeasureCBox;
 import models.helpers.PopupDialog;
 
 public class Stock {
-    private int id, quantity, unit_measure_id, stock_type_id, critical_level;
+    private int id, unit_measure_id, stock_type_id, critical_level;
     private String stock_name, unit_measure_id_string, stock_type_id_string;
     private boolean isVoided;
+    private double quantity;
 
     // Null Stock Constructor
     public Stock() {
 
     }
 
-    public Stock(int id, String stock_name, int quantity, int unit_measure_id, int stock_type_id, int critical_level,
+    public Stock(int id, String stock_name, double quantity, int unit_measure_id, int stock_type_id, int critical_level,
             boolean isVoided) {
         this.id = id;
         this.stock_name = stock_name;
@@ -72,7 +73,7 @@ public class Stock {
         return this.stock_name;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return this.quantity;
     }
 

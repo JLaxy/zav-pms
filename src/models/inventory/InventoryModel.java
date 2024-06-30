@@ -3,7 +3,7 @@ package models.inventory;
 import controllers.inventory.InventoryController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import models.schemas.ExpiringItems;
+import models.schemas.DeprecatedItem;
 
 public class InventoryModel {
     private InventoryController controller;
@@ -14,7 +14,7 @@ public class InventoryModel {
 
     // Returns true if there are deprecated items in the inventory
     public boolean hasExpiringItems() {
-        ObservableList<ExpiringItems> deprecatedItems = FXCollections.observableArrayList();
+        ObservableList<DeprecatedItem> deprecatedItems = FXCollections.observableArrayList();
 
         deprecatedItems.addAll(this.controller.getDBManager().query.getExpiredBeverages());
         deprecatedItems.addAll(this.controller.getDBManager().query.getExpiringBeverages());

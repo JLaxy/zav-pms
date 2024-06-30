@@ -2,16 +2,17 @@ package models.schemas;
 
 import java.time.LocalDate;
 
-public class ExpiringItems {
+public class DeprecatedItem {
     private String inventory_item;
     private LocalDate expiry_date;
-    private int quantity, critical_level;
+    private int critical_level;
+    private double quantity;
 
     // Null constructor
-    public ExpiringItems() {
+    public DeprecatedItem() {
     }
 
-    public ExpiringItems(String inventory_item, int quantity, LocalDate expiry_date, int critical_level) {
+    public DeprecatedItem(String inventory_item, double quantity, LocalDate expiry_date, int critical_level) {
         this.inventory_item = inventory_item;
         this.quantity = quantity;
         this.expiry_date = expiry_date;
@@ -26,7 +27,7 @@ public class ExpiringItems {
         return this.critical_level;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return this.quantity;
     }
 
