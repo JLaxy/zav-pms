@@ -1,12 +1,14 @@
 package controllers.homepage;
 
 import controllers.ParentController;
+import controllers.inventory.InventoryController;
 import controllers.manageaccounts.ManageAccountsController;
 import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import models.helpers.JSONManager;
 
 public class AdminHomePageController extends ParentController {
     @FXML
@@ -41,8 +43,14 @@ public class AdminHomePageController extends ParentController {
             this.initializeNextScreen_BP(ScreenPaths.Paths.TRANSACTION.getPath(), this.loggedInUserInfo,
                     "TRANSACTIONS");
         } else if ((Button) e.getSource() == this.inventoryButton) {
-            this.initializeNextScreen_BP(ScreenPaths.Paths.INVENTORY.getPath(), this.loggedInUserInfo,
+            InventoryController controller = (InventoryController) this.initializeNextScreen_BP(
+                    ScreenPaths.Paths.INVENTORY.getPath(), this.loggedInUserInfo,
                     "INVENTORY");
+
+            // If setting is autoCheckExpiredItems is ON
+            if (new JSONManager().getSetting("autoCheckExpiredItems").compareTo("true") == 0)
+                controller.checkExpiredItems();
+
         } else if ((Button) e.getSource() == this.reportsButton) {
             this.initializeNextScreen_BP(ScreenPaths.Paths.REPORT.getPath(), this.loggedInUserInfo, "REPORT");
             System.out.println("reportsButton");

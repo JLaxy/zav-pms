@@ -2,8 +2,6 @@ package controllers.inventory;
 
 import controllers.ParentController;
 import enums.ScreenPaths;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import models.helpers.PopupDialog;
 import models.inventory.InventoryModel;
@@ -51,6 +49,13 @@ public class InventoryController extends ParentController {
         ViewExpiringItemsController controller = (ViewExpiringItemsController) this
                 .initializePopUpDialog(ScreenPaths.Paths.EXPIRING_ITEMS.getPath(), loggedInUserInfo);
         controller.retrieveExpiringItems();
+    }
+
+    public void checkExpiredItems() {
+        if (this.model.hasExpiringItems())
+            PopupDialog.showCustomErrorDialog("There are expired items in inventory!");
+
+        expiringitems();
     }
 
     @FXML

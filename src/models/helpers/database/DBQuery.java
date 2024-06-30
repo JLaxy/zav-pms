@@ -1186,7 +1186,7 @@ public class DBQuery {
     // Returns Map of all deprecated (expired / expiring) inventory items from
     // database
     public Map<String, Object> getDeprecatedItems(String deprecatedItemType) {
-        // Contains all of the items that are expiring
+        // Contains all of the items that are deprecated (expiring / expired)
         Map<String, Object> deprecatedItems = new HashMap<String, Object>();
 
         String query = "";

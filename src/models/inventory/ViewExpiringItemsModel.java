@@ -8,8 +8,6 @@ import java.util.Map;
 
 import controllers.inventory.ViewExpiringItemsController;
 import enums.PreferredUnits;
-import enums.StockProductType;
-import enums.StockTypeCBox.StockType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
