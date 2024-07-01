@@ -363,6 +363,9 @@ public class DBQuery {
             case DatabaseLists.Lists.PRODUCT_SERVING_SIZE:
                 query = "SELECT size FROM product_serving_size";
                 break;
+            case DatabaseLists.Lists.REDUCTION_TYPES:
+                query = "SELECT reduction_type FROM `zav-pms-db`.reduction_types;";
+                break;
             default:
                 break;
         }
@@ -1195,7 +1198,7 @@ public class DBQuery {
         if (deprecatedItemType.compareTo("EXPIRED") == 0)
             query = "SELECT * FROM `zav-pms-db`.stock_product_expenses WHERE (stock_product_type_id = 1 OR stock_product_type_id = 2) AND datediff(expiry_date, now()) < 1;";
         else if (deprecatedItemType.compareTo("EXPIRING") == 0)
-            query = "SELECT * FROM `zav-pms-db`.stock_product_expenses WHERE (stock_product_type_id = 1 OR stock_product_type_id = 2) AND datediff(expiry_date, now()) < 3 AND datediff(expiry_date, now()) > 0;";
+            query = "SELECT * FROM `zav-pms-db`.stock_product_expenses WHERE (stock_product_type_id = 1 OR stock_product_type_id = 2) AND datediff(expiry_date, now()) < 8 AND datediff(expiry_date, now()) > 0;";
         // Return if invalid
         else
             return deprecatedItems;
@@ -1232,7 +1235,7 @@ public class DBQuery {
         double totalReduced = 0.0;
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
-                        "SELECT SUM(quantity) AS reduced, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? GROUP BY stock_product_expenses_id")) {
+                        "SELECT SUM(quantity) AS reduced, stock_product_expenses_id FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_expenses_id = ? AND isVoided = 0 GROUP BY stock_product_expenses_id")) {
             stmt.setInt(1, stock_product_expenses_id);
             // Execute SQL Query
             stmt.execute();
@@ -1477,6 +1480,51 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return stockTypeID;
+    }
+
+    public int getReductionTypeID(String reductionType) {
+        int reductionTypeID = -1;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.reduction_types WHERE reduction_type = ?;")) {
+            stmt.setString(1, reductionType);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                reductionTypeID = result.getInt("id");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return reductionTypeID;
+    }
+
+    public boolean manualStockProductReduction(PurchasedInventoryItem purchasedInventoryItem, double decreaseQuantity,
+            String reductionType) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "INSERT INTO stock_product_reduction (stock_product_type_id, stock_product_id, date_reducted, quantity, reduction_type_id, stock_product_expenses_id) VALUES (?, ?, ?, ?, ?, ?);")) {
+            stmt.setInt(1, purchasedInventoryItem.getStock_product_type_id());
+            stmt.setInt(2, purchasedInventoryItem.getStock_id());
+            stmt.setString(3, DateHelper.dateToString(LocalDate.now()));
+            stmt.setDouble(4, decreaseQuantity);
+            stmt.setInt(5, getReductionTypeID(reductionType));
+            stmt.setInt(6, purchasedInventoryItem.getId());
+
+            // Execute SQL Query
+            stmt.execute();
+
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
     }
 
     // Returns all of the stock product expenses of item

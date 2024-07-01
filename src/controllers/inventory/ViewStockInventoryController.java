@@ -81,6 +81,7 @@ public class ViewStockInventoryController extends ParentController {
     // Retrieves stocks from database
     public void retrieveStocks(String stockName) {
         try {
+            this.stockDetailsPane.setVisible(false);
             // Show loading Screen
             this.borderPaneRootSwitcher.showLoadingScreen_BP();
 

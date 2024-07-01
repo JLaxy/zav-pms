@@ -45,6 +45,10 @@ public class Stock {
         this.quantity = quantity;
     }
 
+    public void updateQuantity(double newQuantity) {
+        this.quantity = newQuantity;
+    }
+
     // Updates string equivalents of Unit Measure and Stock Type
     private void updateStringEquivalents() {
         DBManager database = new DBManager();

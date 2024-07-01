@@ -84,7 +84,8 @@ public class ScreenPaths {
         SELECT_SIZE("../../views/fxmls/order/SelectSize.fxml"),
 
         // Reusable
-        SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml");
+        SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml"),
+        SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml");
 
         private final String path;
 

@@ -3,17 +3,58 @@ package models.inventory;
 import java.util.Map;
 
 import controllers.inventory.SelectStockDecreaseController;
+import enums.UserLogActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import models.helpers.DateHelper;
 import models.helpers.NumberHelper;
+import models.helpers.PopupDialog;
 import models.schemas.PurchasedInventoryItem;
 import models.schemas.Stock;
+import models.schemas.User;
 
 public class SelectStockDecreaseModel {
     private SelectStockDecreaseController controller;
 
     public SelectStockDecreaseModel(SelectStockDecreaseController controller) {
         this.controller = controller;
+    }
+
+    public boolean confirmDecrease(PurchasedInventoryItem purchasedInventoryItem, double decreaseQuantity,
+            String reductionType, User loggedInUser) {
+        Stock origStock = this.controller.getDBManager().query.getStockByID(purchasedInventoryItem.getStock_id());
+        Stock decreasedStock = origStock.getCopy();
+
+        decreasedStock.updateQuantity(decreasedStock.getQuantity() - decreaseQuantity);
+
+        // ADD STOCK_PRODUCT_REDUCTION LOG
+        if (this.controller.getDBManager().query.manualStockProductReduction(purchasedInventoryItem, decreaseQuantity,
+                reductionType)) {
+            if (this.controller.getDBManager().query.editStock(decreasedStock, loggedInUser,
+                    Stock.getChangesMessages(origStock, decreasedStock))) {
+                int action_id = -1;
+                if (reductionType.compareTo("expired") == 0) {
+                    action_id = UserLogActions.Actions.REMOVED_EXPIRED_ITEM.getValue();
+                } else if (reductionType.compareTo("mishandled") == 0) {
+                    action_id = UserLogActions.Actions.REMOVED_MISHANDLED_ITEM.getValue();
+                }
+
+                try {
+                    this.controller.getDBManager().query.logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                            action_id, DateHelper.getCurrentDateTimeString(),
+                            "inventory item \"" + purchasedInventoryItem.getInventory_item_name() + "\"");
+                } catch (Exception e) {
+                    PopupDialog.showCustomErrorDialog("Unable to log action in user logs");
+                    return false;
+                }
+                return true;
+            }
+            PopupDialog.showCustomErrorDialog(
+                    "Was not able to modify stock quantity! Stock product reduction was recorded");
+        }
+
+        // MODIFY STOCK QUANTITY
+        return false;
     }
 
     public ObservableList<PurchasedInventoryItem> getInventoryItemPurchases(int stockID) {

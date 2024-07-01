@@ -22,4 +22,8 @@ public class UIElementsBuilderHelper {
     public static void applyBlackToText(Node textLabel) {
         textLabel.setStyle("-fx-text-fill: black");
     }
+
+    public static void applyYellowToText(Node textLabel) {
+        textLabel.setStyle("-fx-text-fill: orange");
+    }
 }

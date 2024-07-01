@@ -37,7 +37,7 @@ public class EditStockInventoryController extends ParentController {
         SelectStockDecreaseController controller = (SelectStockDecreaseController) this.initializeNextScreen_BP(
                 ScreenPaths.Paths.SELECT_STOCK_DECREASE.getPath(), this.loggedInUserInfo,
                 "SELECT STOCK");
-        controller.initialize(this.selectedStock.getId());
+        controller.initialize(this.selectedStock.getId(), this.viewStockInventoryController);
     }
 
     // Void currently selected stock

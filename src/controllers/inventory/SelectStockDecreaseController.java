@@ -1,6 +1,8 @@
 package controllers.inventory;
 
 import controllers.ParentController;
+import controllers.reusables.SetDecreaseQuantityController;
+import enums.ScreenPaths;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import models.helpers.DateHelper;
+import models.helpers.PopupDialog;
 import models.helpers.UIElementsBuilderHelper;
 import models.inventory.SelectStockDecreaseModel;
 import models.schemas.PurchasedInventoryItem;
@@ -38,9 +41,11 @@ public class SelectStockDecreaseController extends ParentController {
     private SelectStockDecreaseModel model;
     private PurchasedInventoryItem selectedPurchasedInventoryItem;
     private int selectedStockID;
+    private ViewStockInventoryController viewStockInventoryController;
 
     @FXML
-    public void initialize(int selectedStockID) {
+    public void initialize(int selectedStockID, ViewStockInventoryController viewStockInventoryController) {
+        this.viewStockInventoryController = viewStockInventoryController;
         this.stockDetailsPane.setVisible(false);
         this.decreaseStockButton.setVisible(false);
         this.model = new SelectStockDecreaseModel(this);
@@ -71,6 +76,9 @@ public class SelectStockDecreaseController extends ParentController {
                                     || DateHelper.isDateNow(
                                             DateHelper.stringToDate(selectedPurchasedInventoryItem.getExpiry_date()))) {
                                 UIElementsBuilderHelper.applyRedToText(expiryDateLabel);
+                            } else if (DateHelper.isDateOnNext7Days(
+                                    DateHelper.stringToDate(selectedPurchasedInventoryItem.getExpiry_date()))) {
+                                UIElementsBuilderHelper.applyYellowToText(expiryDateLabel);
                             } else
                                 UIElementsBuilderHelper.applyBlackToText(expiryDateLabel);
 
@@ -79,6 +87,7 @@ public class SelectStockDecreaseController extends ParentController {
                         }
                     }
                 });
+
     }
 
     private void configureTableView() {
@@ -107,7 +116,10 @@ public class SelectStockDecreaseController extends ParentController {
             }
         };
 
-        stockPurchasesRetriever.setOnRunning(e -> this.borderPaneRootSwitcher.showLoadingScreen_BP());
+        stockPurchasesRetriever.setOnRunning(e -> {
+            this.stockDetailsPane.setVisible(false);
+            this.borderPaneRootSwitcher.showLoadingScreen_BP();
+        });
         stockPurchasesRetriever.setOnSucceeded(e -> this.borderPaneRootSwitcher.exitLoadingScreen_BP());
 
         Thread myThread = new Thread(stockPurchasesRetriever);
@@ -117,11 +129,27 @@ public class SelectStockDecreaseController extends ParentController {
 
     @FXML
     private void decreaseStock(ActionEvent e) {
-        System.out.println("decrease stock...");
+        SetDecreaseQuantityController controller = (SetDecreaseQuantityController) this
+                .initializePopUpDialog(ScreenPaths.Paths.SET_DECREASE_QUANTITY.getPath(), loggedInUserInfo);
+        controller.initialize(this, selectedPurchasedInventoryItem.getQuantity());
+    }
+
+    public void confirmDecrease(double decreaseQuantity, String reductionType) {
+
+        if (!this.model.confirmDecrease(selectedPurchasedInventoryItem,
+                decreaseQuantity, reductionType,
+                loggedInUserInfo)) {
+            PopupDialog.showCustomErrorDialog("An error has occured!");
+        }
+
+        PopupDialog.showInfoDialog("Stock Reduced", "Successfully reduced stock!");
+
+        retrieveStockPurchases();
     }
 
     @FXML
     private void goBack(ActionEvent e) {
         this.borderPaneRootSwitcher.goBack_BP();
+        this.viewStockInventoryController.retrieveStocks(null);
     }
 }

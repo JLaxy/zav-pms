@@ -42,7 +42,9 @@ public class UserLogActions {
         EDITED_BEVERAGE_VARIANT(28, "Edited Beverage Variant"),
         ADDED_STOCKS_REQUIRED_ON_FOOD_PRODUCT_VARIANT(29, "Added Stock(s) Required on New Food Product Variant"),
         EDITED_FOOD_VARIANT(30, "Edited Food Variant"),
-        CREATED_ORDER(31, "Create Order");
+        CREATED_ORDER(31, "Create Order"),
+        REMOVED_EXPIRED_ITEM(32, "Removed Expired Inventory Item"),
+        REMOVED_MISHANDLED_ITEM(33, "Removed Mishandled Inventory Item");
 
         private final int action_id;
         private final String action_string;

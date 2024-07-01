@@ -75,6 +75,10 @@ public class DateHelper {
         return date1.isEqual(LocalDate.now());
     }
 
+    public static Boolean isDateOnNext7Days(LocalDate date1) {
+        return LocalDate.now().plusDays(7).isAfter(date1) || LocalDate.now().plusDays(7).isEqual(date1);
+    }
+
     // Returns current date time
     public static LocalDateTime getCurrentDateTime() {
         return LocalDateTime.now();

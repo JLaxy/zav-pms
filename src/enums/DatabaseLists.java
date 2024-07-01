@@ -14,7 +14,8 @@ public class DatabaseLists {
         LEVELS_OF_ACCESS(3),
         UNIT_MEASURE(4),
         STOCK_TYPE(5),
-        PRODUCT_SERVING_SIZE(6);
+        PRODUCT_SERVING_SIZE(6),
+        REDUCTION_TYPES(7);
 
         private final int database_list;
 
