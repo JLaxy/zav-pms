@@ -1,11 +1,14 @@
 package controllers.order;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import java.util.Map;
+import java.util.HashMap;
 import controllers.ParentController;
 import enums.ScreenPaths;
 import javafx.application.Platform;
@@ -19,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
@@ -36,6 +40,9 @@ public class CreateOrderController extends ParentController {
 
     @FXML        
     private Label productTitleLabel;
+
+    @FXML
+    private ComboBox<String> sizeComboBox;
 
     @FXML
     private TextField searchField;
@@ -80,7 +87,7 @@ public class CreateOrderController extends ParentController {
                     @Override
                     protected Void call() throws Exception {
                         try {
-                            foodItems= FXCollections.observableArrayList();
+                            foodItems = FXCollections.observableArrayList();
                             beverages = FXCollections.observableArrayList();
 
                             if (category == null || category.equals("food")) {
@@ -89,27 +96,29 @@ public class CreateOrderController extends ParentController {
                             if (category == null || category.equals("beverage")) {
                                 beverages = model.getDrinkProducts(query);
                             }
-                    
-                            List<Product> allProducts = Stream.concat(
-                                    foodItems.stream().map(food -> new Product(food.getFood_name(), isFastMovingProduct(food), isStockSufficient(food))),
-                                    beverages.stream().map(drink -> new Product(drink.getProduct_name(), isFastMovingProduct(drink), isStockSufficient(drink)))
-                            ).sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
-                    
+
+                            // Group products by name
+                            Map<String, Product> productMap = new HashMap<>();
+                            for (FoodVariant food : foodItems) {
+                                productMap.computeIfAbsent(food.getFood_name(), k -> new Product(food.getFood_name())).addSize(food.getServing_size_id_string());
+                            }
+                            for (DrinkVariant drink : beverages) {
+                                productMap.computeIfAbsent(drink.getProduct_name(), k -> new Product(drink.getProduct_name())).addSize(drink.getSize_string());
+                            }
+
+                            List<Product> allProducts = new ArrayList<>(productMap.values());
+                            allProducts.sort(Comparator.comparing(Product::getName));
+
                             for (Product product : allProducts) {
                                 VBox buttonBox = createProductButton(product.getName(), product.isFastMoving(), product.isStockSufficient());
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        productContainer.getChildren().add(buttonBox);
-                                    }
-                                });
+                                Platform.runLater(() -> productContainer.getChildren().add(buttonBox));
                             }
                             System.out.println("finished");
                         } catch (Exception e) {
-                           e.printStackTrace();
+                            e.printStackTrace();
                         }
-                        
-                        return null;                        
+
+                        return null;
                     }
                 };
             }
@@ -120,21 +129,6 @@ public class CreateOrderController extends ParentController {
         });
 
         productRetriever.start();
-
-        
-    }
-
-    public void handleCreateOrder(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../views/fxmls/order/CreateOrder.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Create Order");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private VBox createProductButton(String productName, boolean isFastMoving, boolean isStockSufficient) {
@@ -160,14 +154,17 @@ public class CreateOrderController extends ParentController {
         vbox.setMaxSize(130, 130);   // Set maximum width and height
     
         vbox.setOnMouseClicked(event -> {
-                CreateOrderController controller = (CreateOrderController) this
+            SelectSizeController controller = (SelectSizeController) this
                 .initializePopUpDialog(ScreenPaths.Paths.SELECT_SIZE.getPath(), this.loggedInUserInfo);
+            controller.setProductName(productName); // Ensure productName is set before initializing the dialog
+            controller.setOrderController(this); // Properly set the controller
             System.out.println("Selected product: " + productName);
         });
     
         return vbox;
     }
-
+    
+    
     @FXML
     private void cancel(ActionEvent e) {
         this.borderPaneRootSwitcher.exitPopUpDialog();
@@ -226,16 +223,17 @@ public class CreateOrderController extends ParentController {
         System.out.println("going back...");
         this.borderPaneRootSwitcher.goBack_BP();
     }
-
     private static class Product {
         private final String name;
         private final boolean isFastMoving;
         private final boolean isStockSufficient;
+        private final List<String> sizes;
 
-        public Product(String name, boolean isFastMoving, boolean isStockSufficient) {
+        public Product(String name) {
             this.name = name;
-            this.isFastMoving = isFastMoving;
-            this.isStockSufficient = isStockSufficient;
+            this.isFastMoving = true; // Placeholder logic
+            this.isStockSufficient = true; // Placeholder logic
+            this.sizes = new ArrayList<>();
         }
 
         public String getName() {
@@ -248,6 +246,14 @@ public class CreateOrderController extends ParentController {
 
         public boolean isStockSufficient() {
             return isStockSufficient;
+        }
+
+        public List<String> getSizes() {
+            return sizes;
+        }
+
+        public void addSize(String size) {
+            sizes.add(size);
         }
     }
 }
