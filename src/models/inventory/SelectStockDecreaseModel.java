@@ -53,7 +53,6 @@ public class SelectStockDecreaseModel {
                     "Was not able to modify stock quantity! Stock product reduction was recorded");
         }
 
-        // MODIFY STOCK QUANTITY
         return false;
     }
 
@@ -61,7 +60,7 @@ public class SelectStockDecreaseModel {
         ObservableList<PurchasedInventoryItem> itemPurchases = FXCollections.observableArrayList();
 
         Map<String, Object> retrievedStockPurchases = this.controller.getDBManager().query
-                .getStockProductExpensesOfItem(stockID);
+                .getStockExpenses(stockID);
 
         for (Map.Entry<String, Object> purchasedInventoryItem : retrievedStockPurchases.entrySet()) {
             Map<String, Object> purchasedInventoryItemDetails = (Map<String, Object>) purchasedInventoryItem.getValue();

@@ -38,7 +38,11 @@ public class EditBeveragePopupController extends ParentController {
 
     @FXML
     private void decreaseBeverage(ActionEvent e) {
-        System.out.println("decreasing...");
+        this.borderPaneRootSwitcher.exitPopUpDialog();
+        SelectBeverageDecreaseController controller = (SelectBeverageDecreaseController) this.initializeNextScreen_BP(
+                ScreenPaths.Paths.SELECT_BEVERAGE_DECREASE.getPath(), loggedInUserInfo,
+                "SELECT BEVERAGE");
+        controller.initialize(this.selectedBeverage, this.viewBeverageProductController);
     }
 
     @FXML

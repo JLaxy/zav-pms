@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" stylesheets="@../css/LoggedInView.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.SelectStockDecreaseController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" stylesheets="@../css/LoggedInView.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.SelectBeverageDecreaseController">
    <children>
       <Button fx:id="goBackButton" layoutX="1190.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-color: #000000; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
          <font>
@@ -20,11 +20,11 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <AnchorPane fx:id="stockDetailsPane" layoutX="685.0" layoutY="76.0" prefHeight="442.0" prefWidth="664.0" style="-fx-background-color: #FDF9F9;">
+      <AnchorPane fx:id="beverageDetailsPane" layoutX="685.0" layoutY="76.0" prefHeight="442.0" prefWidth="664.0" style="-fx-background-color: #FDF9F9;">
          <children>
             <VBox fx:id="stockDetailsVBox" prefHeight="309.0" prefWidth="664.0" spacing="20.0">
                <children>
-                  <Label text="Stock Details">
+                  <Label text="Beverage Details">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>
@@ -37,12 +37,12 @@
                         <Insets left="20.0" />
                      </padding>
                      <children>
-                        <Label text="Stock Name">
+                        <Label text="Beverage Name">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="stockNameLabel" text="Stock Name">
+                        <Label fx:id="beverageNameLabel" text="Beverage Name">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -81,7 +81,7 @@
                   </VBox>
                </children>
             </VBox>
-            <Button fx:id="decreaseStockButton" layoutX="434.0" layoutY="383.0" mnemonicParsing="false" onAction="#decreaseStock" style="-fx-background-radius: 100; -fx-background-color: #D552A0;" text="Decrease Stock" textFill="WHITE">
+            <Button fx:id="decreaseBeverageButton" layoutX="392.0" layoutY="383.0" mnemonicParsing="false" onAction="#decreaseBeverage" style="-fx-background-radius: 100; -fx-background-color: #D552A0;" text="Decrease Beverage" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="23.0" />
                </font>
@@ -91,12 +91,12 @@
             </Button>
          </children>
       </AnchorPane>
-      <TableView fx:id="stockTable" layoutX="14.0" layoutY="76.0" prefHeight="442.0" prefWidth="665.0" style="-fx-background-color: #fdf9f9;">
+      <TableView fx:id="beverageTable" layoutX="14.0" layoutY="76.0" prefHeight="442.0" prefWidth="665.0" style="-fx-background-color: #fdf9f9;">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <columns>
-            <TableColumn fx:id="stockNameCol" editable="false" prefWidth="75.0" text="Stock Name" />
+            <TableColumn fx:id="beverageNameCol" editable="false" prefWidth="75.0" text="Beverage Name" />
             <TableColumn fx:id="quantityCol" editable="false" prefWidth="75.0" text="Quantity" />
             <TableColumn fx:id="datePurchasedCol" editable="false" prefWidth="75.0" text="Date Purchased" />
             <TableColumn fx:id="expiryDateCol" editable="false" prefWidth="75.0" text="Expiry Date" />

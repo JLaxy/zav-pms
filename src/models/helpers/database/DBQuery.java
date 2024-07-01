@@ -1528,7 +1528,7 @@ public class DBQuery {
     }
 
     // Returns all of the stock product expenses of item
-    public Map<String, Object> getStockProductExpensesOfItem(int stockID) {
+    public Map<String, Object> getStockExpenses(int stockID) {
         Map<String, Object> itemStockProductExpenses = new HashMap<String, Object>();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
@@ -1676,4 +1676,38 @@ public class DBQuery {
         }
         return stockRequirements;
     }
+
+    // Returns all of the stock product expenses of item
+    public Map<String, Object> getBeverageExpenses(int beverageID) {
+        Map<String, Object> itemStockProductExpenses = new HashMap<String, Object>();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.stock_product_expenses WHERE stock_product_type_id = 1 AND stock_id = ?;")) {
+            stmt.setInt(1, beverageID);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    Map<String, Object> itemStockProductExpensesDetails = new HashMap<String, Object>();
+                    itemStockProductExpensesDetails.put("stock_id", result.getInt("stock_id"));
+                    itemStockProductExpensesDetails.put("quantity", result.getDouble("quantity"));
+                    itemStockProductExpensesDetails.put("total_cost", result.getDouble("total_cost"));
+                    itemStockProductExpensesDetails.put("date_purchased", result.getString("date_purchased"));
+                    itemStockProductExpensesDetails.put("stock_product_type_id",
+                            result.getString("stock_product_type_id"));
+                    itemStockProductExpensesDetails.put("expiry_date", result.getString("expiry_date"));
+                    itemStockProductExpenses.put(String.valueOf(result.getInt("id")), itemStockProductExpensesDetails);
+                }
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return itemStockProductExpenses;
+    }
+
 }

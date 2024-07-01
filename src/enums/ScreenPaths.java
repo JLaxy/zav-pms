@@ -43,6 +43,7 @@ public class ScreenPaths {
         VIEW_BEVERAGE_PRODUCT("../../views/fxmls/inventory/ViewBeverageProductView.fxml"),
         EDIT_BEVERAGE_PRODUCT("../../views/fxmls/inventory/EditBeveragePopup.fxml"),
         INCREASE_BEVERAGE_PRODUCT("../../views/fxmls/inventory/IncreaseBeveragePopup.fxml"),
+        SELECT_BEVERAGE_DECREASE("../../views/fxmls/inventory/SelectBeverageDecrease.fxml"),
         // Stock
         STOCK_INVENTORY("../../views/fxmls/inventory/StockInventoryView.fxml"),
         REGISTER_NEW_STOCK("../../views/fxmls/inventory/RegisterNewStockView.fxml"),
@@ -85,7 +86,8 @@ public class ScreenPaths {
 
         // Reusable
         SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml"),
-        SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml");
+        SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml"),
+        SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml");
 
         private final String path;
 

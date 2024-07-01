@@ -40,6 +40,10 @@ public class DrinkVariant {
         this.available_count += quantity;
     }
 
+    public void updateQuantity(int quantity) {
+        this.available_count = quantity;
+    }
+
     public void toggleVoidStatus() {
         this.isVoided = !this.isVoided;
     }

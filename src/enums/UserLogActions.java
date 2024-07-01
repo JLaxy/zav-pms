@@ -44,7 +44,8 @@ public class UserLogActions {
         EDITED_FOOD_VARIANT(30, "Edited Food Variant"),
         CREATED_ORDER(31, "Create Order"),
         REMOVED_EXPIRED_ITEM(32, "Removed Expired Inventory Item"),
-        REMOVED_MISHANDLED_ITEM(33, "Removed Mishandled Inventory Item");
+        REMOVED_MISHANDLED_ITEM(33, "Removed Mishandled Inventory Item"),
+        USED_ITEM(34, "Used Inventory Item");
 
         private final int action_id;
         private final String action_string;
