@@ -66,8 +66,12 @@ public class AdminHomePageController extends ParentController {
                     "MAINTENANCE");
             System.out.println("maintenanceButton");
         } else if ((Button) e.getSource() == this.helpButton) {
+            this.initializeNextScreen_BP(ScreenPaths.Paths.HELP.getPath(), this.loggedInUserInfo,
+                    "HELP");
             System.out.println("helpButton");
         } else if ((Button) e.getSource() == this.aboutButton) {
+            this.initializeNextScreen_BP(ScreenPaths.Paths.ABOUT.getPath(), this.loggedInUserInfo,
+                    "ABOUT");
             System.out.println("aboutButton");
         }
     }

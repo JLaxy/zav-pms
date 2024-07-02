@@ -2,15 +2,19 @@ package controllers.order;
 
 import controllers.ParentController;
 import enums.ScreenPaths;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 public class OrderController extends ParentController {
+
     @FXML
     private void createOrder() {
         CreateOrderController controller = (CreateOrderController) initializeNextScreen_BP(ScreenPaths.Paths.CREATE_ORDER.getPath(), this.loggedInUserInfo,
         "CREATE ORDER");
-        controller.loadAllProducts(null);
-        System.out.println("creating order...");
+        if (controller != null) {
+            controller.loadAllProducts(null);
+            System.out.println("creating order...");
+        }
     }
 
     @FXML

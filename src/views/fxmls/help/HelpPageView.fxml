@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" style="-fx-background-image: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.help.HelpController">
+   <children>
+      <Button fx:id="goBackButton" layoutX="1190.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="58.0" prefWidth="161.0" style="-fx-background-radius: 100; -fx-background-color: #000000;" text="Go Back" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Button>
+      <Line fx:id="divider1" endX="-43.0" endY="225.0" layoutX="499.0" layoutY="301.0" startX="-43.0" startY="-101.0" AnchorPane.leftAnchor="455.5" />
+      <Line fx:id="divider2" endX="-43.0" endY="225.0" layoutX="953.0" layoutY="301.0" startX="-43.0" startY="-101.0" AnchorPane.rightAnchor="455.5" />
+      <Button fx:id="helpGeneralIcon" layoutX="31.0" layoutY="72.8" mnemonicParsing="false" onAction="#general" prefHeight="462.0" prefWidth="418.0" textAlignment="JUSTIFY" AnchorPane.topAnchor="73.0">
+         <graphic>
+            <ImageView fx:id="helpGeneralIcon" fitHeight="92.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../assets/images/general.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets bottom="270.0" />
+         </padding>
+      </Button>
+      <Label layoutX="151.0" layoutY="212.0" prefHeight="51.0" prefWidth="188.0" text="GENERAL" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Black" size="34.0" />
+         </font>
+      </Label>
+      <Text fx:id="textGeneral" layoutX="34.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Provides an overview of the system's features and functionalities, helping you understand the general capabilities and benefits of our application." textAlignment="JUSTIFY" wrappingWidth="400.0">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Text>
+      <Button fx:id="helpFaqsIcon" layoutX="471.0" layoutY="82.4" mnemonicParsing="false" onAction="#faqs" prefHeight="462.0" prefWidth="417.0" AnchorPane.topAnchor="72.4">
+         <graphic>
+            <ImageView fitHeight="126.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../assets/images/faq.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets bottom="270.0" />
+         </padding>
+      </Button>
+      <Label layoutX="627.0" layoutY="213.0" prefHeight="51.0" prefWidth="105.0" text="FAQs" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Black" size="34.0" />
+         </font>
+      </Label>
+      <Text fx:id="textFaq" layoutX="479.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Addresses frequent inquiries and provides solutions to typical issues encountered while using our product management system." textAlignment="JUSTIFY" wrappingWidth="400.0">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Text>
+      <Button fx:id="helpHowTo" layoutX="928.0" layoutY="71.6" mnemonicParsing="false" onAction="#howto" prefHeight="462.0" prefWidth="417.0" AnchorPane.topAnchor="71.6">
+         <graphic>
+            <ImageView fitHeight="113.0" fitWidth="101.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../assets/images/howTo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <padding>
+            <Insets bottom="270.0" />
+         </padding>
+      </Button>
+      <Label layoutX="1051.0" layoutY="213.0" prefHeight="51.0" prefWidth="188.0" text="HOW - TO" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Black" size="34.0" />
+         </font>
+      </Label>
+      <Text fx:id="textHowTo" layoutX="931.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get detailed instructions on using specific modules of the system. Includes screenshots with annotated arrows to guide you through each feature." textAlignment="JUSTIFY" wrappingWidth="400.0">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Text>
+   </children>
+   <stylesheets>
+      <URL value="@../css/HelpFaqs.css" />
+      <URL value="@../css/HelpGeneral.css" />
+      <URL value="@../css/HelpHowTo.css" />
+   </stylesheets>
+</AnchorPane>

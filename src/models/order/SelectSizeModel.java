@@ -4,6 +4,7 @@ import enums.StockProductType;
 import javafx.collections.ObservableList;
 import models.schemas.FoodVariant;
 import models.schemas.Stock;
+import models.schemas.DrinkVariant;
 
 public class SelectSizeModel {
 
@@ -35,5 +36,9 @@ public class SelectSizeModel {
 
     public ObservableList<Stock> getStockRequirements(FoodVariant foodVariant) {
         return createOrderModel.getStockRequirements(foodVariant);
+    }
+
+    public DrinkVariant getDrinkVariantBySize(int productId, String size) {
+        return createOrderModel.getDrinkVariantBySize(productId, size);
     }
 }

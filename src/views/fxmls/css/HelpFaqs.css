@@ -1,0 +1,12 @@
+#helpFaqsIcon {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+  }
+
+#helpFaqsIcon:hover {
+    -fx-background-color: rgb(211, 207, 207);
+  }
+
+#helpFaqsIcon:pressed {
+    -fx-background-color: rgb(153, 152, 152);
+  }

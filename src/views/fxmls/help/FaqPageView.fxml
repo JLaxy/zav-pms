@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" style="-fx-background-image: #d3d3d3;" stylesheets="@../css/HelpScroll.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.help.FaqsHelpController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="623.0" layoutX="-2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="1373.0" />
+      <Rectangle fx:id="popUPBox" arcHeight="5.0" arcWidth="5.0" fill="#000000a6" height="566.0" layoutX="155.0" layoutY="27.0" stroke="BLACK" strokeType="INSIDE" width="1112.0" />
+      <ImageView fitHeight="112.0" fitWidth="112.0" layoutX="662.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../assets/images/faq.png" />
+         </image>
+         <effect>
+            <Lighting diffuseConstant="2.0" specularConstant="2.0" specularExponent="0.0">
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </ImageView>
+      <Label fx:id="popUpBackButton" layoutX="668.0" layoutY="170.0" prefHeight="51.0" prefWidth="112.0" text="FAQs" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="34.0" />
+         </font>
+      </Label>
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="203.0" layoutY="230.0" prefHeight="301.0" prefWidth="1042.0" style="-fx-background-image: transparent;" stylesheets="@../css/HelpScroll.css">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="308.0" prefWidth="1042.0" style="-fx-background-color: transparent;" stylesheets="@../css/HelpScroll.css">
+               <children>
+                  <VBox layoutX="1.0" layoutY="2.0" prefHeight="226.0" prefWidth="950.0">
+                     <children>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q1: How do I reset my password?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText11" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q2: How can I add a new product to the inventory?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText1" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q3: What should I do if the system is running slowly?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="faqS" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q4: Can I customize the product categories?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText13" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q5: How do I generate a sales report?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText14" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q6: Is there a way to back up my data?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText15" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q7: Can multiple users access the system simultaneously?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText16" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q8: How do I set up user permissions?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText17" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q9: How can I track inventory stock levels?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText18" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q10: How do I delete a product from the system?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText19" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q11: How do I import data from an existing database?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText110" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q12: How do I perform a system update?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText111" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q13:  How can I ensure the security of my data?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="faqS" mnemonicParsing="false">
+                           <graphic>
+                              <Text fx:id="GenText112" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q14: How do I contact support?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Text>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <Button fx:id="goBackButton1" layoutX="1083.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="20.0" prefWidth="150.0" style="-fx-background-color: #D552AO; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="14.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Line endX="675.0" layoutX="269.0" layoutY="230.0" opacity="0.55" startX="241.0" stroke="WHITE" strokeWidth="5.0" style="-fx-background-radius: 100;" />
+   </children>
+</AnchorPane>

@@ -55,7 +55,7 @@
             <Font name="Arial Black" size="32.0" />
          </font>
       </Label>
-      <TextField fx:id="firstNameField" layoutX="361.0" layoutY="269.0" prefHeight="30.0" prefWidth="310.0" promptText="First Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+      <TextField fx:id="fnameField" layoutX="361.0" layoutY="269.0" prefHeight="30.0" prefWidth="310.0" promptText="First Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -63,7 +63,7 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <TextField fx:id="middleNameField" layoutX="360.0" layoutY="319.0" prefHeight="40.0" prefWidth="310.0" promptText="Middle Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+      <TextField fx:id="mnameField" layoutX="360.0" layoutY="319.0" prefHeight="40.0" prefWidth="310.0" promptText="Middle Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -71,7 +71,7 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <TextField fx:id="lastNameField" layoutX="360.0" layoutY="370.0" prefHeight="40.0" prefWidth="310.0" promptText="Last Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+      <TextField fx:id="lnameField" layoutX="360.0" layoutY="370.0" prefHeight="40.0" prefWidth="310.0" promptText="Last Name" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -87,7 +87,7 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <TextField fx:id="idnumberField" layoutX="716.0" layoutY="318.0" prefHeight="35.0" prefWidth="310.0" promptText="ID Number" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
+      <TextField fx:id="idNumberField" layoutX="716.0" layoutY="318.0" prefHeight="35.0" prefWidth="310.0" promptText="ID Number" style="-fx-background-color: #D552A0; -fx-border-radius: 1000;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -95,6 +95,6 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <ComboBox fx:id="IDTypeCBox" layoutX="716.0" layoutY="269.0" prefHeight="40.0" prefWidth="310.0" promptText="--- Select ID Type ---" style="-fx-background-color: #D552A0;" />
+      <ComboBox fx:id="idTypeComboBox" layoutX="716.0" layoutY="269.0" prefHeight="40.0" prefWidth="310.0" promptText="--- Select ID Type ---" style="-fx-background-color: #D552A0;" />
    </children>
 </AnchorPane>

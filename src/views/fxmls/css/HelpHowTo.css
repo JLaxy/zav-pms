@@ -1,0 +1,12 @@
+#helpHowTo {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+  }
+
+#helpHowTo:hover {
+    -fx-background-color: rgb(211, 207, 207);
+  }
+
+#helpHowTo:pressed {
+    -fx-background-color: rgb(153, 152, 152);
+  }

@@ -1,16 +1,5 @@
 package controllers.order;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import java.util.Map;
-import java.util.HashMap;
-import controllers.ParentController;
-import enums.ScreenPaths;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,31 +7,47 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import models.helpers.PopupDialog;
 import models.order.CreateOrderModel;
-import models.schemas.FoodVariant;
 import models.schemas.DrinkVariant;
+import models.schemas.FoodVariant;
+import models.schemas.OrderProduct;
+import controllers.ParentController;
+import enums.ScreenPaths;
+
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CreateOrderController extends ParentController {
 
     @FXML
-    private Button goBackButton, searchButton, allCategory, foodCategory, beverageCategory, removeProductButton,
-            discountProductButton, createTransactionButton;
-
-    @FXML        
-    private Label productTitleLabel;
+    private TableView<OrderProduct> orderTableView;
+    @FXML
+    private TableColumn<OrderProduct, String> productNameCol;
+    @FXML
+    private TableColumn<OrderProduct, String> sizeCol;
+    @FXML
+    private TableColumn<OrderProduct, Integer> quantityCol;
+    @FXML
+    private TableColumn<OrderProduct, Double> amountCol;
+    @FXML
+    private TableColumn<OrderProduct, Double> discountedCol;
 
     @FXML
-    private ComboBox<String> sizeComboBox;
+    private Button goBackButton, searchButton, allCategory, foodCategory, beverageCategory, removeProductButton,
+            discountProductButton, createTransactionButton;
 
     @FXML
     private TextField searchField;
@@ -53,9 +58,29 @@ public class CreateOrderController extends ParentController {
     private ObservableList<FoodVariant> foodItems;
     private ObservableList<DrinkVariant> beverages;
     private CreateOrderModel model;
+    private ObservableList<OrderProduct> orderProducts;
 
     public void initialize() {
         this.model = new CreateOrderModel(this);
+        orderProducts = FXCollections.observableArrayList();
+
+        productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        discountedCol.setCellValueFactory(new PropertyValueFactory<>("discountedPrice"));
+        orderTableView.setItems(orderProducts);
+
+        orderTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                removeProductButton.setVisible(true);
+            } else {
+                removeProductButton.setVisible(false);
+            }
+        });
+
+        // Hide the removeProductButton initially
+        removeProductButton.setVisible(false);
     }
 
     @FXML
@@ -72,10 +97,10 @@ public class CreateOrderController extends ParentController {
     private void loadBeverageProducts(ActionEvent event) {
         loadProducts("beverage", null);
     }
-    
+
     public void loadProducts(String category, String query) {
         productContainer.getChildren().clear();
-        
+
         System.out.println("showing loading screen");
         // Show loading Screen
         borderPaneRootSwitcher.showLoadingScreen_BP();
@@ -136,35 +161,69 @@ public class CreateOrderController extends ParentController {
         productNameLabel.setStyle("-fx-alignment: center; -fx-font-size: 15px; -fx-text-fill: black;");
         productNameLabel.setMaxWidth(Double.MAX_VALUE);
         productNameLabel.setWrapText(true);
-    
+
         Label movingStatusLabel = new Label(isFastMoving ? "Fast Moving" : "Slow Moving");
         movingStatusLabel.setStyle("-fx-alignment: center; -fx-font-size: 12px; -fx-text-fill: " + (isFastMoving ? "green;" : "red;"));
         movingStatusLabel.setMaxWidth(Double.MAX_VALUE);
         movingStatusLabel.setWrapText(true);
-    
+
         Label stockStatusLabel = new Label(isStockSufficient ? "In Stock" : "Insufficient Stock");
         stockStatusLabel.setStyle("-fx-alignment: center; -fx-font-size: 12px; -fx-text-fill: " + (isStockSufficient ? "green;" : "red;"));
         stockStatusLabel.setMaxWidth(Double.MAX_VALUE);
         stockStatusLabel.setWrapText(true);
-    
+
         VBox vbox = new VBox(movingStatusLabel, productNameLabel, stockStatusLabel);
         vbox.setStyle("-fx-alignment: center; -fx-background-color: white; -fx-spacing: 10px; -fx-padding: 10px; -fx-background-radius: 10px;");
-        vbox.setPrefSize(130, 130);  // Set preferred width and height
-        vbox.setMinSize(130, 130);   // Set minimum width and height
-        vbox.setMaxSize(130, 130);   // Set maximum width and height
-    
+        vbox.setPrefSize(130, 130);
+        vbox.setMinSize(130, 130);
+        vbox.setMaxSize(130, 130);
+
         vbox.setOnMouseClicked(event -> {
             SelectSizeController controller = (SelectSizeController) this
                 .initializePopUpDialog(ScreenPaths.Paths.SELECT_SIZE.getPath(), this.loggedInUserInfo);
-            controller.setProductName(productName); // Ensure productName is set before initializing the dialog
-            controller.setOrderController(this); // Properly set the controller
-            System.out.println("Selected product: " + productName);
+            if (controller != null) {
+                controller.setProductName(productName);
+                controller.setOrderController(this);
+                System.out.println("Selected product: " + productName);
+            }
         });
-    
+
         return vbox;
     }
-    
-    
+
+    public void addProductToOrder(OrderProduct orderProduct) {
+        if (!orderProduct.isStockSufficient()) {
+            PopupDialog.showCustomErrorDialog("Stock required for product " + orderProduct.getProductName() + " is insufficient. Unable to add the product.");
+            return;
+        }
+
+        boolean productExists = false;
+
+        for (OrderProduct existingProduct : orderProducts) {
+            if (existingProduct.getProductName().equals(orderProduct.getProductName()) &&
+                existingProduct.getSize().equals(orderProduct.getSize())) {
+                // Increment the quantity
+                existingProduct.setQuantity(existingProduct.getQuantity() + orderProduct.getQuantity());
+                // Update the amount and discounted price
+                existingProduct.setAmount(existingProduct.getAmount() + orderProduct.getAmount());
+                existingProduct.setDiscountedPrice(existingProduct.getDiscountedPrice() + orderProduct.getDiscountedPrice());
+                productExists = true;
+                break;
+            }
+        }
+
+        if (!productExists) {
+            orderProducts.add(orderProduct);
+        }
+
+        orderTableView.refresh();
+        // Set focus back to the CreateOrderController
+        Platform.runLater(() -> {
+            this.borderPaneRootSwitcher.exitPopUpDialog();
+            orderTableView.requestFocus(); // Set focus back to the order table view
+        });
+    }
+
     @FXML
     private void cancel(ActionEvent e) {
         this.borderPaneRootSwitcher.exitPopUpDialog();
@@ -201,15 +260,26 @@ public class CreateOrderController extends ParentController {
     }
 
     @FXML
-    public void removeproduct(ActionEvent event) {
-        System.out.println("remove product");
+    private void removeproduct(ActionEvent event) {
+        OrderProduct selectedProduct = orderTableView.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null) {
+            int result = PopupDialog.confirmOperationDialog("Are you sure you want to remove the selected product? Product: " + selectedProduct.getProductName());
+            if (result == JOptionPane.YES_OPTION) {
+                orderProducts.remove(selectedProduct);
+                orderTableView.refresh();
+                removeProductButton.setVisible(false);
+                orderTableView.getSelectionModel().clearSelection();
+            }
+        }
     }
 
     @FXML
     public void discountproducts(ActionEvent event) {
-        initializeNextScreen_BP(ScreenPaths.Paths.DISCOUNT_ORDERS.getPath(), this.loggedInUserInfo,
-        "DISCOUNT ORDERS");
-        System.out.println("discount products");
+        // Initialize the next screen and pass the orderProducts
+        DiscountOrdersController controller = (DiscountOrdersController) initializeNextScreen_BP(ScreenPaths.Paths.DISCOUNT_ORDERS.getPath(), this.loggedInUserInfo, "DISCOUNT ORDERS");
+        if (controller != null) {
+            controller.setOrderProducts(orderProducts);
+        }
     }
 
     @FXML
@@ -218,11 +288,17 @@ public class CreateOrderController extends ParentController {
         System.out.println("search");
     }
 
+    public void focus() {
+        // Implement any necessary updates or focus changes required after adding a product
+        orderTableView.requestFocus(); // Example: setting focus back to the order table view
+    }
+
     @FXML
     private void goBack(ActionEvent event) {
         System.out.println("going back...");
         this.borderPaneRootSwitcher.goBack_BP();
     }
+
     private static class Product {
         private final String name;
         private final boolean isFastMoving;
@@ -231,8 +307,8 @@ public class CreateOrderController extends ParentController {
 
         public Product(String name) {
             this.name = name;
-            this.isFastMoving = true; // Placeholder logic
-            this.isStockSufficient = true; // Placeholder logic
+            this.isFastMoving = true;
+            this.isStockSufficient = true;
             this.sizes = new ArrayList<>();
         }
 

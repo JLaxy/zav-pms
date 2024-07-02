@@ -1,5 +1,6 @@
 package controllers.order;
 
+import enums.ScreenPaths;
 import enums.StockProductType;
 import controllers.ParentController;
 import javafx.collections.FXCollections;
@@ -8,9 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
-import javafx.stage.Stage;
 import models.helpers.PopupDialog;
 import models.order.CreateOrderModel;
 import models.order.SelectSizeModel;
@@ -70,9 +69,8 @@ public class SelectSizeController extends ParentController {
             System.out.println("Selected size: " + selectedSize);
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../../views/fxmls/order/AddingOrderPrompt.fxml")); // Ensure the path is correct
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(ScreenPaths.Paths.ADDING_ORDER_PROMPT.getPath()));
                 Parent root = loader.load();
-
                 AddingOrderPromptController controller = loader.getController();
                 controller.setProductName(productName);
                 controller.setSelectedSize(selectedSize);
@@ -83,14 +81,19 @@ public class SelectSizeController extends ParentController {
                     FoodVariant foodVariant = model.getFoodVariantBySize(productId, selectedSize);
                     controller.setStockRequired(model.getStockRequirements(foodVariant));
                 }
+                
+                // Initialize references for the AddingOrderPromptController
+                controller.initializeReferences_BP(this.zavPMSDB, this.borderPaneRootSwitcher);
+                controller.setCreateOrderController(this.orderController); // Pass the CreateOrderController
+                
+                // Show the AddingOrderPrompt pop-up dialog
+                System.out.println("Showing pop-up dialog for AddingOrderPrompt.");
+                this.borderPaneRootSwitcher.showPopUpDialog(root);
+                System.out.println("Pop-up dialog should be visible now.");
 
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
-
-                this.borderPaneRootSwitcher.exitPopUpDialog();
             } catch (IOException ex) {
                 ex.printStackTrace();
+                System.out.println("Failed to load AddingOrderPromptView: " + ex.getMessage());
             }
         }
     }

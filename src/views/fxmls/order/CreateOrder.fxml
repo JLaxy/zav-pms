@@ -86,12 +86,13 @@
                <children>
                   <VBox prefHeight="326.0" prefWidth="530.0">
                      <children>
-                        <TableView fx:id="orderTable" prefHeight="312.0" prefWidth="530.0">
+                        <TableView fx:id="orderTableView" prefHeight="312.0" prefWidth="530.0">
                           <columns>
-                            <TableColumn fx:id="productNameCol" prefWidth="171.20000916719437" text="Product Name" />
-                            <TableColumn fx:id="quantityCol" minWidth="2.6666259765625" prefWidth="96.00007629394531" text="Quantity" />
-                              <TableColumn fx:id="amountCol" minWidth="2.6666259765625" prefWidth="128.7999267578125" text="Amount" />
-                              <TableColumn fx:id="discountedCol" minWidth="2.6666259765625" prefWidth="135.199951171875" text="Discounted" />
+                            <TableColumn fx:id="productNameCol" prefWidth="157.60003358125687" text="Product Name" />
+                              <TableColumn fx:id="sizeCol" prefWidth="81.5999755859375" text="Size" />
+                            <TableColumn fx:id="quantityCol" minWidth="2.6666259765625" prefWidth="65.59999084472656" text="Quantity" />
+                              <TableColumn fx:id="amountCol" minWidth="2.6666259765625" prefWidth="106.4000244140625" text="Amount" />
+                              <TableColumn fx:id="discountedCol" minWidth="2.6666259765625" prefWidth="116.0" text="Discounted" />
                           </columns>
                         </TableView>
                      </children>
@@ -112,7 +113,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="removeproductButton" layoutX="10.0" layoutY="352.0" mnemonicParsing="false" onAction="#removeproduct" prefHeight="62.0" prefWidth="146.0" style="-fx-background-color: #D552A0; -fx-background-radius: 100;" text="Remove &#10;Product" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="removeProductButton" layoutX="10.0" layoutY="352.0" visible="false" mnemonicParsing="false" onAction="#removeproduct" prefHeight="62.0" prefWidth="146.0" style="-fx-background-color: #D552A0; -fx-background-radius: 100;" text="Remove &#10;Product" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Arial Black" size="13.0" />
                      </font>

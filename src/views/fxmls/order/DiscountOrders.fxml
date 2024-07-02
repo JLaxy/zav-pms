@@ -42,14 +42,14 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <columns>
-                  <TableColumn fx:id="stockNameCol" editable="false" prefWidth="75.0" text="Product Name" />
-                  <TableColumn fx:id="stockTypeCol" editable="false" prefWidth="75.0" text="Quantity" />
-                  <TableColumn fx:id="quantityCol" editable="false" prefWidth="75.0" text="'checkbox'" />
+                  <TableColumn fx:id="productNameCol" editable="false" prefWidth="75.0" text="Product Name" />
+                  <TableColumn fx:id="quantityCol" editable="false" prefWidth="75.0" text="Quantity" />
+                  <TableColumn fx:id="checkboxCol" editable="false" prefWidth="75.0" text="Discount Applied" />
                </columns>
             </TableView>
          </children>
       </VBox>
-      <AnchorPane fx:id="stockDetailsPane" layoutX="685.0" layoutY="76.0" prefHeight="443.0" prefWidth="664.0" style="-fx-background-color: #FDF9F9;">
+      <AnchorPane fx:id="discountcardDetailsPane" layoutX="685.0" layoutY="76.0" prefHeight="443.0" prefWidth="664.0" style="-fx-background-color: #FDF9F9;">
          <children>
             <HBox layoutY="41.0" prefHeight="394.0" prefWidth="660.0">
                <children>

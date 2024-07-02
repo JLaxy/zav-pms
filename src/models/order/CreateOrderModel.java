@@ -5,6 +5,7 @@ import enums.StockProductType;
 import javafx.collections.ObservableList;
 import models.schemas.DrinkVariant;
 import models.schemas.FoodVariant;
+import models.schemas.OrderProduct;
 import models.schemas.Stock;
 
 public class CreateOrderModel {
@@ -17,7 +18,7 @@ public class CreateOrderModel {
 
     public int getProductId(String productName) {
         int productId = this.controller.getDBManager().query.getProductNameId(productName);
-        System.out.println("getProductId for " + productName + " returned: " + productId); // Debugging statement
+        System.out.println("getProductId for " + productName + " returned: " + productId);
         return productId;
     }
 
@@ -53,5 +54,14 @@ public class CreateOrderModel {
 
     public ObservableList<Stock> getStockRequirements(FoodVariant foodVariant) {
         return this.controller.getDBManager().query.getStockRequirements(foodVariant);
+    }
+
+    public DrinkVariant getDrinkVariantBySize(int productsNameId, String size) {
+        return this.controller.getDBManager().query.getDrinkVariantBySize(productsNameId, size);
+    }
+
+    // Example method where OrderProduct is instantiated
+    public OrderProduct createOrderProduct(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient) {
+        return new OrderProduct(productName, size, quantity, amount, discountedPrice, stockSufficient);
     }
 }

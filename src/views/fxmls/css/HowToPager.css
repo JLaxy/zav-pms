@@ -1,0 +1,12 @@
+#howToPageTurn {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+  }
+
+#howToPageTurn:hover {
+    -fx-background-color: rgb(99, 99, 99);
+  }
+
+#howToPageTurn:pressed {
+    -fx-background-color: rgb(73, 73, 73);
+  }

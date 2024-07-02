@@ -48,7 +48,7 @@
             <Font name="Arial Black" size="19.0" />
          </font>
       </Label>
-      <Button fx:id="updateButton" layoutX="768.0" layoutY="433.0" mnemonicParsing="false" onAction="#update" prefHeight="43.0" prefWidth="127.0" text="Add" textFill="WHITE">
+      <Button fx:id="addButton" layoutX="768.0" layoutY="433.0" mnemonicParsing="false" onAction="#add" prefHeight="43.0" prefWidth="127.0" text="Add" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
