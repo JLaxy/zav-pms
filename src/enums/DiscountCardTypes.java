@@ -28,11 +28,12 @@ public class DiscountCardTypes {
 
         public static CardType fromString(String text) {
             for (CardType b : CardType.values()) {
-                if (b.type_name.equalsIgnoreCase(text.replace(" ", "_"))) {
+                if (b.type_name.equalsIgnoreCase(text)) {
                     return b;
                 }
             }
             throw new IllegalArgumentException("No enum constant " + text);
         }
+        
     }
 }

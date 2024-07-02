@@ -8,18 +8,26 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import models.schemas.DiscountCard;
 import models.schemas.OrderProduct;
 
 public class DiscountOrdersController extends ParentController {
+    @FXML
+    private AnchorPane discountcardDetailsPane;
+    @FXML
+    private TextField searchField;
     @FXML
     private TableView<OrderProduct> stockTable;
     @FXML
     private TableColumn<OrderProduct, String> productNameCol;
     @FXML
     private TableColumn<OrderProduct, Integer> quantityCol;
+    @FXML
+    private TableColumn<OrderProduct, String> sizeCol;
     @FXML
     private TableColumn<OrderProduct, Boolean> checkboxCol;
 
@@ -41,6 +49,7 @@ public class DiscountOrdersController extends ParentController {
     public void initialize() {
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size")); // Set cell value factory
         checkboxCol.setCellValueFactory(cellData -> cellData.getValue().discountAppliedProperty());
         checkboxCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxCol));
 
@@ -52,10 +61,13 @@ public class DiscountOrdersController extends ParentController {
                 stockTable.refresh();
             }
         });
+        // Initially hide the discount card details pane
+        discountcardDetailsPane.setVisible(false);
     }
 
     public void setOrderProducts(ObservableList<OrderProduct> orderProducts) {
-        this.orderProducts.setAll(orderProducts);
+        this.orderProducts = orderProducts;
+        stockTable.setItems(orderProducts);
     }
 
     @FXML
@@ -73,7 +85,19 @@ public class DiscountOrdersController extends ParentController {
 
     @FXML
     private void search() {
-        System.out.println("searching");
+        String searchText = searchField.getText();
+        if (searchText == null || searchText.isEmpty()) {
+            stockTable.setItems(orderProducts);
+            return;
+        }
+
+        ObservableList<OrderProduct> filteredList = FXCollections.observableArrayList();
+        for (OrderProduct product : orderProducts) {
+            if (product.getProductName().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredList.add(product);
+            }
+        }
+        stockTable.setItems(filteredList);
     }
 
     @FXML
@@ -89,5 +113,8 @@ public class DiscountOrdersController extends ParentController {
         suffixLabel.setText(discountCard.getSuffix());
         cardTypeLabel.setText(discountCard.getType().getName());
         idnumberLabel.setText(discountCard.getIdNumber());
+
+        // Make the discount card details pane visible
+        discountcardDetailsPane.setVisible(true);
     }
 }
