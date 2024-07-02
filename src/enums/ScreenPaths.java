@@ -87,7 +87,8 @@ public class ScreenPaths {
         // Reusable
         SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml"),
         SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml"),
-        SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml");
+        SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml"),
+        SET_FOOD_DECREASE_QUANTITY("../../views/fxmls/reusables/SetFoodDecreaseQuantityView.fxml");
 
         private final String path;
 

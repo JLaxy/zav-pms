@@ -3,6 +3,8 @@ package controllers.inventory;
 import javax.swing.JOptionPane;
 
 import controllers.ParentController;
+import controllers.reusables.SetFoodDecreaseQuantityController;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import models.helpers.PopupDialog;
@@ -30,7 +32,16 @@ public class EditFoodPopupController extends ParentController {
 
     @FXML
     private void decreaseFood(ActionEvent e) {
-        System.out.println("decreasing...");
+        if (this.selectedFood.getAvailable_count() < 1) {
+            PopupDialog.showCustomErrorDialog("This food product has no stock in the inventory!");
+            return;
+        }
+
+        this.borderPaneRootSwitcher.exitPopUpDialog();
+
+        SetFoodDecreaseQuantityController controller = (SetFoodDecreaseQuantityController) this
+                .initializePopUpDialog(ScreenPaths.Paths.SET_FOOD_DECREASE_QUANTITY.getPath(), loggedInUserInfo);
+        controller.initialize(this.viewFoodProductController, selectedFood.getAvailable_count());
     }
 
     @FXML

@@ -117,6 +117,10 @@ public class ViewFoodProductController extends ParentController {
         controller.initialize(selectedFood, this);
     }
 
+    public void confirmDecrease(int quantity) {
+        System.out.println("decreasing " + quantity);
+    }
+
     @FXML
     public void goBack(ActionEvent e) {
         this.borderPaneRootSwitcher.goBack_BP();
