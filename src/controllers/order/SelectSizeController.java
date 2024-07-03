@@ -79,13 +79,18 @@ public class SelectSizeController extends ParentController {
                 StockProductType.Type productType = model.getProductType(productId);
                 if (productType == StockProductType.Type.FOOD) {
                     FoodVariant foodVariant = model.getFoodVariantBySize(productId, selectedSize);
-                    controller.setStockRequired(model.getStockRequirements(foodVariant));
+                    if (foodVariant != null) {
+                        controller.setStockRequired(model.getStockRequirements(foodVariant));
+                    } else {
+                        PopupDialog.showCustomErrorDialog("Selected food variant not found.");
+                        return;
+                    }
                 }
-                
+
                 // Initialize references for the AddingOrderPromptController
                 controller.initializeReferences_BP(this.zavPMSDB, this.borderPaneRootSwitcher);
                 controller.setCreateOrderController(this.orderController); // Pass the CreateOrderController
-                
+
                 // Show the AddingOrderPrompt pop-up dialog
                 System.out.println("Showing pop-up dialog for AddingOrderPrompt.");
                 this.borderPaneRootSwitcher.showPopUpDialog(root);

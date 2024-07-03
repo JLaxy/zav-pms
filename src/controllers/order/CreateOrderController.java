@@ -7,11 +7,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -43,7 +39,7 @@ public class CreateOrderController extends ParentController {
     @FXML
     private TableColumn<OrderProduct, Double> amountCol;
     @FXML
-    private TableColumn<OrderProduct, Double> discountedCol;
+    private TableColumn<OrderProduct, String> discountedCol;
 
     @FXML
     private Button goBackButton, searchButton, allCategory, foodCategory, beverageCategory, removeProductButton,
@@ -68,7 +64,24 @@ public class CreateOrderController extends ParentController {
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        discountedCol.setCellValueFactory(new PropertyValueFactory<>("discountedPrice"));
+        discountedCol.setCellValueFactory(new PropertyValueFactory<>("discounted"));
+
+        discountedCol.setCellFactory(column -> {
+            return new TableCell<OrderProduct, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(item);
+                        setStyle("-fx-alignment: CENTER;");
+                    }
+                }
+            };
+        });
+
         orderTableView.setItems(orderProducts);
 
         orderTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -203,7 +216,7 @@ public class CreateOrderController extends ParentController {
             if (existingProduct.getProductName().equals(orderProduct.getProductName()) &&
                 existingProduct.getSize().equals(orderProduct.getSize())) {
                 // Increment the quantity
-                existingProduct.setQuantity(existingProduct.getQuantity() + orderProduct.getQuantity());
+                existingProduct.setTotalQuantity(existingProduct.getTotalQuantity() + orderProduct.getQuantity());
                 // Update the amount and discounted price
                 existingProduct.setAmount(existingProduct.getAmount() + orderProduct.getAmount());
                 existingProduct.setDiscountedPrice(existingProduct.getDiscountedPrice() + orderProduct.getDiscountedPrice());
@@ -275,12 +288,16 @@ public class CreateOrderController extends ParentController {
 
     @FXML
     public void discountproducts(ActionEvent event) {
-        // Initialize the next screen and pass the orderProducts
+        // Filter out already discounted products
+        ObservableList<OrderProduct> nonDiscountedProducts = orderProducts.filtered(op -> !op.isDiscountApplied());
+
+        // Initialize the next screen and pass the nonDiscountedProducts
         DiscountOrdersController controller = (DiscountOrdersController) initializeNextScreen_BP(ScreenPaths.Paths.DISCOUNT_ORDERS.getPath(), this.loggedInUserInfo, "DISCOUNT ORDERS");
         if (controller != null) {
-            controller.setOrderProducts(orderProducts);
+            controller.setOrderProducts(nonDiscountedProducts);
         }
     }
+
 
     @FXML
     public void search(ActionEvent event) {
@@ -292,6 +309,13 @@ public class CreateOrderController extends ParentController {
         // Implement any necessary updates or focus changes required after adding a product
         orderTableView.requestFocus(); // Example: setting focus back to the order table view
     }
+
+    public void updateOrderProducts(ObservableList<OrderProduct> updatedOrderProducts) {
+        this.orderProducts.clear();
+        this.orderProducts.addAll(updatedOrderProducts);
+        this.orderTableView.refresh();
+    }
+
 
     @FXML
     private void goBack(ActionEvent event) {

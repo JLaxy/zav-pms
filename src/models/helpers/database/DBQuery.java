@@ -1726,11 +1726,10 @@ public class DBQuery {
         ObservableList<Stock> stockRequirements = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
-                        "SELECT stock.id, stock_name, quantity, unit_measure_id, stock_type_id, critical_level, isVoided "
-                                +
-                                "FROM stock_required " +
-                                "JOIN stock ON stock_required.stock_id = stock.id " +
-                                "WHERE food_product_id = ?")) {
+                        "SELECT stock.id, stock.stock_name, stock_required.quantity, stock.unit_measure_id, stock.stock_type_id, stock.critical_level, stock.isVoided "
+                                + "FROM stock_required "
+                                + "JOIN stock ON stock_required.stock_id = stock.id "
+                                + "WHERE stock_required.food_product_id = ?")) {
             stmt.setInt(1, foodVariant.getId());
             ResultSet result = stmt.executeQuery();
             while (result.next()) {

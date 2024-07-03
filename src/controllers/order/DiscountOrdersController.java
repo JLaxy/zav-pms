@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.application.Platform;
 import models.helpers.PopupDialog;
 import models.schemas.DiscountCard;
 import models.schemas.OrderProduct;
@@ -74,8 +75,13 @@ public class DiscountOrdersController extends ParentController {
     }
 
     public void setOrderProducts(ObservableList<OrderProduct> orderProducts) {
+        // Reset discount applied state for all products
+        for (OrderProduct product : orderProducts) {
+            product.setDiscountApplied(false);
+        }
         this.orderProducts = orderProducts;
         stockTable.setItems(orderProducts);
+        stockTable.refresh();  // Refresh the table to ensure the checkboxes are cleared
     }
 
     @FXML
@@ -93,7 +99,23 @@ public class DiscountOrdersController extends ParentController {
             return;
         }
 
-        System.out.println("apply discount");
+        boolean hasSelectedProducts = false;
+        for (OrderProduct orderProduct : orderProducts) {
+            if (orderProduct.isDiscountApplied()) {
+                orderProduct.setAmount(orderProduct.getDiscountedPrice());
+                orderProduct.setDiscounted(true);
+                hasSelectedProducts = true;
+            }
+        }
+
+        if (!hasSelectedProducts) {
+            PopupDialog.showCustomErrorDialog("No products selected for discount.");
+            return;
+        }
+
+        stockTable.refresh();
+        PopupDialog.showInfoDialog("Success", "Discount applied successfully.");
+        Platform.runLater(() -> this.borderPaneRootSwitcher.goBack_BP());
     }
 
     @FXML
@@ -120,6 +142,7 @@ public class DiscountOrdersController extends ParentController {
     }
 
     public void updateDiscountCardDetails(DiscountCard discountCard) {
+        this.boundDiscountCard = discountCard;
         firstNameLabel.setText(discountCard.getFname());
         middleNameLabel.setText(discountCard.getMname());
         lastNameLabel.setText(discountCard.getLname());
@@ -128,5 +151,10 @@ public class DiscountOrdersController extends ParentController {
         idnumberLabel.setText(discountCard.getIdNumber());
 
         discountcardDetailsPane.setVisible(true);
+    }
+
+    // Add the missing method
+    public void getPreviousScreen() {
+        this.borderPaneRootSwitcher.goBack_BP();
     }
 }

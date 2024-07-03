@@ -1,28 +1,27 @@
 package models.schemas;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 
 public class OrderProduct {
     private String productName;
     private String size;
     private int quantity;
-    private double amount;
+    private DoubleProperty amount;
     private double discountedPrice;
-    private BooleanProperty discountApplied;
-    private boolean stockSufficient; // Add this field
+    private boolean stockSufficient;
+    private BooleanProperty discountApplied = new SimpleBooleanProperty(false);
+    private StringProperty discounted = new SimpleStringProperty("");
 
     public OrderProduct(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient) {
         this.productName = productName;
         this.size = size;
         this.quantity = quantity;
-        this.amount = amount;
+        this.amount = new SimpleDoubleProperty(amount);
         this.discountedPrice = discountedPrice;
-        this.discountApplied = new SimpleBooleanProperty(false);
         this.stockSufficient = stockSufficient;
     }
 
-    // Getters and setters
+    // Getters and Setters for all properties
 
     public String getProductName() {
         return productName;
@@ -49,11 +48,15 @@ public class OrderProduct {
     }
 
     public double getAmount() {
-        return amount;
+        return amount.get();
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        this.amount.set(amount);
+    }
+
+    public DoubleProperty amountProperty() {
+        return amount;
     }
 
     public double getDiscountedPrice() {
@@ -62,6 +65,14 @@ public class OrderProduct {
 
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
+    }
+
+    public boolean isStockSufficient() {
+        return stockSufficient;
+    }
+
+    public void setStockSufficient(boolean stockSufficient) {
+        this.stockSufficient = stockSufficient;
     }
 
     public BooleanProperty discountAppliedProperty() {
@@ -76,11 +87,25 @@ public class OrderProduct {
         this.discountApplied.set(discountApplied);
     }
 
-    public boolean isStockSufficient() {
-        return stockSufficient;
+    public StringProperty discountedProperty() {
+        return discounted;
     }
 
-    public void setStockSufficient(boolean stockSufficient) {
-        this.stockSufficient = stockSufficient;
+    public String getDiscounted() {
+        return discounted.get();
+    }
+
+    public void setDiscounted(boolean discounted) {
+        this.discounted.set(discounted ? "✓" : "");
+    }
+
+    public int getTotalQuantity() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTotalQuantity'");
+    }
+
+    public void setTotalQuantity(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTotalQuantity'");
     }
 }
