@@ -7,11 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import models.helpers.PopupDialog;
 import models.schemas.DiscountCard;
 import models.schemas.OrderProduct;
 
@@ -45,23 +47,29 @@ public class DiscountOrdersController extends ParentController {
     private Label idnumberLabel;
 
     private ObservableList<OrderProduct> orderProducts = FXCollections.observableArrayList();
+    private DiscountCard boundDiscountCard;
 
     public void initialize() {
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size")); // Set cell value factory
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         checkboxCol.setCellValueFactory(cellData -> cellData.getValue().discountAppliedProperty());
         checkboxCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxCol));
 
         stockTable.setItems(orderProducts);
 
-        stockTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                newSelection.setDiscountApplied(!newSelection.isDiscountApplied());
-                stockTable.refresh();
-            }
+        stockTable.setRowFactory(tv -> {
+            TableRow<OrderProduct> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    OrderProduct clickedRow = row.getItem();
+                    clickedRow.setDiscountApplied(!clickedRow.isDiscountApplied());
+                    stockTable.refresh();
+                }
+            });
+            return row;
         });
-        // Initially hide the discount card details pane
+
         discountcardDetailsPane.setVisible(false);
     }
 
@@ -80,6 +88,11 @@ public class DiscountOrdersController extends ParentController {
 
     @FXML
     private void applydiscount() {
+        if (boundDiscountCard == null) {
+            PopupDialog.showCustomErrorDialog("You must bind a discount card before applying a discount.");
+            return;
+        }
+
         System.out.println("apply discount");
     }
 
@@ -114,7 +127,6 @@ public class DiscountOrdersController extends ParentController {
         cardTypeLabel.setText(discountCard.getType().getName());
         idnumberLabel.setText(discountCard.getIdNumber());
 
-        // Make the discount card details pane visible
         discountcardDetailsPane.setVisible(true);
     }
 }

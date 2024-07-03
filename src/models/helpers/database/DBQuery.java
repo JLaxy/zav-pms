@@ -1313,17 +1313,25 @@ public class DBQuery {
         return stock;
     }
 
-    public boolean createOrder(ObservableList<Order> orders, User loggedInUser) {
+    public boolean createOrder(ObservableList<OrderProduct> orders, User loggedInUser) {
         try (Connection con = this.zavPMSDB.createConnection()) {
-            for (@SuppressWarnings("unused")
-            Order order : orders) {
+            for (OrderProduct order : orders) {
                 try (PreparedStatement stmt = con.prepareStatement(
-                        "INSERT INTO orders (user_id, product_name, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)")) {
+                        "INSERT INTO orders (user_id, product_name, quantity, total_price, order_date, size, discounted_price) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                    
+                    // Setting order details
                     stmt.setInt(1, loggedInUser.getId());
-                    // stmt.setString(2, order.getProductName());
-                    // stmt.setInt(3, order.getQuantity());
-                    // stmt.setDouble(4, order.getTotalPrice());
+                    stmt.setString(2, order.getProductName());
+                    stmt.setInt(3, order.getQuantity());
+                    stmt.setDouble(4, order.getAmount());
                     stmt.setString(5, DateHelper.getCurrentDateTimeString());
+                    
+                    // Converting size to database format
+                    String dbFormattedSize = StringHelper.convertSizeToDatabaseFormat(order.getSize());
+                    stmt.setString(6, dbFormattedSize);
+                    
+                    stmt.setDouble(7, order.getDiscountedPrice());
+    
                     stmt.execute();
                 }
             }

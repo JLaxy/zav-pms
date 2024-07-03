@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import models.helpers.PopupDialog;
-import models.order.DiscountCardModel;
+import models.order.NewDiscountCardModel;
 import models.schemas.SeniorPwdId;
 import models.schemas.User;
 import enums.DiscountCardTypes.CardType;
@@ -27,7 +27,7 @@ public class NewDiscountCardController extends ParentController {
     @FXML
     private ComboBox<CardType> idTypeComboBox;
 
-    private DiscountCardModel discountCardModel;
+    private NewDiscountCardModel newDiscountCardModel;
     private SelectDiscountCardController parentController;
 
     @FXML
@@ -38,7 +38,7 @@ public class NewDiscountCardController extends ParentController {
             System.err.println("DBManager is null in NewDiscountCardController.");
             return;
         }
-        this.discountCardModel = new DiscountCardModel(this.zavPMSDB);
+        this.newDiscountCardModel = new NewDiscountCardModel(this);
         loadDiscountCardTypes();
     }
 
@@ -57,7 +57,7 @@ public class NewDiscountCardController extends ParentController {
             }
 
             String idNumber = idNumberField.getText();
-            if (discountCardModel.isDiscountCardExists(idNumber)) {
+            if (newDiscountCardModel.isDiscountCardExists(idNumber)) {
                 PopupDialog.showErrorDialog(new Exception("Discount card with this ID number already exists."), this.getClass().getName());
                 return;
             }
@@ -72,7 +72,7 @@ public class NewDiscountCardController extends ParentController {
                     selectedType.getValue()
             );
 
-            boolean success = discountCardModel.addNewDiscountCard(newCard);
+            boolean success = newDiscountCardModel.addNewDiscountCard(newCard);
             if (success) {
                 PopupDialog.showInfoDialog("Success", "Discount card added successfully.");
                 parentController.loadDiscountCards(); // Notify parent controller to refresh
