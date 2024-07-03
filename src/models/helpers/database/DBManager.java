@@ -55,7 +55,6 @@ public class DBManager {
 
     // Creating connection to Database
     public Connection createConnection() {
-        System.out.println("connecting...");
         try {
             return DriverManager.getConnection(
                     "jdbc:mysql://" + SERVER_ADDRESS + ":" + PORT_ADDRESS + "/" + DATABASE_NAME, USERNAME, PASSWORD);

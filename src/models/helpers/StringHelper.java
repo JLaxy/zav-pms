@@ -15,4 +15,19 @@ public class StringHelper {
         }
         return titleCase.toString();
     }
+
+    public static String convertSizeToDatabaseFormat(String size) {
+        if (size.endsWith("L")) {
+            // Convert liters to milliliters
+            double value = Double.parseDouble(size.replace("L", "").trim());
+            return String.format("%.0f", value * 1000); // No decimals for whole numbers
+        }
+        if (size.endsWith("ml")) {
+            // Directly use milliliters value
+            double value = Double.parseDouble(size.replace("ml", "").trim());
+            return String.format("%.0f", value); // No decimals for whole numbers
+        }
+        // For sizes that might be in other units (e.g., without units or other formats)
+        return size.trim();
+    }
 }
