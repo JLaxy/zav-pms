@@ -117,8 +117,13 @@ public class ViewFoodProductController extends ParentController {
         controller.initialize(selectedFood, this);
     }
 
-    public void confirmDecrease(int quantity) {
+    public void confirmDecrease(int quantity, String reductionType) {
         System.out.println("decreasing " + quantity);
+
+        if (this.model.confirmDecrease(this.selectedFood, reductionType, quantity, loggedInUserInfo)) {
+            this.borderPaneRootSwitcher.exitPopUpDialog();
+            this.retrieveFoodProducts();
+        }
     }
 
     @FXML

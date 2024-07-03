@@ -28,6 +28,10 @@ public class FoodVariant {
                 this.available_count, this.discounted_price, this.is_voided);
     }
 
+    public void updateQuantity(int quantity) {
+        this.available_count = quantity;
+    }
+
     public void toggleVoidStatus() {
         this.is_voided = !this.is_voided;
     }

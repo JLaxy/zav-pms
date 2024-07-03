@@ -61,7 +61,8 @@ public class SetFoodDecreaseQuantityController extends ParentController {
             PopupDialog.showCustomErrorDialog("Quantity cannot be greater than available quantity!");
             return;
         }
-        this.viewFoodProductController.confirmDecrease(this.quantitySpinner.getValue());
+        this.viewFoodProductController.confirmDecrease(this.quantitySpinner.getValue(),
+                this.reductionTypeCBox.getSelectionModel().getSelectedItem());
     }
 
     @FXML

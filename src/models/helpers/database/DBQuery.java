@@ -730,7 +730,7 @@ public class DBQuery {
                         // Add to list
                         resultList.add(new PurchasedInventoryItem(stockResult.getInt("id"),
                                 stockResult.getInt("stock_id"), stockResult.getDouble("quantity"),
-                                stockResult.getFloat("total_cost"), stockResult.getString("date_purchased"),
+                                stockResult.getDouble("total_cost"), stockResult.getString("date_purchased"),
                                 stockResult.getInt("stock_product_type_id"), stockResult.getString("expiry_date"),
                                 stockResult.getString("stock_name"), stockResult.getString("unit"), null));
                     }
@@ -756,7 +756,7 @@ public class DBQuery {
                         // Add to list
                         resultList.add(new PurchasedInventoryItem(beverageResult.getInt(1),
                                 beverageResult.getInt(2), beverageResult.getInt("quantity"),
-                                beverageResult.getFloat("total_cost"), beverageResult.getString("date_purchased"),
+                                beverageResult.getDouble("total_cost"), beverageResult.getString("date_purchased"),
                                 beverageResult.getInt("stock_product_type_id"),
                                 beverageResult.getString("expiry_date"),
                                 beverageResult.getString("product_name"), "bottle",
@@ -1520,7 +1520,11 @@ public class DBQuery {
             stmt.setString(3, DateHelper.dateToString(LocalDate.now()));
             stmt.setDouble(4, decreaseQuantity);
             stmt.setInt(5, getReductionTypeID(reductionType));
-            stmt.setInt(6, purchasedInventoryItem.getId());
+
+            if (purchasedInventoryItem.getId() == null)
+                stmt.setString(6, null);
+            else
+                stmt.setInt(6, purchasedInventoryItem.getId());
 
             // Execute SQL Query
             stmt.execute();
