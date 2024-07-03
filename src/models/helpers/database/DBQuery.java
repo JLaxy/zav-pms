@@ -1313,6 +1313,31 @@ public class DBQuery {
         return stock;
     }
 
+    public ObservableList<Stock> getStockByProductId(int productId) {
+        ObservableList<Stock> stockList = FXCollections.observableArrayList();
+        String query = "SELECT * FROM stock WHERE product_id = ?";
+        try (Connection con = this.zavPMSDB.createConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, productId);
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                Stock stock = new Stock(
+                    result.getInt("id"),
+                    result.getString("stock_name"),
+                    result.getDouble("quantity"),
+                    result.getInt("unit_measure_id"),
+                    result.getInt("stock_type_id"),
+                    result.getInt("critical_level"),
+                    result.getBoolean("isVoided")
+                );
+                stockList.add(stock);
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return stockList;
+    }    
+
     public boolean createOrder(ObservableList<OrderProduct> orders, User loggedInUser) {
         try (Connection con = this.zavPMSDB.createConnection()) {
             for (OrderProduct order : orders) {
@@ -1777,7 +1802,7 @@ public class DBQuery {
             // Determine the product type (Beverage or Food)
             int productId = getProductNameId(productName);
             StockProductType.Type productType = getProductType(productId);
-
+    
             if (productType == StockProductType.Type.BEVERAGE) {
                 // Get the drink variant
                 DrinkVariant drinkVariant = getDrinkVariantBySize(productId, size);
@@ -1801,7 +1826,7 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return false;
-    }
+    }    
 
     // Returns all of the stock product expenses of item
     public Map<String, Object> getBeverageExpenses(int beverageID) {
@@ -1910,4 +1935,15 @@ public class DBQuery {
         return cardTypes;
     }
 
+    public boolean isStockSufficient(int productId) {
+        ObservableList<Stock> stockList = getStockByProductId(productId);
+        for (Stock stock : stockList) {
+            if (stock.getQuantity() < stock.getCritical_level()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    
 }

@@ -10,16 +10,13 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import models.schemas.Stock;
 import models.helpers.PopupDialog;
 import controllers.ParentController;
-import enums.ScreenPaths;
 import enums.StockProductType;
 import models.schemas.OrderProduct;
-import models.schemas.FoodVariant;
-import models.schemas.DrinkVariant;
-import models.order.SelectSizeModel;
-import models.order.CreateOrderModel;
+import models.schemas.Stock;
+import models.order.AddingOrderPromptModel;
+import models.helpers.database.DBManager;
 
 public class AddingOrderPromptController extends ParentController {
 
@@ -37,7 +34,7 @@ public class AddingOrderPromptController extends ParentController {
     private String productName;
     private String selectedSize;
     private CreateOrderController createOrderController;
-    private SelectSizeModel model;
+    private AddingOrderPromptModel model;
 
     public void initialize() {
         stockreqCol.setCellValueFactory(new PropertyValueFactory<>("stockRequired"));
@@ -70,7 +67,7 @@ public class AddingOrderPromptController extends ParentController {
 
     public void setCreateOrderController(CreateOrderController createOrderController) {
         this.createOrderController = createOrderController;
-        this.model = new SelectSizeModel(new CreateOrderModel(createOrderController));
+        this.model = new AddingOrderPromptModel(this);
     }
 
     @FXML
@@ -87,17 +84,12 @@ public class AddingOrderPromptController extends ParentController {
         }
 
         int quantity = quantityValue.intValue();
-        double amount = fetchAmountFromDatabase(productName, selectedSize, quantity);
-        double discountedPrice = fetchDiscountedPriceFromDatabase(productName, selectedSize, quantity);
-        boolean stockSufficient = checkOverallStockSufficiency();
+        double amount = model.fetchAmountFromDatabase(productName, selectedSize, quantity);
+        double discountedPrice = model.fetchDiscountedPriceFromDatabase(productName, selectedSize, quantity);
+        boolean stockSufficient = model.checkOverallStockSufficiency(productTableView.getItems(), quantity);
 
         if (amount == 0.0) {
             // Error already displayed in fetchAmountFromDatabase method
-            return;
-        }
-
-        if (!stockSufficient) {
-            PopupDialog.showCustomErrorDialog("Stock required for the product is insufficient. Unable to add the product.");
             return;
         }
 
@@ -114,63 +106,6 @@ public class AddingOrderPromptController extends ParentController {
         Platform.runLater(() -> {
             createOrderController.focus();
         });
-    }
-
-    private double fetchAmountFromDatabase(String productName, String selectedSize, int quantity) {
-        int productId = model.getProductId(productName);
-        StockProductType.Type productType = model.getProductType(productId);
-
-        if (productType == StockProductType.Type.BEVERAGE) {
-            DrinkVariant drinkVariant = model.getDrinkVariantBySize(productId, selectedSize);
-            if (drinkVariant != null) {
-                return drinkVariant.getPrice() * quantity;
-            } else {
-                PopupDialog.showCustomErrorDialog("Error: Drink variant not found.");
-                return 0.0;
-            }
-        } else if (productType == StockProductType.Type.FOOD) {
-            FoodVariant foodVariant = model.getFoodVariantBySize(productId, selectedSize);
-            if (foodVariant != null) {
-                return foodVariant.getRegular_price() * quantity;
-            } else {
-                PopupDialog.showCustomErrorDialog("Error: Food variant not found.");
-                return 0.0;
-            }
-        }
-        return 0.0; // Default fallback, should not reach here ideally
-    }
-
-    private double fetchDiscountedPriceFromDatabase(String productName, String selectedSize, int quantity) {
-        int productId = model.getProductId(productName);
-        StockProductType.Type productType = model.getProductType(productId);
-
-        if (productType == StockProductType.Type.BEVERAGE) {
-            DrinkVariant drinkVariant = model.getDrinkVariantBySize(productId, selectedSize);
-            if (drinkVariant != null) {
-                return drinkVariant.getDiscounted_price() * quantity;
-            } else {
-                PopupDialog.showCustomErrorDialog("Error: Drink variant not found.");
-                return 0.0;
-            }
-        } else if (productType == StockProductType.Type.FOOD) {
-            FoodVariant foodVariant = model.getFoodVariantBySize(productId, selectedSize);
-            if (foodVariant != null) {
-                return foodVariant.getDiscounted_price() * quantity;
-            } else {
-                PopupDialog.showCustomErrorDialog("Error: Food variant not found.");
-                return 0.0;
-            }
-        }
-        return 0.0; // Default fallback, should not reach here ideally
-    }
-
-    private boolean checkOverallStockSufficiency() {
-        for (StockRequirement requirement : productTableView.getItems()) {
-            if ("Insufficient".equals(requirement.getStatus())) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public static class StockRequirement {

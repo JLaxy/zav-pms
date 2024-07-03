@@ -18,6 +18,7 @@ import models.schemas.FoodVariant;
 import models.schemas.OrderProduct;
 import controllers.ParentController;
 import enums.ScreenPaths;
+import models.schemas.Stock;
 
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
@@ -148,7 +149,7 @@ public class CreateOrderController extends ParentController {
                             allProducts.sort(Comparator.comparing(Product::getName));
 
                             for (Product product : allProducts) {
-                                VBox buttonBox = createProductButton(product.getName(), product.isFastMoving(), product.isStockSufficient());
+                                VBox buttonBox = createProductButton(product.getName(), product.isFastMoving(), model.isStockSufficient(product.getName()));
                                 Platform.runLater(() -> productContainer.getChildren().add(buttonBox));
                             }
                             System.out.println("finished");
@@ -205,11 +206,6 @@ public class CreateOrderController extends ParentController {
     }
 
     public void addProductToOrder(OrderProduct orderProduct) {
-        if (!orderProduct.isStockSufficient()) {
-            PopupDialog.showCustomErrorDialog("Stock required for product " + orderProduct.getProductName() + " is insufficient. Unable to add the product.");
-            return;
-        }
-
         boolean productExists = false;
 
         for (OrderProduct existingProduct : orderProducts) {
@@ -229,6 +225,10 @@ public class CreateOrderController extends ParentController {
             orderProducts.add(orderProduct);
         }
 
+        if (orderProduct.isStockSufficient()) {
+            PopupDialog.showCustomErrorDialog("Stock for product " + orderProduct.getProductName() + " is insufficient. It will be added as a backorder.");
+        }
+
         orderTableView.refresh();
         // Set focus back to the CreateOrderController
         Platform.runLater(() -> {
@@ -245,26 +245,6 @@ public class CreateOrderController extends ParentController {
     @FXML
     private void select() {
         System.out.println("Select");
-    }
-
-    private boolean isFastMovingProduct(FoodVariant food) {
-        // Implement actual logic to determine if the food product is fast-moving
-        return true; // Placeholder
-    }
-
-    private boolean isStockSufficient(FoodVariant food) {
-        // Implement actual logic to determine if the stock is sufficient for the food product
-        return true; // Placeholder
-    }
-
-    private boolean isFastMovingProduct(DrinkVariant drink) {
-        // Implement actual logic to determine if the drink product is fast-moving
-        return true; // Placeholder
-    }
-
-    private boolean isStockSufficient(DrinkVariant drink) {
-        // Implement actual logic to determine if the stock is sufficient for the drink product
-        return true; // Placeholder
     }
 
     @FXML
@@ -298,7 +278,6 @@ public class CreateOrderController extends ParentController {
         }
     }
 
-
     @FXML
     public void search(ActionEvent event) {
         loadProducts(null, searchField.getText());
@@ -315,7 +294,6 @@ public class CreateOrderController extends ParentController {
         this.orderProducts.addAll(updatedOrderProducts);
         this.orderTableView.refresh();
     }
-
 
     @FXML
     private void goBack(ActionEvent event) {

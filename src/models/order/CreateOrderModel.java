@@ -60,6 +60,31 @@ public class CreateOrderModel {
         return this.controller.getDBManager().query.getDrinkVariantBySize(productsNameId, size);
     }
 
+    public boolean isStockSufficient(String productName) {
+        int productId = getProductId(productName);
+        StockProductType.Type productType = getProductType(productId);
+        
+        if (productType == StockProductType.Type.BEVERAGE) {
+            ObservableList<DrinkVariant> drinkVariants = this.controller.getDBManager().query.getBeverageProducts(productName);
+            for (DrinkVariant drink : drinkVariants) {
+                if (drink.getAvailable_count() < drink.getCritical_level()) {
+                    return false;
+                }
+            }
+        } else if (productType == StockProductType.Type.FOOD) {
+            ObservableList<FoodVariant> foodVariants = this.controller.getDBManager().query.getFoodProducts(productName);
+            for (FoodVariant food : foodVariants) {
+                ObservableList<Stock> stockList = getStockRequirements(food);
+                for (Stock stock : stockList) {
+                    if (stock.getQuantity() < stock.getCritical_level()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     // Example method where OrderProduct is instantiated
     public OrderProduct createOrderProduct(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient) {
         return new OrderProduct(productName, size, quantity, amount, discountedPrice, stockSufficient);
