@@ -31,19 +31,38 @@ public class RegisterNewBeverageVariantDetailsController extends ParentControlle
     private RegisterNewBeverageVariantDetailsModel model;
 
     @FXML
-    public void initialize(String productName, boolean isNewBeverageProduct) {
-        this.model = new RegisterNewBeverageVariantDetailsModel(this);
-        this.productName = productName;
-        this.isNewBeverageProduct = isNewBeverageProduct;
+public void initialize(String productName, boolean isNewBeverageProduct) {
+    this.model = new RegisterNewBeverageVariantDetailsModel(this);
+    this.productName = productName;
+    this.isNewBeverageProduct = isNewBeverageProduct;
 
-        // Configure fields to only accept numbers
-        convertToNumberField(this.regularPriceField);
-        convertToNumberField(this.discountedPriceField);
-        convertToNumberField(this.sizeField);
-        convertToNumberField(this.criticalLevelField);
+    // Configure fields to only accept numbers
+    convertToNumberField(this.regularPriceField);
+    convertToNumberField(this.discountedPriceField);
+    convertToNumberField(this.sizeField);
+    convertToNumberField(this.criticalLevelField);
 
-        System.out.println("product name: " + this.productName);
-    }
+    // Add listener to calculate and display discounted price
+    this.regularPriceField.textProperty().addListener(new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            if (!newValue.isEmpty()) {
+                try {
+                    float regularPrice = Float.parseFloat(newValue);
+                    float discountedPrice = regularPrice * 0.80f;
+                    discountedPriceField.setText(String.format("%.2f", discountedPrice));
+                } catch (NumberFormatException e) {
+                    discountedPriceField.setText("");
+                }
+            } else {
+                discountedPriceField.setText("");
+            }
+        }
+    });
+
+    System.out.println("product name: " + this.productName);
+}
+
 
     @FXML
     private void goBack(ActionEvent e) {
