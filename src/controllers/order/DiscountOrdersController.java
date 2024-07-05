@@ -35,9 +35,7 @@ public class DiscountOrdersController extends ParentController {
     private TableColumn<OrderProduct, Boolean> checkboxCol;
 
     @FXML
-    private Label firstNameLabel;
-    @FXML
-    private Label middleNameLabel;
+    private Label firstNameLabel, middleNameLabel;
     @FXML
     private Label lastNameLabel;
     @FXML
@@ -49,10 +47,11 @@ public class DiscountOrdersController extends ParentController {
 
     private ObservableList<OrderProduct> orderProducts = FXCollections.observableArrayList();
     private DiscountCard boundDiscountCard;
+    private CreateOrderController createOrderController;
 
     public void initialize() {
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("remainingQuantity"));
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         checkboxCol.setCellValueFactory(cellData -> cellData.getValue().discountAppliedProperty());
         checkboxCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxCol));
@@ -75,15 +74,29 @@ public class DiscountOrdersController extends ParentController {
     }
 
     public void setOrderProducts(ObservableList<OrderProduct> orderProducts) {
-        // Reset discount applied state for all products
-        for (OrderProduct product : orderProducts) {
-            product.setDiscountApplied(false);
-        }
-        this.orderProducts = orderProducts;
-        stockTable.setItems(orderProducts);
-        stockTable.refresh();  // Refresh the table to ensure the checkboxes are cleared
-    }
+    // ObservableList<OrderProduct> individualProducts = FXCollections.observableArrayList();
 
+    // for (OrderProduct product : orderProducts) {
+    //     int remainingQuantity = product.getRemainingQuantity();
+    //     for (int i = 0; i < remainingQuantity; i++) {
+    //         OrderProduct individualProduct = new OrderProduct(
+    //             product.getProductName(), product.getSize(), 1,
+    //             product.getInitialAmount() / product.getInitialQuantity(),
+    //             product.getDiscountedPrice() / product.getInitialQuantity(),
+    //             product.isStockSufficient()
+    //         );
+    //         individualProducts.add(individualProduct);
+    //     }
+    // }
+
+    // this.orderProducts = individualProducts;
+    // stockTable.setItems(individualProducts);
+    System.out.println("setorederproducts");
+    this.orderProducts = orderProducts;
+    this.stockTable.setItems(this.orderProducts);
+}
+   
+          
     @FXML
     private void binddiscountcard() {
         SelectDiscountCardController controller = (SelectDiscountCardController) 
@@ -100,22 +113,29 @@ public class DiscountOrdersController extends ParentController {
         }
 
         boolean hasSelectedProducts = false;
-        for (OrderProduct orderProduct : orderProducts) {
+
+        for (OrderProduct orderProduct : this.orderProducts) {
             if (orderProduct.isDiscountApplied()) {
+                hasSelectedProducts = true;
                 orderProduct.setAmount(orderProduct.getDiscountedPrice());
                 orderProduct.setDiscounted(true);
-                hasSelectedProducts = true;
+                continue;
             }
+            orderProduct.setDiscounted(false);
         }
-
+        
         if (!hasSelectedProducts) {
             PopupDialog.showCustomErrorDialog("No products selected for discount.");
             return;
         }
 
-        stockTable.refresh();
         PopupDialog.showInfoDialog("Success", "Discount applied successfully.");
+        this.createOrderController.updateOrderProducts(this.orderProducts);
         Platform.runLater(() -> this.borderPaneRootSwitcher.goBack_BP());
+    }
+
+    public void setCreateOrderController(CreateOrderController createOrderController) {
+        this.createOrderController = createOrderController;
     }
 
     @FXML

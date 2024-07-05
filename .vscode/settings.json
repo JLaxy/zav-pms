@@ -7,7 +7,25 @@
     "lib/gson-2.10.1.jar",
     "lib/JavaMailAPI/activation.jar",
     "lib/JavaMailAPI/javax.mail-1.6.2.jar",
-    "lib/javamailapi/javax.mail-1.6.2.jar"
+    "lib/javamailapi/javax.mail-1.6.2.jar",
+    "lib/iText-Core-8.0.4/barcodes-8.0.4.jar",
+    "lib/iText-Core-8.0.4/bouncy-castle-adapter-8.0.4.jar",
+    "lib/iText-Core-8.0.4/bouncy-castle-connector-8.0.4.jar",
+    "lib/iText-Core-8.0.4/bouncy-castle-fips-adapter-8.0.4.jar",
+    "lib/iText-Core-8.0.4/commons-8.0.4.jar",
+    "lib/iText-Core-8.0.4/font-asian-8.0.4.jar",
+    "lib/iText-Core-8.0.4/forms-8.0.4.jar",
+    "lib/iText-Core-8.0.4/hyph-8.0.4.jar",
+    "lib/iText-Core-8.0.4/io-8.0.4.jar",
+    "lib/iText-Core-8.0.4/kernel-8.0.4.jar",
+    "lib/iText-Core-8.0.4/layout-8.0.4.jar",
+    "lib/iText-Core-8.0.4/pdfa-8.0.4.jar",
+    "lib/iText-Core-8.0.4/pdftest-8.0.4.jar",
+    "lib/iText-Core-8.0.4/pdfua-8.0.4.jar",
+    "lib/iText-Core-8.0.4/sign-8.0.4.jar",
+    "lib/iText-Core-8.0.4/styled-xml-parser-8.0.4.jar",
+    "lib/iText-Core-8.0.4/svg-8.0.4.jar",
+    "lib/slf4j-api-2.0.13.jar"
   ],
   "java.debug.settings.onBuildFailureProceed": true
 }

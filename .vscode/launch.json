@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ReportManager",
+      "request": "launch",
+      "mainClass": "models.modules.report.ReportManager",
+      "projectName": "zav-pms_32989c7c"
+    },
+    {
+      "type": "java",
+      "name": "Runner",
+      "request": "launch",
+      "mainClass": "Runner",
+      "projectName": "zav-pms_32989c7c"
+    },
+    {
+      "type": "java",
       "name": "Runner",
       "request": "launch",
       "mainClass": "Runner",
