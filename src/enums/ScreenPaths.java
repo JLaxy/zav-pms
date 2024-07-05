@@ -72,6 +72,7 @@ public class ScreenPaths {
 
         // Transactions
         TRANSACTION("../../views/fxmls/transactions/TransactionsView.fxml"),
+        VIEW_TRANSACTIONS("../../views/fxmls/transactions/ViewTransactionsView.fxml"),
 
         // Order
         ORDER("../../views/fxmls/order/OrderView.fxml"),
@@ -90,13 +91,14 @@ public class ScreenPaths {
         SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml"),
         SET_FOOD_DECREASE_QUANTITY("../../views/fxmls/reusables/SetFoodDecreaseQuantityView.fxml"),
 
-        //HELP
+        // HELP
         HELP("../../views/fxmls/help/HelpPageView.fxml"),
         GENERAL("../../views/fxmls/help/GenPageView.fxml"),
         FAQS("../../views/fxmls/help/FaqPageView.fxml"),
+        FAQS_ANSWER("../../views/fxmls/help/FaqAnswerView.fxml"),
         HOW_TO("../../views/fxmls/help/HelpPageView.fxml"),
 
-        //ABOUT
+        // ABOUT
         ABOUT("../../views/fxmls/about/AboutPage.fxml");
 
         private final String path;
