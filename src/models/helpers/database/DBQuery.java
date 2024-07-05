@@ -15,9 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Iterator;
-
-import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
 import enums.DatabaseLists;
 import enums.PreferredUnits;
@@ -1317,46 +1314,45 @@ public class DBQuery {
         ObservableList<Stock> stockList = FXCollections.observableArrayList();
         String query = "SELECT * FROM stock WHERE product_id = ?";
         try (Connection con = this.zavPMSDB.createConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
+                PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, productId);
             ResultSet result = stmt.executeQuery();
             while (result.next()) {
                 Stock stock = new Stock(
-                    result.getInt("id"),
-                    result.getString("stock_name"),
-                    result.getDouble("quantity"),
-                    result.getInt("unit_measure_id"),
-                    result.getInt("stock_type_id"),
-                    result.getInt("critical_level"),
-                    result.getBoolean("isVoided")
-                );
+                        result.getInt("id"),
+                        result.getString("stock_name"),
+                        result.getDouble("quantity"),
+                        result.getInt("unit_measure_id"),
+                        result.getInt("stock_type_id"),
+                        result.getInt("critical_level"),
+                        result.getBoolean("isVoided"));
                 stockList.add(stock);
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return stockList;
-    }    
+    }
 
     public boolean createOrder(ObservableList<OrderProduct> orders, User loggedInUser) {
         try (Connection con = this.zavPMSDB.createConnection()) {
             for (OrderProduct order : orders) {
                 try (PreparedStatement stmt = con.prepareStatement(
                         "INSERT INTO orders (user_id, product_name, quantity, total_price, order_date, size, discounted_price) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-                    
+
                     // Setting order details
                     stmt.setInt(1, loggedInUser.getId());
                     stmt.setString(2, order.getProductName());
                     stmt.setInt(3, order.getQuantity());
                     stmt.setDouble(4, order.getAmount());
                     stmt.setString(5, DateHelper.getCurrentDateTimeString());
-                    
+
                     // Converting size to database format
                     String dbFormattedSize = StringHelper.convertSizeToDatabaseFormat(order.getSize());
                     stmt.setString(6, dbFormattedSize);
-                    
+
                     stmt.setDouble(7, order.getDiscountedPrice());
-    
+
                     stmt.execute();
                 }
             }
@@ -1802,7 +1798,7 @@ public class DBQuery {
             // Determine the product type (Beverage or Food)
             int productId = getProductNameId(productName);
             StockProductType.Type productType = getProductType(productId);
-    
+
             if (productType == StockProductType.Type.BEVERAGE) {
                 // Get the drink variant
                 DrinkVariant drinkVariant = getDrinkVariantBySize(productId, size);
@@ -1826,7 +1822,7 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return false;
-    }    
+    }
 
     // Returns all of the stock product expenses of item
     public Map<String, Object> getBeverageExpenses(int beverageID) {
@@ -1945,5 +1941,36 @@ public class DBQuery {
         return true;
     }
 
-    
+    public void getProductsSold(String date1, String date2) {
+        Map<String, Object> productsSold = new HashMap<String, Object>();
+        String query = "SELECT ordered_products.product_type_id, ordered_products.product_id FROM `zav-pms-db`.transaction JOIN ordered_products ON ordered_products.transaction_id = transaction.id WHERE order_date >= ? AND order_date <= ?;";
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet result = stmt.executeQuery()) {
+
+            Map<Integer, Integer> foodProduct = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> beverageProduct = new HashMap<Integer, Integer>();
+
+            // {
+            // 1 FOOD: {
+            // food_id : 1,
+            // food_id : 2,
+            // },
+
+            // 2 DRINK: {
+
+            // },
+            // }
+
+            // If food, increment with key if same id
+            if (result.getInt(1) == 1) {
+                foodProduct.put(result.getInt(2), foodProduct.get(result.getInt(2)));
+            }
+
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+
+    }
+
 }

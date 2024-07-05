@@ -62,6 +62,10 @@ public class DateHelper {
         return dateTimeToString(LocalDateTime.now());
     }
 
+    public static String getCurrentDateString() {
+        return dateToString(LocalDate.now());
+    }
+
     // Returns true if date supplied has already passed
     public static Boolean isDateTimeBeforeNow(LocalDateTime date1) {
         return date1.isBefore(LocalDateTime.now());

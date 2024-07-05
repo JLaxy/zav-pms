@@ -14,6 +14,7 @@ import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
 import models.helpers.database.DBManager;
 import models.maintenance.AutoBackup;
+import models.modules.report.AutoReporter;
 
 public class PMS extends Application {
     // Easy to change values
@@ -66,6 +67,8 @@ public class PMS extends Application {
 
             // Comment to disable database save on exit
             AutoBackup.enableDatabaseSaveOnExit(mainStage, zavPMSDB);
+
+            AutoReporter.setupAutoReporterTask();
 
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

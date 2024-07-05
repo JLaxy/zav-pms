@@ -53,6 +53,8 @@ public class JSONManager {
             settings.put("autoBackup", false);
             settings.put("autoCheckExpiredItems", true);
             settings.put("runInFullScreen", false);
+            settings.put("reportTimeInterval", "none");
+            settings.put("emailReportDestination", "none");
 
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
             settingsFile.put("program_settings", settings);
