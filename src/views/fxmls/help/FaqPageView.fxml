@@ -147,7 +147,7 @@
                         </Button>
                         <Button fx:id="faqS" mnemonicParsing="false" onAction="#q12">
                            <graphic>
-                              <Text fx:id="GenText110" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q12: How do I perform a system update?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
+                              <Text fx:id="GenText110" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Q12: Can I automatically make back-ups of the database?" textAlignment="JUSTIFY" wrappingWidth="1009.8034210205078">
                                  <font>
                                     <Font size="22.0" />
                                  </font>

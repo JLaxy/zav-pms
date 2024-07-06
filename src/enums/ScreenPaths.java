@@ -93,10 +93,12 @@ public class ScreenPaths {
 
         // HELP
         HELP("../../views/fxmls/help/HelpPageView.fxml"),
+        USER_MANUAL("../../views/fxmls/help/UserManualViewerView.fxml"),
         GENERAL("../../views/fxmls/help/GenPageView.fxml"),
         FAQS("../../views/fxmls/help/FaqPageView.fxml"),
         FAQS_ANSWER("../../views/fxmls/help/FaqAnswerView.fxml"),
         HOW_TO("../../views/fxmls/help/HelpPageView.fxml"),
+        HOW_TO_SELECTION("../../views/fxmls/help/HowToView.fxml"),
 
         // ABOUT
         ABOUT("../../views/fxmls/about/AboutPage.fxml");

@@ -5,7 +5,6 @@ import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-
 public class HelpController extends ParentController {
 
     @FXML
@@ -14,21 +13,21 @@ public class HelpController extends ParentController {
     }
 
     @FXML
-    private void general(){
+    private void general() {
         this.initializeNextScreen_BP(ScreenPaths.Paths.GENERAL.getPath(), this.loggedInUserInfo,
-                    "GENERAL");
+                "GENERAL");
         System.out.println("General");
     }
 
     @FXML
-    private void faqs(){
+    private void faqs() {
         this.initializeNextScreen_BP(ScreenPaths.Paths.FAQS.getPath(), this.loggedInUserInfo,
-                    "FAQs");
+                "FAQs");
         System.out.println("FAQs");
     }
 
     @FXML
-    private void howto(){
-        System.out.println("How To");
+    private void howto() {
+        this.initializeNextScreen_BP(ScreenPaths.Paths.HOW_TO_SELECTION.getPath(), loggedInUserInfo, "USER MANUALS");
     }
 }
