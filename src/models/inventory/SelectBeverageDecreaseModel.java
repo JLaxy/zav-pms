@@ -3,6 +3,9 @@ package models.inventory;
 import java.util.Map;
 
 import controllers.inventory.SelectBeverageDecreaseController;
+import controllers.transactions.SelectTransactionsController;
+import enums.ScreenPaths;
+import enums.StockProductType;
 import enums.UserLogActions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,11 +34,6 @@ public class SelectBeverageDecreaseModel {
 
         decreasedDrink.updateQuantity(decreasedDrink.getAvailable_count() - decreaseQuantity);
 
-        if (reductionType.compareTo("used") == 0) {
-            PopupDialog.showInfoDialog("TODO", "IMPLEMENT FUNCTION FOR USED");
-            return true;
-        }
-
         if (this.controller.getDBManager().query.manualStockProductReduction(purchasedInventoryItem, decreaseQuantity,
                 reductionType)) {
             if (this.controller.getDBManager().query.editBeverage(origDrink, decreasedDrink, loggedInUser,
@@ -62,6 +60,19 @@ public class SelectBeverageDecreaseModel {
             PopupDialog.showCustomErrorDialog(
                     "Was not able to modify beverage quantity! Stock product reduction was recorded");
         }
+
+        return false;
+    }
+
+    public boolean consumeBeverage(PurchasedInventoryItem purchasedInventoryItem, int decreaseQuantity,
+            String reductionType, User loggedInUser) {
+        // TODO: Select transaction, select beverage
+        PopupDialog.showInfoDialog("TODO", "IMPLEMENT FUNCTION FOR USED");
+
+        SelectTransactionsController controller1 = (SelectTransactionsController) this.controller
+                .initializeNextScreen_BP(ScreenPaths.Paths.SELECT_TRANSACTION.getPath(), loggedInUser,
+                        "SELECT TRANSACTION");
+        controller1.initialize(StockProductType.Type.BEVERAGE);
 
         return false;
     }

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import controllers.ParentController;
 import enums.UserManualTypes;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -53,7 +54,26 @@ public class UserManualViewerController extends ParentController {
                 PopupDialog.showCustomErrorDialog("Error retrieving manual!");
                 return;
         }
-        this.loadImages(path);
+
+        this.configureManualLoader(path);
+    }
+
+    // Starts thread of retrieving user manual in file system
+    private void configureManualLoader(String path) {
+        Task<Void> manualLoader = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                loadImages(path);
+                return null;
+            }
+        };
+
+        manualLoader.setOnRunning(e -> this.borderPaneRootSwitcher.showLoadingScreen_BP());
+        manualLoader.setOnSucceeded(e -> this.borderPaneRootSwitcher.exitLoadingScreen_BP());
+
+        Thread loader = new Thread(manualLoader);
+        loader.setDaemon(true);
+        loader.start();
     }
 
     private void loadImages(String manualPath) {
@@ -98,7 +118,7 @@ public class UserManualViewerController extends ParentController {
     @FXML
     private void previous(ActionEvent event) {
         if (!images.isEmpty()) {
-            if (this.currentIndex < 0)
+            if (this.currentIndex < 1)
                 return;
 
             --this.currentIndex;
@@ -109,7 +129,7 @@ public class UserManualViewerController extends ParentController {
             this.rightArrowButton.setDisable(false);
 
             if (this.currentIndex == 0)
-                this.leftArrowButton.setDisable(false);
+                this.leftArrowButton.setDisable(true);
         }
     }
 
@@ -128,7 +148,6 @@ public class UserManualViewerController extends ParentController {
 
             if (this.currentIndex == this.images.size() - 1)
                 this.rightArrowButton.setDisable(true);
-
         }
     }
 }

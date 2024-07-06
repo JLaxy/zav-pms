@@ -4,7 +4,9 @@ import javax.swing.JOptionPane;
 
 import controllers.ParentController;
 import controllers.reusables.SetFoodDecreaseQuantityController;
+import controllers.transactions.SelectTransactionsController;
 import enums.ScreenPaths;
+import enums.StockProductType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import models.helpers.PopupDialog;
@@ -27,7 +29,12 @@ public class EditFoodPopupController extends ParentController {
 
     @FXML
     private void increaseFood(ActionEvent e) {
-        System.out.println("increasing...");
+        // do SelectTransacttionsController functions using controller variable
+        this.borderPaneRootSwitcher.exitPopUpDialog();
+        SelectTransactionsController controller = (SelectTransactionsController) this.initializeNextScreen_BP(
+                ScreenPaths.Paths.SELECT_TRANSACTION.getPath(), loggedInUserInfo,
+                "SELECT TRANSACTION");
+        controller.initialize(StockProductType.Type.FOOD);
     }
 
     @FXML

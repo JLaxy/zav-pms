@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import controllers.ParentController;
 import controllers.inventory.SelectBeverageDecreaseController;
-import controllers.inventory.ViewBeverageProductController;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;

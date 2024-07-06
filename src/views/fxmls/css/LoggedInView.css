@@ -15,7 +15,8 @@
   -fx-text-fill: white;
 }
 
-#goBackButton {
+#goBackButton,
+#confirmButton {
   -fx-background-color: #d552a0;
   -fx-background-radius: 1000;
   -fx-text-fill: white;

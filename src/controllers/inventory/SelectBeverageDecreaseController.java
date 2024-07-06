@@ -139,6 +139,13 @@ public class SelectBeverageDecreaseController extends ParentController {
 
     public void confirmDecrease(int decreaseQuantity, String reductionType) {
 
+        // Separate function for used
+        if (reductionType.compareTo("used") == 0) {
+            this.consumeBeverage(decreaseQuantity, reductionType);
+            return;
+        }
+
+        // Decrease on model
         if (!this.model.confirmDecrease(selectedBeveragePurchase,
                 decreaseQuantity, reductionType,
                 loggedInUserInfo)) {
@@ -148,6 +155,13 @@ public class SelectBeverageDecreaseController extends ParentController {
         PopupDialog.showInfoDialog("Beverage Reduced", "Successfully reduced beverage!");
 
         retrievePurchases();
+    }
+
+    public void consumeBeverage(int decreaseQuantity, String reductionType) {
+        PopupDialog.showInfoDialog("TODO", "implement at SelectBeverageDecreaseController");
+        if (!this.model.consumeBeverage(selectedBeveragePurchase, decreaseQuantity, reductionType, loggedInUserInfo)) {
+            PopupDialog.showCustomErrorDialog("An error has occured!");
+        }
     }
 
     @FXML

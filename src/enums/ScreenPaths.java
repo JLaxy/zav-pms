@@ -72,6 +72,7 @@ public class ScreenPaths {
 
         // Transactions
         TRANSACTION("../../views/fxmls/transactions/TransactionsView.fxml"),
+        SELECT_TRANSACTION("../../views/fxmls/transactions/SelectTransactionsView.fxml"),
         CREATE_TRANSACTION("../../views/fxmls/transactions/CreateTransactionsView.fxml"),
         ADD_PAYMENT("../../views/fxmls/transactions/AddPaymentView.fxml"),
         CASH_PAYMENT("../../views/fxmls/transactions/CashPaymentPopUpView.fxml"),
@@ -88,14 +89,16 @@ public class ScreenPaths {
         NEW_DISCOUNT_CARD("../../views/fxmls/order/NewDiscountCard.fxml"),
         VIEW_BACKORDER("../../views/fxmls/order/ViewBackorder.fxml"),
         SELECT_SIZE("../../views/fxmls/order/SelectSize.fxml"),
+        SELECT_FOOD_ORDER("../../views/fxmls/order/SelectFoodOrder.fxml"),
+        SELECT_BEVERAGE_ORDER("../../views/fxmls/order/SelectBeverageOrder.fxml"),
 
         // Reusable
         SET_QUANTITY("../../views/fxmls/reusables/SetQuantityView.fxml"),
         SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml"),
         SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml"),
         SET_FOOD_DECREASE_QUANTITY("../../views/fxmls/reusables/SetFoodDecreaseQuantityView.fxml"),
-        
-        //HELP
+
+        // HELP
         HELP("../../views/fxmls/help/HelpPageView.fxml"),
         USER_MANUAL("../../views/fxmls/help/UserManualViewerView.fxml"),
         GENERAL("../../views/fxmls/help/GenPageView.fxml"),
