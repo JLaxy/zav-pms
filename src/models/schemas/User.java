@@ -14,7 +14,7 @@ import models.helpers.PopupDialog;
 public class User {
     private int id, level_of_access_id, account_status_id, unique_question_id;
     private String uname, pass, email, fname, lname, unique_question_answer, level_of_access_id_string,
-            account_status_id_string;
+            account_status_id_string, mname, suffix;
 
     // Null User Constructor
     public User() {
@@ -22,7 +22,7 @@ public class User {
     }
 
     public User(int id, String uname, String pass, String email, int level_of_access_id, String fname, String lname,
-            int account_status_id, int unique_question_id, String unique_question_answer) {
+            int account_status_id, int unique_question_id, String unique_question_answer, String mname, String suffix) {
         this.id = id;
         this.uname = uname;
         this.pass = pass;
@@ -33,6 +33,8 @@ public class User {
         this.account_status_id = account_status_id;
         this.unique_question_id = unique_question_id;
         this.unique_question_answer = unique_question_answer;
+        this.mname = mname;
+        this.suffix = suffix;
 
         // Updates string equivalents of LOA and Account Status
         updateStringEquivalents();
@@ -57,11 +59,19 @@ public class User {
     public User getCopy() {
         return new User(this.id, this.uname, this.pass, this.email, this.level_of_access_id, this.fname, this.lname,
                 this.account_status_id, this.unique_question_id,
-                this.unique_question_answer);
+                this.unique_question_answer, this.mname, this.suffix);
     }
 
     public int getId() {
         return this.id;
+    }
+
+    public String getMname() {
+        return this.mname;
+    }
+
+    public String getSuffix() {
+        return this.suffix;
     }
 
     public int getLevel_of_access_id() {
@@ -155,7 +165,7 @@ public class User {
                     }
                 }
             } catch (Exception e) {
-                PopupDialog.showErrorDialog(e, "User");
+                System.out.println("Null Value");
             }
         }
         // Return list of changes in array
@@ -176,7 +186,7 @@ public class User {
     }
 
     public static User getSystemUser() {
-        return new User(1, "SYSTEM", "-", "-", 0, "SYSTEM", "SYSTEM", 0, 0, "-");
+        return new User(1, "SYSTEM", "-", "-", 0, "SYSTEM", "SYSTEM", 0, 0, "-", "-", "-");
     }
 
 }

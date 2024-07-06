@@ -17,7 +17,7 @@ import models.schemas.User;
 public class UserDetailsController extends ParentController {
 
     @FXML
-    private TextField unameField, passField, emailField, fnameField, lnameField, secAnsField;
+    private TextField unameField, passField, emailField, fnameField, lnameField, secAnsField, mnameField, suffixField;
 
     @FXML
     private ComboBox<String> accountTypeCBox, secQuesCBox;
@@ -74,7 +74,7 @@ public class UserDetailsController extends ParentController {
         User updatedUserInfo = new User(selectedUser.getId(), unameField.getText(), passField.getText(),
                 emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)),
                 fnameField.getText(), lnameField.getText(), selectedUser.getAccount_status_id(), secQuesId,
-                secAnsField.getText());
+                secAnsField.getText(), mnameField.getText(), suffixField.getText());
 
         this.borderPaneRootSwitcher.exitPopUpDialog();
         // If failed to update
@@ -149,7 +149,7 @@ public class UserDetailsController extends ParentController {
         User updatedUserInfo = new User(0, unameField.getText(), passField.getText(),
                 emailField.getText(), (loa.compareTo("Admin") == 0 ? 1 : (loa.compareTo("Kitchen Staff") == 0 ? 2 : 3)),
                 fnameField.getText(), lnameField.getText(), AccountStatuses.Status.ACTIVE.getValue(), secQuesId,
-                secAnsField.getText());
+                secAnsField.getText(), mnameField.getText(), suffixField.getText());
 
         this.borderPaneRootSwitcher.exitPopUpDialog();
 
@@ -240,5 +240,8 @@ public class UserDetailsController extends ParentController {
         this.fnameField.setText(selectedUser.getFName());
         this.lnameField.setText(selectedUser.getLName());
         this.secAnsField.setText(selectedUser.getUniqueQuestionAnswer());
+
+        this.mnameField.setText(selectedUser.getMname());
+        this.suffixField.setText(selectedUser.getSuffix());
     }
 }

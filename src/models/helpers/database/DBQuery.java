@@ -158,7 +158,8 @@ public class DBQuery {
                         Integer.valueOf(result.getString("level_of_access_id")), result.getString("fname"),
                         result.getString("lname"), Integer.valueOf(result.getString("account_status_id")),
                         Integer.valueOf(result.getString("unique_question_id")),
-                        result.getString("unique_question_answer"));
+                        result.getString("unique_question_answer"), result.getString("mname"),
+                        result.getString("suffix"));
 
                 result.close();
 
@@ -330,7 +331,8 @@ public class DBQuery {
                             result.getInt("level_of_access_id"), result.getString("fname"),
                             result.getString("lname"),
                             result.getInt("account_status_id"), result.getInt("unique_question_id"),
-                            result.getString("unique_question_answer")));
+                            result.getString("unique_question_answer"), result.getString("mname"),
+                            result.getString("suffix")));
                 }
                 result.close();
                 return myList;
@@ -404,7 +406,7 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "UPDATE users SET uname = (?), pass = (?), email = (?), fname = (?), lname = (?), level_of_access_id = (?), account_status_id = (?), unique_question_id = (?), unique_question_answer = (?) WHERE BINARY uname = (?);")) {
+                                "UPDATE users SET uname = (?), pass = (?), email = (?), fname = (?), lname = (?), level_of_access_id = (?), account_status_id = (?), unique_question_id = (?), unique_question_answer = (?), mname = (?), suffix = (?) WHERE BINARY uname = (?);")) {
 
             // Putting in values
             stmt.setString(1, updatedUserInfo.getUname());
@@ -416,7 +418,9 @@ public class DBQuery {
             stmt.setInt(7, updatedUserInfo.getAccount_status_id());
             stmt.setInt(8, updatedUserInfo.getUniqueQuestionID());
             stmt.setString(9, updatedUserInfo.getUniqueQuestionAnswer());
-            stmt.setString(10, oldUserInfo.getUname());
+            stmt.setString(10, updatedUserInfo.getMname());
+            stmt.setString(11, updatedUserInfo.getSuffix());
+            stmt.setString(12, oldUserInfo.getUname());
 
             stmt.execute();
 
@@ -445,7 +449,7 @@ public class DBQuery {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
-                                "INSERT INTO users (uname, pass, email, level_of_access_id, fname, lname, account_status_id, unique_question_id, unique_question_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
+                                "INSERT INTO users (uname, pass, email, level_of_access_id, fname, lname, account_status_id, unique_question_id, unique_question_answer, mname, suffix) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
 
             // Setting user info
             stmt.setString(1, newUser.getUname());
@@ -457,6 +461,8 @@ public class DBQuery {
             stmt.setInt(7, newUser.getAccount_status_id());
             stmt.setInt(8, newUser.getUniqueQuestionID());
             stmt.setString(9, newUser.getUniqueQuestionAnswer());
+            stmt.setString(10, newUser.getMname());
+            stmt.setString(11, newUser.getSuffix());
 
             stmt.execute();
 
@@ -1944,8 +1950,8 @@ public class DBQuery {
     public double getDiscountedPrice(String productName, String size) {
         double discountedPrice = 0.0;
         try (Connection con = this.zavPMSDB.createConnection();
-             PreparedStatement stmt = con.prepareStatement(
-                 "SELECT discounted_price FROM drink_product WHERE products_name_id = ? AND size = ?")) {
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT discounted_price FROM drink_product WHERE products_name_id = ? AND size = ?")) {
             stmt.setInt(1, getProductNameId(productName));
             stmt.setString(2, StringHelper.convertSizeToDatabaseFormat(size));
             ResultSet result = stmt.executeQuery();
@@ -1962,8 +1968,8 @@ public class DBQuery {
         ObservableList<String> paymentTypes = FXCollections.observableArrayList();
         String query = "SELECT mode FROM mode_of_payment";
         try (Connection con = this.zavPMSDB.createConnection();
-             PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet result = stmt.executeQuery()) {
+                PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet result = stmt.executeQuery()) {
             while (result.next()) {
                 paymentTypes.add(result.getString("mode"));
             }
@@ -1972,8 +1978,8 @@ public class DBQuery {
         }
         return paymentTypes;
     }
-    
-        public void getProductsSold(String date1, String date2) {
+
+    public void getProductsSold(String date1, String date2) {
         Map<String, Object> productsSold = new HashMap<String, Object>();
         String query = "SELECT ordered_products.product_type_id, ordered_products.product_id FROM `zav-pms-db`.transaction JOIN ordered_products ON ordered_products.transaction_id = transaction.id WHERE order_date >= ? AND order_date <= ?;";
         try (Connection con = this.zavPMSDB.createConnection();

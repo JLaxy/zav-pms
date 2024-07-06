@@ -138,6 +138,9 @@ public class ManageAccountsController extends ParentController {
     private void edituser() {
         try {
             System.out.println("Editing user " + selectedUser.getUname());
+            System.out.println(selectedUser.getMname());
+            System.out.println(selectedUser.getSuffix());
+
             // Logging user view on database
             this.model.logViewingUserDetails(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
                     selectedUser.getUname());
@@ -147,6 +150,7 @@ public class ManageAccountsController extends ParentController {
                     "../../views/fxmls/manageaccounts/UserDetailsView.fxml", this.loggedInUserInfo);
             controller.initialize(selectedUser, this);
         } catch (Exception e) {
+            e.printStackTrace();
             PopupDialog.showCustomErrorDialog("Please select a user first!");
         }
     }
