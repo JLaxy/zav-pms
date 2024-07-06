@@ -84,8 +84,8 @@ public class AddingOrderPromptController extends ParentController {
         }
 
         int quantity = quantityValue.intValue();
-        double amount = model.fetchAmountFromDatabase(productName, selectedSize, quantity);
-        double discountedPrice = model.fetchDiscountedPriceFromDatabase(productName, selectedSize, quantity);
+        double amount = quantity * model.fetchAmountFromDatabase(productName, selectedSize, quantity);
+        double discountedPrice = quantity * model.fetchDiscountedPriceFromDatabase(productName, selectedSize, quantity);
         boolean stockSufficient = model.checkOverallStockSufficiency(productTableView.getItems(), quantity);
 
         if (amount == 0.0) {

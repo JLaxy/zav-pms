@@ -11,12 +11,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import models.helpers.ObservableListHelper;
 import models.helpers.PopupDialog;
 import models.order.CreateOrderModel;
 import models.schemas.DrinkVariant;
 import models.schemas.FoodVariant;
 import models.schemas.OrderProduct;
 import controllers.ParentController;
+import controllers.transactions.CreateTransactionsController;
 import enums.ScreenPaths;
 import models.schemas.Stock;
 
@@ -59,32 +61,34 @@ public class CreateOrderController extends ParentController {
 
     public void initialize() {
         this.model = new CreateOrderModel(this);
-        orderProducts = FXCollections.observableArrayList();
-
-        productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
-        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        discountedCol.setCellValueFactory(new PropertyValueFactory<>("discounted"));
-
+        this.orderProducts = FXCollections.observableArrayList();
+        
+        productNameCol.setCellValueFactory(cellData -> cellData.getValue().productNameProperty());
+        sizeCol.setCellValueFactory(cellData -> cellData.getValue().sizeProperty());
+        quantityCol.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
+        amountCol.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
+        discountedCol.setCellValueFactory(cellData -> cellData.getValue().discountedProperty());
+    
         discountedCol.setCellFactory(column -> {
             return new TableCell<OrderProduct, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
                     if (item == null || empty) {
+                        System.out.println("falase");
                         setText(null);
                         setGraphic(null);
                     } else {
+                        System.out.println("true");
                         setText(item);
                         setStyle("-fx-alignment: CENTER;");
                     }
                 }
             };
         });
-
-        orderTableView.setItems(orderProducts);
-
+    
+        orderTableView.setItems(this.orderProducts);
+    
         orderTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 removeProductButton.setVisible(true);
@@ -92,10 +96,10 @@ public class CreateOrderController extends ParentController {
                 removeProductButton.setVisible(false);
             }
         });
-
+    
         // Hide the removeProductButton initially
         removeProductButton.setVisible(false);
-    }
+    }         
 
     @FXML
     public void loadAllProducts(ActionEvent event) {
@@ -204,39 +208,43 @@ public class CreateOrderController extends ParentController {
 
         return vbox;
     }
-
+        
     public void addProductToOrder(OrderProduct orderProduct) {
         boolean productExists = false;
-
-        for (OrderProduct existingProduct : orderProducts) {
-            if (existingProduct.getProductName().equals(orderProduct.getProductName()) &&
-                existingProduct.getSize().equals(orderProduct.getSize())) {
-                // Increment the quantity
-                existingProduct.setTotalQuantity(existingProduct.getTotalQuantity() + orderProduct.getQuantity());
-                // Update the amount and discounted price
-                existingProduct.setAmount(existingProduct.getAmount() + orderProduct.getAmount());
-                existingProduct.setDiscountedPrice(existingProduct.getDiscountedPrice() + orderProduct.getDiscountedPrice());
-                productExists = true;
-                break;
-            }
-        }
-
+        // for (OrderProduct existingProduct : orderProducts) {
+        //     if (existingProduct.getProductName().equals(orderProduct.getProductName()) &&
+        //         existingProduct.getSize().equals(orderProduct.getSize())) {
+    
+        //         // Update the existing product's quantity
+        //         int newQuantity = existingProduct.getQuantity() + orderProduct.getQuantity();
+        //         existingProduct.setQuantity(newQuantity);
+    
+        //         // Update the initial values for consistent calculation
+        //         existingProduct.initialQuantity += orderProduct.getQuantity();
+        //         existingProduct.initialAmount += orderProduct.getInitialAmount();
+    
+        //         // Recalculate the amount
+        //         existingProduct.calculateAmount();
+    
+        //         productExists = true;
+        //         break;
+        //     }
+        // }
         if (!productExists) {
-            orderProducts.add(orderProduct);
+            this.orderProducts.add(orderProduct);
         }
-
-        if (orderProduct.isStockSufficient()) {
+    
+        if (!orderProduct.isStockSufficient()) {
             PopupDialog.showCustomErrorDialog("Stock for product " + orderProduct.getProductName() + " is insufficient. It will be added as a backorder.");
         }
-
+    
         orderTableView.refresh();
-        // Set focus back to the CreateOrderController
         Platform.runLater(() -> {
             this.borderPaneRootSwitcher.exitPopUpDialog();
-            orderTableView.requestFocus(); // Set focus back to the order table view
+            orderTableView.requestFocus();
         });
-    }
-
+    }            
+                
     @FXML
     private void cancel(ActionEvent e) {
         this.borderPaneRootSwitcher.exitPopUpDialog();
@@ -249,7 +257,9 @@ public class CreateOrderController extends ParentController {
 
     @FXML
     private void createtransaction(ActionEvent event) {
-        // Implement transaction creation logic here
+        CreateTransactionsController controller = (CreateTransactionsController)
+        initializeNextScreen_BP(ScreenPaths.Paths.CREATE_TRANSACTION.getPath(), this.loggedInUserInfo, "CREATE TRANSACTION");
+        controller.initialize(this.orderProducts);
     }
 
     @FXML
@@ -268,14 +278,15 @@ public class CreateOrderController extends ParentController {
 
     @FXML
     public void discountproducts(ActionEvent event) {
-        // Filter out already discounted products
-        ObservableList<OrderProduct> nonDiscountedProducts = orderProducts.filtered(op -> !op.isDiscountApplied());
-
-        // Initialize the next screen and pass the nonDiscountedProducts
+        // ObservableList<OrderProduct> nonDiscountedProducts = orderProducts.filtered(op -> op.getRemainingQuantity() > 0);
+        // if (nonDiscountedProducts.isEmpty()) {
+        //     PopupDialog.showCustomErrorDialog("There are no products left to be discounted.");
+        //     return;
+        // }
         DiscountOrdersController controller = (DiscountOrdersController) initializeNextScreen_BP(ScreenPaths.Paths.DISCOUNT_ORDERS.getPath(), this.loggedInUserInfo, "DISCOUNT ORDERS");
-        if (controller != null) {
-            controller.setOrderProducts(nonDiscountedProducts);
-        }
+        controller.setCreateOrderController(this);
+        System.out.println(this.orderProducts);
+        controller.setOrderProducts(ObservableListHelper.getRegularOnList(this.orderProducts));
     }
 
     @FXML
@@ -290,11 +301,15 @@ public class CreateOrderController extends ParentController {
     }
 
     public void updateOrderProducts(ObservableList<OrderProduct> updatedOrderProducts) {
-        this.orderProducts.clear();
-        this.orderProducts.addAll(updatedOrderProducts);
-        this.orderTableView.refresh();
-    }
+        System.out.println("hhgyugyug: "+ updatedOrderProducts);
 
+        this.orderProducts = ObservableListHelper.getDiscountedOnList(this.orderProducts);
+        this.orderProducts.addAll(updatedOrderProducts);
+
+        this.orderTableView.setItems(this.orderProducts);
+        this.orderTableView.refresh();
+    }    
+    
     @FXML
     private void goBack(ActionEvent event) {
         System.out.println("going back...");

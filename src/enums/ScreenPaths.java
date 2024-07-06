@@ -72,6 +72,10 @@ public class ScreenPaths {
 
         // Transactions
         TRANSACTION("../../views/fxmls/transactions/TransactionsView.fxml"),
+        CREATE_TRANSACTION("../../views/fxmls/transactions/CreateTransactionsView.fxml"),
+        ADD_PAYMENT("../../views/fxmls/transactions/AddPaymentView.fxml"),
+        CASH_PAYMENT("../../views/fxmls/transactions/CashPaymentPopUpView.fxml"),
+        E_WALLET_PAYMENT("../../views/fxmls/transactions/E-walletPaymentPopUpView.fxml"),
         VIEW_TRANSACTIONS("../../views/fxmls/transactions/ViewTransactionsView.fxml"),
 
         // Order
@@ -90,8 +94,8 @@ public class ScreenPaths {
         SET_DECREASE_QUANTITY("../../views/fxmls/reusables/SetDecreaseQuantityView.fxml"),
         SET_BEVERAGE_DECREASE_QUANTITY("../../views/fxmls/reusables/SetBeverageDecreaseQuantityView.fxml"),
         SET_FOOD_DECREASE_QUANTITY("../../views/fxmls/reusables/SetFoodDecreaseQuantityView.fxml"),
-
-        // HELP
+        
+        //HELP
         HELP("../../views/fxmls/help/HelpPageView.fxml"),
         USER_MANUAL("../../views/fxmls/help/UserManualViewerView.fxml"),
         GENERAL("../../views/fxmls/help/GenPageView.fxml"),

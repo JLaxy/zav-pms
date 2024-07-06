@@ -1941,7 +1941,39 @@ public class DBQuery {
         return true;
     }
 
-    public void getProductsSold(String date1, String date2) {
+    public double getDiscountedPrice(String productName, String size) {
+        double discountedPrice = 0.0;
+        try (Connection con = this.zavPMSDB.createConnection();
+             PreparedStatement stmt = con.prepareStatement(
+                 "SELECT discounted_price FROM drink_product WHERE products_name_id = ? AND size = ?")) {
+            stmt.setInt(1, getProductNameId(productName));
+            stmt.setString(2, StringHelper.convertSizeToDatabaseFormat(size));
+            ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                discountedPrice = result.getDouble("discounted_price");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return discountedPrice;
+    }
+
+    public ObservableList<String> getModeOfPaymentTypes() {
+        ObservableList<String> paymentTypes = FXCollections.observableArrayList();
+        String query = "SELECT mode FROM mode_of_payment";
+        try (Connection con = this.zavPMSDB.createConnection();
+             PreparedStatement stmt = con.prepareStatement(query);
+             ResultSet result = stmt.executeQuery()) {
+            while (result.next()) {
+                paymentTypes.add(result.getString("mode"));
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return paymentTypes;
+    }
+    
+        public void getProductsSold(String date1, String date2) {
         Map<String, Object> productsSold = new HashMap<String, Object>();
         String query = "SELECT ordered_products.product_type_id, ordered_products.product_id FROM `zav-pms-db`.transaction JOIN ordered_products ON ordered_products.transaction_id = transaction.id WHERE order_date >= ? AND order_date <= ?;";
         try (Connection con = this.zavPMSDB.createConnection();
