@@ -70,7 +70,6 @@ public class UserManualViewerController extends ParentController {
             // Sort files by their names
             Arrays.sort(files, Comparator.comparingInt(this::extractNumberFromFilename));
             for (File file : files) {
-                System.out.println(file.toURI().toString());
                 this.images.add(new Image(file.toURI().toString()));
             }
         }
@@ -109,8 +108,6 @@ public class UserManualViewerController extends ParentController {
             this.leftArrowButton.setDisable(false);
             this.rightArrowButton.setDisable(false);
 
-            System.out.println(this.currentIndex);
-
             if (this.currentIndex == 0)
                 this.leftArrowButton.setDisable(false);
         }
@@ -128,8 +125,6 @@ public class UserManualViewerController extends ParentController {
 
             this.leftArrowButton.setDisable(false);
             this.rightArrowButton.setDisable(false);
-
-            System.out.println(this.currentIndex);
 
             if (this.currentIndex == this.images.size() - 1)
                 this.rightArrowButton.setDisable(true);

@@ -13,13 +13,11 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" style="-fx-background-image: #d3d3d3;" stylesheets="@../css/HelpScroll.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.about.AboutController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1366.0" style="-fx-background-image: #d3d3d3;" stylesheets="@../css/HelpScroll.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.about.AboutController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="623.0" layoutX="-2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="1373.0" />
-      <Rectangle fx:id="popUPBox" arcHeight="5.0" arcWidth="5.0" fill="#000000a6" height="566.0" layoutX="131.0" layoutY="27.0" stroke="BLACK" strokeType="INSIDE" width="1112.0" AnchorPane.leftAnchor="131.0" AnchorPane.rightAnchor="123.0" />
-      <ImageView fitHeight="112.0" fitWidth="112.0" layoutX="658.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+      <Rectangle fx:id="popUPBox" arcHeight="5.0" arcWidth="5.0" fill="#000000a6" height="614.0" stroke="BLACK" strokeType="INSIDE" width="1366.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <ImageView fitHeight="112.0" fitWidth="112.0" layoutX="662.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../assets/images/about.png" />
          </image>
@@ -34,25 +32,12 @@
             </Lighting>
          </effect>
       </ImageView>
-      <Label fx:id="popUpBackButton" layoutX="655.0" layoutY="175.0" prefHeight="51.0" prefWidth="157.0" text="ABOUT" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="popUpBackButton" layoutX="649.0" layoutY="124.0" prefHeight="51.0" prefWidth="157.0" text="ABOUT" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="34.0" />
          </font>
       </Label>
-      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="177.0" layoutY="230.0" prefHeight="301.0" prefWidth="1042.0" style="-fx-background-image: transparent;" stylesheets="@../css/HelpScroll.css">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: transparent;" stylesheets="@../css/GeneralScroll.css">
-               <children>
-                  <Text fx:id="GenText" fill="WHITE" layoutX="7.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-color: #000000;" text="Welcome to our Product Management System, a robust LAN-based application designed to streamline and enhance your product management processes. Developed by a dedicated team comprising Junell Laxamana, Clark Czedrick Limson, and Andrea Lituania, this system is meticulously crafted using Java 21.0.2 for the backend and MySQL Workbench 8.0.33 for database management, ensuring a seamless and efficient user experience. As a newly created system, we are continually evolving to meet the needs of our users, and we are currently operating on Version 1.0. Our focus is to provide a reliable, secure, user-friendly, robust, and easy-to-maintain platform that simplifies product management solely for Zav’s Kitchen and RestoBar." textAlignment="JUSTIFY" wrappingWidth="999.8034210205078" AnchorPane.bottomAnchor="10.7099609375" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-4.8034210205078125" AnchorPane.topAnchor="-1.9775390625">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Text>
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-      <Button fx:id="goBackButton1" layoutX="1083.0" layoutY="545.0" mnemonicParsing="false" onAction="#goBack" prefHeight="20.0" prefWidth="150.0" style="-fx-background-color: #D552AO; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
+      <Button fx:id="goBackButton1" layoutX="1200.0" layoutY="567.0" mnemonicParsing="false" onAction="#goBack" prefHeight="20.0" prefWidth="150.0" style="-fx-background-color: #D552AO; -fx-background-radius: 100;" text="Go Back" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="14.0" />
          </font>
@@ -60,6 +45,49 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Line endX="675.0" layoutX="259.0" layoutY="220.0" opacity="0.55" startX="241.0" stroke="WHITE" strokeWidth="5.0" style="-fx-background-radius: 100;" />
+      <Line endX="675.0" layoutX="253.0" layoutY="169.0" opacity="0.55" startX="241.0" stroke="WHITE" strokeWidth="5.0" style="-fx-background-radius: 100;" />
+      <ScrollPane hbarPolicy="NEVER" layoutX="64.0" layoutY="187.0" prefHeight="371.0" prefWidth="1268.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="840.0" prefWidth="1268.0">
+               <children>
+                  <Label prefHeight="234.0" prefWidth="1253.0" text="Welcome to our Product Management System, a robust LAN-based application designed to streamline and enhance your product management processes. This system is meticulously crafted using Java 21.0.2 for the backend and MySQL Workbench 8.0.33 for database management, ensuring a seamless and efficient user experience. As a newly created system, we are continually evolving to meet the needs of our users, and we are currently operating on Version 1.0. Our focus is to provide a reliable, secure, user-friendly, robust, and easy-to-maintain platform that simplifies product management solely for Zav’s Kitchen and RestoBar." textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="27.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../assets/images/dev_images/dev1.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="228.0" layoutY="256.0" prefHeight="140.0" prefWidth="293.0" text="Clark Czedrick F. Limson qccflimson@tip.edu.ph 09950878700" textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="165.0" fitWidth="165.0" layoutX="21.0" layoutY="440.0">
+                     <image>
+                        <Image url="@../../../../assets/images/dev_images/dev2.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="237.0" layoutY="453.0" prefHeight="140.0" prefWidth="277.0" text="Andrea A. Lituania qaalituania@tip.edu.ph 09213348287" textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="161.0" fitWidth="161.0" layoutX="23.0" layoutY="646.0">
+                     <image>
+                        <Image url="@../../../../assets/images/dev_images/dev3.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="236.0" layoutY="642.0" prefHeight="140.0" prefWidth="297.0" text="Junell N. Laxamana qjnlaxamana@tip.edu.ph 09273425396" textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

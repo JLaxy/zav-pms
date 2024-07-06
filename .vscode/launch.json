@@ -6,13 +6,6 @@
   "configurations": [
     {
       "type": "java",
-      "name": "UserManualViewerController",
-      "request": "launch",
-      "mainClass": "controllers.help.UserManualViewerController",
-      "projectName": "zav-pms_954a1701"
-    },
-    {
-      "type": "java",
       "name": "Runner",
       "request": "launch",
       "mainClass": "Runner",
