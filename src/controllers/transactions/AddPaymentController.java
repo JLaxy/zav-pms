@@ -50,6 +50,9 @@ public class AddPaymentController extends ParentController {
             
             this.controller.setSelectedPaymentType(selectedPaymentType);
             this.borderPaneRootSwitcher.exitPopUpDialog();
+            CashPaymentPopUpController controller = (CashPaymentPopUpController) this
+                    .initializePopUpDialog(ScreenPaths.Paths.CASH_PAYMENT.getPath(), this.loggedInUserInfo);
+            controller.initialize(null, this.controller);
         } else {
             // Handle the case where no payment type is selected
             System.out.println("No payment type selected.");

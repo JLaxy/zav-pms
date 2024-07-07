@@ -19,7 +19,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import models.order.CreateOrderModel;
 import models.schemas.OrderProduct;
+import models.schemas.OrderedProduct;
 import models.schemas.Transaction;
 import models.transactions.CreateTransactionsModel;
 
@@ -38,6 +40,8 @@ public class CreateTransactionsController extends ParentController {
     private CreateTransactionsModel model;
     private ObservableList<OrderProduct> listOfOrders;
     private String selectedPaymentType;
+    private String change;
+    private String amount;
 
     @FXML
     public void initialize(ObservableList<OrderProduct> orderList) {
@@ -81,9 +85,30 @@ public class CreateTransactionsController extends ParentController {
     public void setSelectedPaymentType(String paymentType) {
         this.selectedPaymentType = paymentType;
         System.out.println("Payment type set to: " + paymentType);
+        
     }
+    
+    
 
-    @FXML
+    public String getChange() {
+		return change;
+	}
+
+	public void setChange(String change) {
+		this.change = change;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+		double downPayment=Double.parseDouble(requiredDownpaymentLabel.getText());
+		requiredDownpaymentLabel.setText(downPayment-Double.parseDouble(amount)+"");
+	}
+
+	@FXML
     private void addpayment() {
         AddPaymentController controller = (AddPaymentController) this
                 .initializePopUpDialog(ScreenPaths.Paths.ADD_PAYMENT.getPath(), this.loggedInUserInfo);
@@ -94,8 +119,12 @@ public class CreateTransactionsController extends ParentController {
     @FXML
     private void save() {
         // Save logic here
-    	Transaction transaction = new Transaction(0,customerNameField.getText(),LocalDateTime.now(),targetDate.getValue().atStartOfDay(),contactNumberField.getText(),transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()),calculateTotalDiscountAmount(),false,calculateTotalTransactionCost(),null,calculateRequiredDownpayment(calculateTotalTransactionCost()));
+    	Transaction transaction = new Transaction(0,customerNameField.getText(),LocalDateTime.now(),targetDate.getValue().atStartOfDay(),contactNumberField.getText(),transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()),calculateTotalDiscountAmount(),false,calculateTotalTransactionCost(),null,Double.parseDouble(requiredDownpaymentLabel.getText()));
         this.model.saveTransaction(transaction,  loggedInUserInfo);
+        ObservableList <Transaction> transactions=this.getDBManager().query.getTransactions(customerNameField.getText());
+        for(OrderProduct order : this.listOfOrders) {
+       	 this.getDBManager().query.saveOrder(new OrderedProduct(0,transactions.get(0).getId(),this.getDBManager().query.getProductNameId(order.getProductName()),order.getQuantity(),order.getRemainingQuantity(),this.getDBManager().query.getProductNameId(order.getProductName()),""),this.loggedInUserInfo);
+       }
     }
 
     @FXML

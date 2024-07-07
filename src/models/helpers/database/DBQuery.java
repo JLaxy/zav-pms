@@ -41,6 +41,7 @@ import models.schemas.DiscountCard;
 import models.schemas.DiscountCardType;
 import models.schemas.FoodVariant;
 import models.schemas.OrderProduct;
+import models.schemas.OrderedProduct;
 import models.schemas.PurchasedInventoryItem;
 import models.schemas.SeniorPwdId;
 
@@ -579,6 +580,63 @@ public class DBQuery {
         }
         return false;
     }
+    
+    public boolean saveOrder(OrderedProduct order, User loggedInUserInfo) {
+    	
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO `zav-pms-db`.`ordered_products` (`transaction_id`, `product_id`, `required_quantity`, `current_quantity`, `product_type_id`, `special_instruction`) VALUES (?, ?, ?, ?, ?,?);")) {
+
+            // Setting stock info
+            stmt.setString(1,Integer.toString(order.getTransaction_id()));
+            stmt.setInt(2,getProductNameId(getProductName(order.getProduct_id())));
+            stmt.setInt(3, order.getRequired_quantity());
+            stmt.setInt(4, order.getCurrent_quantity());
+            stmt.setInt(5, order.getProduct_type_id());
+            stmt.setString(6, "");
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.CREATED_ORDER.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "Created order");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+    
+public ObservableList<OrderedProduct> getOrder() {
+
+	ObservableList<OrderedProduct> list = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM `zav-pms-db`.ordered_products;")) {
+
+         
+            stmt.execute();
+            ResultSet result = stmt.getResultSet();
+
+            // Log creating new user in database
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                	list.add(
+                            new OrderedProduct(result.getInt("id"), result.getInt("transaction_id"), result.getInt("product_id"),result.getInt("required_quantity"),result.getInt("current_quantity"),result.getInt("product_type_id"),result.getString("special_instruction")));
+                }
+                result.close();
+            }
+        }catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return list;
+    }
+    
     
     //Get stock types
     public ObservableList<StockType> getStockTypes() {
@@ -1205,6 +1263,31 @@ public class DBQuery {
                         .prepareStatement(
                                 "SELECT * FROM products_name WHERE product_name = ?")) {
             stmt.setString(1, productName);
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                retrievedID = result.getInt("id");
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return retrievedID;
+    }
+    
+    public int getProductTypeId(String productType) {
+        int retrievedID = -1;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM products_name WHERE product_type = ?")) {
+            stmt.setString(1, productType);
             // Execute SQL Query
             stmt.execute();
 
@@ -2140,6 +2223,21 @@ public class DBQuery {
                 ResultSet result = stmt.executeQuery()) {
             while (result.next()) {
                 paymentTypes.add(result.getString("mode"));
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return paymentTypes;
+    }
+    
+    public ObservableList<String> getPaymentTypes() {
+        ObservableList<String> paymentTypes = FXCollections.observableArrayList();
+        String query = "SELECT * FROM `zav-pms-db`.payment_type;";
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(query);
+                ResultSet result = stmt.executeQuery()) {
+            while (result.next()) {
+                paymentTypes.add(result.getString("payment_type"));
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

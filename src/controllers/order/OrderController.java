@@ -19,7 +19,7 @@ public class OrderController extends ParentController {
 
     @FXML
     private void viewOrders() {
-        initializeNextScreen_BP(ScreenPaths.Paths.VIEW_ORDER.getPath(), this.loggedInUserInfo,
+    	ViewOrderController controller=(ViewOrderController)initializeNextScreen_BP(ScreenPaths.Paths.VIEW_ORDER.getPath(), this.loggedInUserInfo,
         "VIEW ORDER");
         System.out.println("viewOrders");
     }

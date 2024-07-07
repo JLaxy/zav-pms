@@ -13,6 +13,8 @@ public class OrderProduct {
     private StringProperty discounted;
     private IntegerProperty discountedQuantity;
     private BooleanProperty grouped;
+    private IntegerProperty transactionId;
+    private StringProperty unitOfMeasure;
     public Double initialAmount; // Original amount for initial state
     public int initialQuantity; // Original quantity for initial state
 
@@ -29,7 +31,24 @@ public class OrderProduct {
         this.grouped = new SimpleBooleanProperty(false);
         this.initialAmount = amount; // Set initial amount
         this.initialQuantity = quantity; // Set initial quantity
-    }      
+    } 
+    
+    public OrderProduct(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient, int transactionId, String unitOfMeasure) {
+        this.productName = new SimpleStringProperty(productName);
+        this.size = new SimpleStringProperty(size);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.amount = new SimpleDoubleProperty(amount);
+        this.discountedPrice = new SimpleDoubleProperty(discountedPrice);
+        this.stockSufficient = new SimpleBooleanProperty(stockSufficient);
+        this.discountApplied = new SimpleBooleanProperty(false);
+        this.discounted = new SimpleStringProperty("");
+        this.discountedQuantity = new SimpleIntegerProperty(0);
+        this.grouped = new SimpleBooleanProperty(false);
+        this.initialAmount = amount; // Set initial amount
+        this.initialQuantity = quantity; // Set initial quantity
+        this.transactionId = new SimpleIntegerProperty(transactionId);
+        this.unitOfMeasure = new SimpleStringProperty(unitOfMeasure);
+    } 
 
     public OrderProduct(OrderProduct other) {
         this.productName = new SimpleStringProperty(other.getProductName());
@@ -76,7 +95,23 @@ public class OrderProduct {
         return size;
     }
 
-    public int getQuantity() {
+    public IntegerProperty getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(IntegerProperty transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public StringProperty getUnitOfMeasure() {
+		return unitOfMeasure;
+	}
+
+	public void setUnitOfMeasure(StringProperty unitOfMeasure) {
+		this.unitOfMeasure = unitOfMeasure;
+	}
+
+	public int getQuantity() {
         return quantity.get();
     }
 

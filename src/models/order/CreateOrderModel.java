@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import models.schemas.DrinkVariant;
 import models.schemas.FoodVariant;
 import models.schemas.OrderProduct;
+import models.schemas.OrderedProduct;
 import models.schemas.Stock;
 
 public class CreateOrderModel {
@@ -89,4 +90,8 @@ public class CreateOrderModel {
     public OrderProduct createOrderProduct(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient) {
         return new OrderProduct(productName, size, quantity, amount, discountedPrice, stockSufficient);
     }
+    
+//    public OrderedProduct createOrderProductWithTransactionId(String productName, String size, int quantity, double amount, double discountedPrice, boolean stockSufficient, int transactionId, String unitOfMeasure) {
+//        return new OrderedProduct(0,transactionId,controller.getDBManager().query.getProductNameId(productName),quantity,);
+//    }
 }
