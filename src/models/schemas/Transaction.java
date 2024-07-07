@@ -8,6 +8,7 @@ public class Transaction {
     private Boolean isVoided;
     private String customer_name, contact_number;
     private LocalDateTime order_date, target_date, fulfillment_date;
+    private String transaction_type;
 
     public Transaction(int id, String customer_name, LocalDateTime order_date, LocalDateTime target_date,
             String contact_number, int transaction_type_id, Double discount_amount, boolean isVoided,
@@ -37,7 +38,15 @@ public class Transaction {
         return this.discount_amount;
     }
 
-    public Double getTotal_amount_payable() {
+    public String getTransaction_type() {
+		return transaction_type;
+	}
+
+	public void setTransaction_type(String transaction_type) {
+		this.transaction_type = transaction_type;
+	}
+
+	public Double getTotal_amount_payable() {
         return this.total_amount_payable;
     }
 

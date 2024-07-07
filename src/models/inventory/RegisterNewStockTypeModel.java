@@ -16,5 +16,6 @@ public class RegisterNewStockTypeModel {
     public boolean saveNewStockType(StockType stockType, User loggedInUser) {
         return this.controller.getDBManager().query.saveNewStockType(stockType, loggedInUser);
     }
-
+    
+    
 }

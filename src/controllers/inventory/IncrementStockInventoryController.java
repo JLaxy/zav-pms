@@ -1,6 +1,7 @@
 package controllers.inventory;
 
 import java.time.LocalDate;
+import java.util.Observable;
 
 import javax.swing.JOptionPane;
 
@@ -8,6 +9,7 @@ import controllers.ParentController;
 import enums.StockProductType;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -17,6 +19,7 @@ import javafx.scene.control.TextField;
 import models.helpers.PopupDialog;
 import models.inventory.IncrementStockInventoryModel;
 import models.schemas.Stock;
+import models.schemas.StockType;
 
 public class IncrementStockInventoryController extends ParentController {
     @FXML
@@ -39,6 +42,9 @@ public class IncrementStockInventoryController extends ParentController {
         System.out.println("called");
         this.viewStockInventoryController = viewStockInventoryController;
         this.configureFields();
+        if(this.selectedStock.getStock_type_id_string().contains("meat") || this.selectedStock.getStock_type_id_string().contains("vegetable")) {
+        	dateExpiryPicker.setDisable(true);
+        }
     }
 
     @FXML
@@ -61,14 +67,49 @@ public class IncrementStockInventoryController extends ParentController {
         LocalDate purchaseDate = datePurchasedPicker.getValue();
         LocalDate expiryDate = dateExpiryPicker.getValue();
         double quantity = quantitySpinner.getValue();
-
-        // Log Purchase
-        if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
-                purchaseDate, expiryDate,
-                StockProductType.Type.STOCK.getValue(), this.loggedInUserInfo)) {
-            PopupDialog.showCustomErrorDialog("Failed to log purchase!");
-            return;
+     // Log Purchase
+        if(this.selectedStock.getStock_type_id_string().contains("meat") || this.selectedStock.getStock_type_id_string().contains("vegetable")) {
+        	
+        	if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
+                    purchaseDate, purchaseDate.plusDays(7),
+                    StockProductType.Type.STOCK.getValue(), this.loggedInUserInfo)) {
+                PopupDialog.showCustomErrorDialog("Failed to log purchase!");
+                return;
+            }
+        }else if(!this.selectedStock.getStock_type_id_string().contains("condiment")) {
+        	ObservableList<StockType> stockTypes = this.getDBManager().query.getStockTypes();
+        	for(StockType stockType : stockTypes) {
+        		if(stockType.getType().contains(this.selectedStock.getStock_type_id_string())) {
+        			if(expiryDate==null) {
+        				if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
+                                purchaseDate,purchaseDate.plusDays(stockType.getDefault_expiration()) ,
+                                StockProductType.Type.STOCK.getValue(), this.loggedInUserInfo)) {
+                            PopupDialog.showCustomErrorDialog("Failed to log purchase!");
+                            return;
+                        }
+        			}else {
+        				if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
+                                purchaseDate,expiryDate ,
+                                StockProductType.Type.STOCK.getValue(), this.loggedInUserInfo)) {
+                            PopupDialog.showCustomErrorDialog("Failed to log purchase!");
+                            return;
+                        }
+        			}
+        			
+        		}
+        	}
+        	
         }
+        else {
+        	if (!this.model.logStockProductPurchase(this.selectedStock, quantity, cost,
+                    purchaseDate, expiryDate,
+                    StockProductType.Type.STOCK.getValue(), this.loggedInUserInfo)) {
+                PopupDialog.showCustomErrorDialog("Failed to log purchase!");
+                return;
+            }
+        }
+        
+        
 
         // Increment Stock
         if (!this.model.incrementStock(selectedStock, quantity, loggedInUserInfo)) {
@@ -131,16 +172,20 @@ public class IncrementStockInventoryController extends ParentController {
             return false;
         }
 
-        if (dateExpiryPicker.getValue() == null) {
+        if (dateExpiryPicker.getValue() == null && !(this.selectedStock.getStock_type_id_string().contains("meat") || this.selectedStock.getStock_type_id_string().contains("vegetable") || !this.selectedStock.getStock_type_id_string().contains("condiment"))) {
             PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
             return false;
         }
-
+        
         // Expiry date must be before current date
-        if (dateExpiryPicker.getValue().isBefore(LocalDate.now())) {
-            PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
-            return false;
+        if(dateExpiryPicker.getValue() != null) {
+        	if (dateExpiryPicker.getValue().isBefore(LocalDate.now())) {
+                PopupDialog.showCustomErrorDialog("Expiry date is not valid!");
+                return false;
+            }
         }
+        
+        
 
         return true;
     }

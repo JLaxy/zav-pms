@@ -74,4 +74,9 @@ public class DiscountCard {
     public int getTypeId() {
         return typeId;
     }
+
+	public double getDiscountRate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

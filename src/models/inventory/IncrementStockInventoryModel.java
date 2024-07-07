@@ -17,6 +17,7 @@ public class IncrementStockInventoryModel {
     public boolean logStockProductPurchase(Stock selectedStock, double quantity, double totalCost,
             LocalDate datePurchased,
             LocalDate expiryDate, int stockProductTypeID, User loggedInUser) {
+    	System.out.println("im here");
         return this.controller.getDBManager().query.logStockProductPurchase(selectedStock.getId(), quantity, totalCost,
                 datePurchased, expiryDate, stockProductTypeID, loggedInUser, selectedStock.getStock_name());
     }

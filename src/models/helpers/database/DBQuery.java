@@ -10,9 +10,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ import models.helpers.NumberHelper;
 import models.modules.Security;
 import models.schemas.Stock;
 import models.schemas.StockType;
+import models.schemas.Transaction;
 import models.schemas.User;
 import models.schemas.UserLog;
 import models.schemas.DatabaseLog;
@@ -45,7 +48,7 @@ public class DBQuery {
 
     private DBManager zavPMSDB;
 
-    DBQuery(DBManager zavPMSDB) {
+   public DBQuery(DBManager zavPMSDB) {
         this.zavPMSDB = zavPMSDB;
     }
 
@@ -576,6 +579,39 @@ public class DBQuery {
         }
         return false;
     }
+    
+    //Get stock types
+    public ObservableList<StockType> getStockTypes() {
+        String query = "SELECT * FROM `zav-pms-db`.stock_type;";
+
+
+        ObservableList<StockType> myList = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                query)) {
+
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    myList.add(
+                            new StockType(result.getInt("id"), result.getString("type"), result.getInt("default_expiration")));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        // Return list
+        return myList;
+    }
+
 
     public ObservableList<Stock> getStocks(String stockName) {
         String query = "";
@@ -1397,6 +1433,112 @@ public class DBQuery {
         }
         return false;
     }
+    
+    public ObservableList<Transaction> getTransactions(String userQuery){
+    	ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+    	String query="";
+    	if(userQuery == null) {
+			query = "SELECT * FROM `zav-pms-db`.transaction;";
+		}else {
+			query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
+		}
+        try (Connection con = this.zavPMSDB.createConnection();
+        		
+                PreparedStatement stmt = con.prepareStatement(
+                		query)) {
+            // Execute SQL Query
+        	if(userQuery !=null) {
+        		stmt.setString(1, userQuery);
+        	}
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while(result.next()) {
+                	LocalDateTime fulfillment;
+                	if( result.getDate("fulfillment_date")==null) {
+                		fulfillment = null;
+                	}else {
+                		fulfillment = result.getDate("fulfillment_date").toLocalDate().atStartOfDay();
+                	}
+                	Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"), result.getDate("order_date").toLocalDate().atStartOfDay(), result.getDate("target_date").toLocalDate().atStartOfDay(), result.getString("contact_number"), result.getInt("transaction_type_id"), result.getDouble("discount_amount"), result.getBoolean("isVoided"), result.getDouble("total_amount_payable"),fulfillment, result.getDouble("balance"));
+                	transactions.add(transaction);
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return transactions;
+    }
+    
+    public ObservableList<Transaction> getTransactionsById(int id){
+    	ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+    	String query="";
+    	if(id == 0) {
+			query = "SELECT * FROM `zav-pms-db`.transaction;";
+		}else {
+			query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
+		}
+        try (Connection con = this.zavPMSDB.createConnection();
+        		
+                PreparedStatement stmt = con.prepareStatement(
+                		query)) {
+            // Execute SQL Query
+        	if(id !=0) {
+        		stmt.setInt(2, id);
+        	}
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while(result.next()) {
+                	Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"), result.getDate("order_date").toLocalDate().atStartOfDay(), result.getDate("target_date").toLocalDate().atStartOfDay(), result.getString("contact_number"), result.getInt("transaction_type_id"), result.getDouble("discount_amount"), result.getBoolean("isVoided"), result.getDouble("total_amount_payable"), result.getDate("fulfillment_date").toLocalDate().atStartOfDay(), result.getDouble("balance"));
+                	transactions.add(transaction);
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return transactions;
+    }
+    
+    public boolean createTransaction(Transaction transaction, User loggedInUser) {
+        try (Connection con = this.zavPMSDB.createConnection()) {
+                try (PreparedStatement stmt = con.prepareStatement(
+                        "INSERT INTO `zav-pms-db`.`transaction` ( `customer_name`, `order_date`, `target_date`, `contact_number`, `transaction_type_id`, `discount_amount`,`isVoided`, `total_amount_payable`, `balance`) VALUES  (?, ?, ?, ?,?, ?, ?,?,?)")) {
+
+                    // Setting order details
+                    
+                    stmt.setString(1, transaction.getCustomer_name());
+                    stmt.setDate(2, java.sql.Date.valueOf(LocalDate.now().toString()));
+                    stmt.setDate(3, java.sql.Date.valueOf(transaction.getTarget_date().toLocalDate().toString()));
+                    stmt.setString(4, transaction.getContact_number());
+                    stmt.setInt(5, transaction.getTransaction_type_id());
+                    stmt.setDouble(6, 0.0);
+                    stmt.setInt(7, 0);
+                    stmt.setDouble(8, transaction.getTotal_amount_payable());
+                    stmt.setDouble(9, transaction.getBalance());
+                    stmt.execute();
+                }
+            
+            logAction(loggedInUser.getId(), loggedInUser.getUname(),
+                    UserLogActions.Actions.CREATED_TRANSACTION.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "created transaction");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
 
     // Returns inventory items in critical level
     public ObservableList<DeprecatedItem> getItemsInCriticalLevel() {
@@ -2140,5 +2282,15 @@ public class DBQuery {
         }
         return false;
     }
+
+		public ObservableList<OrderProduct> fetchOrderProducts() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public ObservableList<DiscountCard> fetchDiscountCards() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 }

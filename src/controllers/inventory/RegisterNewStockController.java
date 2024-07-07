@@ -50,12 +50,13 @@ public class RegisterNewStockController extends ParentController {
 
         String unitMeasureString = unitmeasureCBox.getSelectionModel().getSelectedItem();
         String stockTypeString = stockTypeCBox.getSelectionModel().getSelectedItem();
+        int stockTypeId = getDBManager().query.getStockTypeID(stockTypeString);
 
         int unitMeasureID = getDBManager().query.getUnitMeasureID(unitMeasureString);
 
         Stock newStock = new Stock(0, stockNameField.getText(), 0,
                 unitMeasureID,
-                (stockTypeString.compareTo("vegetable") == 0 ? 1 : (stockTypeString.compareTo("meat") == 0 ? 2 : 3)),
+                (stockTypeString.compareTo("vegetable") == 0 ? 1 : (stockTypeString.compareTo("meat") == 0 ? 2 : stockTypeId)),
                 criticalLevel, false);
 
         this.borderPaneRootSwitcher.goBack_BP();

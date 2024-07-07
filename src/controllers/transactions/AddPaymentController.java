@@ -5,6 +5,7 @@ import enums.ScreenPaths;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import models.schemas.User;
 import models.transactions.AddPaymentModel;
 
@@ -17,6 +18,10 @@ public class AddPaymentController extends ParentController {
 
     @FXML
     private ComboBox<String> paymentTypeCBox;
+    @FXML
+    private TextField Change;
+    @FXML
+    private TextField AmountPaid;
 
     private CreateTransactionsController controller;
     private AddPaymentModel model;

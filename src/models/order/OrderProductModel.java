@@ -13,6 +13,6 @@ public class OrderProductModel {
     }
 
     public ObservableList<FetchedOrderProduct> fetchOrderProducts() {
-        return dbQuery.fetchOrderProducts();
+        return null;
     }
 }
