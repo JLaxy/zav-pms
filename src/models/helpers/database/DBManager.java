@@ -24,6 +24,7 @@ public class DBManager {
     private final String DATABASE_NAME = "zav-pms-db";
     private final String USERNAME = "pmsprogram";
     private final String PASSWORD = "zavpms@123";
+    private final String USERNAME_ALGO = "pmsalgo";
 
     public DBQuery query;
 
@@ -49,7 +50,7 @@ public class DBManager {
     // Used at program start to determine if application is able to connect to the
     // database
     private void testConnection() {
-        if (createConnection() == null)
+        if (createConnection() == null || createConnectionAlgo() == null)
             System.exit(1);
     }
 
@@ -58,6 +59,18 @@ public class DBManager {
         try {
             return DriverManager.getConnection(
                     "jdbc:mysql://" + SERVER_ADDRESS + ":" + PORT_ADDRESS + "/" + DATABASE_NAME, USERNAME, PASSWORD);
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+            return null;
+        }
+    }
+
+    // Creating special connection to Database; for algo purposes
+    public Connection createConnectionAlgo() {
+        try {
+            return DriverManager.getConnection(
+                    "jdbc:mysql://" + SERVER_ADDRESS + ":" + PORT_ADDRESS + "/" + DATABASE_NAME, USERNAME_ALGO,
+                    PASSWORD);
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
             return null;

@@ -618,6 +618,32 @@ public class DBQuery {
         return myList;
     }
 
+    // Returns arraylist containing all of the stockIDs
+    public ArrayList<Integer> getStockIDs() {
+        ArrayList<Integer> stockIDs = new ArrayList<Integer>();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement("SELECT id FROM stock where isVoided = 0")) {
+
+            // Execute SQL Query
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    stockIDs.add(result.getInt("id"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return stockIDs;
+    }
+
     public boolean editStock(Stock newStock, User loggedInUser, String[] changes) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
@@ -1979,36 +2005,140 @@ public class DBQuery {
         return paymentTypes;
     }
 
-    public void getProductsSold(String date1, String date2) {
-        Map<String, Object> productsSold = new HashMap<String, Object>();
-        String query = "SELECT ordered_products.product_type_id, ordered_products.product_id FROM `zav-pms-db`.transaction JOIN ordered_products ON ordered_products.transaction_id = transaction.id WHERE order_date >= ? AND order_date <= ?;";
+    // Returns arraylist containing all of the beverageIDs
+    public ArrayList<Integer> getBeverageIDs() {
+        ArrayList<Integer> beverageIDs = new ArrayList<Integer>();
         try (Connection con = this.zavPMSDB.createConnection();
-                PreparedStatement stmt = con.prepareStatement(query);
-                ResultSet result = stmt.executeQuery()) {
+                PreparedStatement stmt = con
+                        .prepareStatement("SELECT id FROM drink_product WHERE isVoided = 0")) {
 
-            Map<Integer, Integer> foodProduct = new HashMap<Integer, Integer>();
-            Map<Integer, Integer> beverageProduct = new HashMap<Integer, Integer>();
+            // Execute SQL Query
+            stmt.execute();
 
-            // {
-            // 1 FOOD: {
-            // food_id : 1,
-            // food_id : 2,
-            // },
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    beverageIDs.add(result.getInt("id"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return beverageIDs;
+    }
 
-            // 2 DRINK: {
+    public ArrayList<Integer> getFoodIDs() {
+        ArrayList<Integer> foodIDs = new ArrayList<Integer>();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement("SELECT id FROM food_product WHERE isVoided = 0")) {
 
-            // },
-            // }
+            // Execute SQL Query
+            stmt.execute();
 
-            // If food, increment with key if same id
-            if (result.getInt(1) == 1) {
-                foodProduct.put(result.getInt(2), foodProduct.get(result.getInt(2)));
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    foodIDs.add(result.getInt("id"));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return foodIDs;
+    }
+
+    // Returns the total amount used
+    public Double getRecentQuantityUsed(StockProductType.Type productType, int stock_product_id) {
+        Double quantityUsed = 0.0;
+
+        String query = "";
+
+        // Retrieving all stock_product_expenses of inventory item in past 3 months
+        if (productType == StockProductType.Type.BEVERAGE) {
+            query = "SELECT SUM(quantity) AS sum FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_type_id = 1 AND stock_product_id = ? AND date_reducted > DATE_SUB(now(), INTERVAL 3 MONTH);";
+        } else if (productType == StockProductType.Type.STOCK) {
+            query = "SELECT SUM(quantity) AS sum FROM `zav-pms-db`.stock_product_reduction WHERE stock_product_type_id = 2 AND stock_product_id = ? AND date_reducted > DATE_SUB(now(), INTERVAL 3 MONTH);";
+        }
+
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(query);) {
+
+            stmt.setInt(1, stock_product_id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            // For each result
+            while (result.next()) {
+                quantityUsed += result.getDouble("sum");
             }
 
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
 
+        return quantityUsed;
+    }
+
+    // Retrieving the the number of times all food products were ordered
+    public int getFoodOrderQuantity(int product_id) {
+        int quantityOrdered = 0;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT SUM(current_quantity) AS sum FROM `zav-pms-db`.ordered_products JOIN transaction ON transaction.id = ordered_products.transaction_id WHERE transaction.isVoided = 0 AND order_date > DATE_SUB(now(), INTERVAL 3 MONTH) AND product_id = ? AND product_type_id = 1;");) {
+
+            stmt.setInt(1, product_id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            // For each result
+            while (result.next()) {
+                quantityOrdered += result.getInt("sum");
+            }
+
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+
+        return quantityOrdered;
+    }
+
+    public boolean updateBeverageCriticalLevel(int id, int newCritLevel) {
+        try (Connection con = this.zavPMSDB.createConnectionAlgo();
+                PreparedStatement stmt = con
+                        .prepareStatement("UPDATE `zav-pms-db`.drink_product SET critical_level = ? WHERE id = ?;")) {
+            stmt.setInt(2, id);
+            stmt.setInt(1, newCritLevel);
+            stmt.execute();
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
+
+    public boolean updateStockCriticalLevel(int id, int newCritLevel) {
+        try (Connection con = this.zavPMSDB.createConnectionAlgo();
+                PreparedStatement stmt = con
+                        .prepareStatement("UPDATE `zav-pms-db`.stock SET critical_level = ? WHERE id = ?;")) {
+            stmt.setInt(2, id);
+            stmt.setInt(1, newCritLevel);
+            stmt.execute();
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
     }
 
 }

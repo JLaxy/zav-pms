@@ -55,6 +55,7 @@ public class JSONManager {
             settings.put("runInFullScreen", false);
             settings.put("reportTimeInterval", "none");
             settings.put("emailReportDestination", "none");
+            settings.put("forecastMonthInterval", 3);
 
             settingsFile.put("developer_settings", getJSONPair("skipOTP", false));
             settingsFile.put("program_settings", settings);

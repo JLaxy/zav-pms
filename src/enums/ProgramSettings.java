@@ -15,6 +15,7 @@ public class ProgramSettings {
         RUN_IN_FULLSCREEN("runInFullScreen"),
         REPORT_TIME_INTERVAL("reportTimeInterval"),
         EMAIL_REPORT_DESTINATION("emailReportDestination"),
+        FORECAST_MONTH_INTERVAL("forecastMonthInterval"),
         BACKUP_LOCATION("backupLocation");
 
         private final String setting;

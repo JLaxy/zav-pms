@@ -14,6 +14,7 @@ import models.helpers.PopupDialog;
 import models.helpers.RootSwitcher;
 import models.helpers.database.DBManager;
 import models.maintenance.AutoBackup;
+import models.modules.forecastalgorithm.Forecast;
 import models.modules.report.AutoReporter;
 
 public class PMS extends Application {
@@ -27,6 +28,8 @@ public class PMS extends Application {
         try {
             // Connecting to Database
             DBManager zavPMSDB = connectToDatabase();
+
+            
 
             // Initializing settings file; makes sure it exists
             new JSONManager().initializeSettingsFile();
@@ -69,6 +72,7 @@ public class PMS extends Application {
             AutoBackup.enableDatabaseSaveOnExit(mainStage, zavPMSDB);
 
             AutoReporter.setupAutoReporterTask();
+            Forecast.setupAutoUpdateCriticalLevelTask();
 
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

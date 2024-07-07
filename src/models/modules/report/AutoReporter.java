@@ -32,10 +32,10 @@ public class AutoReporter {
             interval = 24 * 60 * 60 * 1000;
         } else if (new JSONManager().getSetting(ProgramSettings.Setting.REPORT_TIME_INTERVAL.getValue())
                 .compareTo("weekly") == 0) {
-            interval = 7 * 24 * 60 * 60 * 1000;
+            interval = 7L * 24 * 60 * 60 * 1000;
         } else if (new JSONManager().getSetting(ProgramSettings.Setting.REPORT_TIME_INTERVAL.getValue())
                 .compareTo("monthly") == 0) {
-            interval = 4 * 7 * 24 * 60 * 60 * 1000;
+            interval = 30L * 24 * 60 * 60 * 1000;
         }
 
         reportTime.scheduleAtFixedRate(reporter, 0, interval);
