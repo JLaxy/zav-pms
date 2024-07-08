@@ -78,6 +78,7 @@ public class ScreenPaths {
         CASH_PAYMENT("../../views/fxmls/transactions/CashPaymentPopUpView.fxml"),
         E_WALLET_PAYMENT("../../views/fxmls/transactions/E-walletPaymentPopUpView.fxml"),
         VIEW_TRANSACTIONS("../../views/fxmls/transactions/ViewTransactionsView.fxml"),
+        VIEW_PAYMENTS("../../views/fxmls/transactions/ViewPaymentsView.fxml"),
 
         // Order
         ORDER("../../views/fxmls/order/OrderView.fxml"),

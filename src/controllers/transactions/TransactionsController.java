@@ -12,7 +12,9 @@ public class TransactionsController extends ParentController {
 
     @FXML
     private void viewpayments() {
-        System.out.println("View Payments");
+        ViewPaymentsController controller = (ViewPaymentsController) this
+                .initializeNextScreen_BP(ScreenPaths.Paths.VIEW_PAYMENTS.getPath(), loggedInUserInfo, "PAYMENTS");
+        controller.retrievePayments();
     }
 
     @FXML

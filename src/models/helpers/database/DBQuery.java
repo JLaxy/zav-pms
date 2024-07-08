@@ -42,6 +42,7 @@ import models.schemas.DiscountCardType;
 import models.schemas.FoodVariant;
 import models.schemas.OrderProduct;
 import models.schemas.OrderedProduct;
+import models.schemas.Payment;
 import models.schemas.PurchasedInventoryItem;
 import models.schemas.SeniorPwdId;
 
@@ -49,7 +50,7 @@ public class DBQuery {
 
     private DBManager zavPMSDB;
 
-   public DBQuery(DBManager zavPMSDB) {
+    public DBQuery(DBManager zavPMSDB) {
         this.zavPMSDB = zavPMSDB;
     }
 
@@ -580,17 +581,17 @@ public class DBQuery {
         }
         return false;
     }
-    
+
     public boolean saveOrder(OrderedProduct order, User loggedInUserInfo) {
-    	
+
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
                                 "INSERT INTO `zav-pms-db`.`ordered_products` (`transaction_id`, `product_id`, `required_quantity`, `current_quantity`, `product_type_id`, `special_instruction`) VALUES (?, ?, ?, ?, ?,?);")) {
 
             // Setting stock info
-            stmt.setString(1,Integer.toString(order.getTransaction_id()));
-            stmt.setInt(2,getProductNameId(getProductName(order.getProduct_id())));
+            stmt.setString(1, Integer.toString(order.getTransaction_id()));
+            stmt.setInt(2, getProductNameId(getProductName(order.getProduct_id())));
             stmt.setInt(3, order.getRequired_quantity());
             stmt.setInt(4, order.getCurrent_quantity());
             stmt.setInt(5, order.getProduct_type_id());
@@ -608,16 +609,15 @@ public class DBQuery {
         }
         return false;
     }
-    
-public ObservableList<OrderedProduct> getOrder() {
 
-	ObservableList<OrderedProduct> list = FXCollections.observableArrayList();
+    public ObservableList<OrderedProduct> getOrder() {
+
+        ObservableList<OrderedProduct> list = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
                         .prepareStatement(
                                 "SELECT * FROM `zav-pms-db`.ordered_products;")) {
 
-         
             stmt.execute();
             ResultSet result = stmt.getResultSet();
 
@@ -626,22 +626,23 @@ public ObservableList<OrderedProduct> getOrder() {
                 result.close();
             } else {
                 while (result.next()) {
-                	list.add(
-                            new OrderedProduct(result.getInt("id"), result.getInt("transaction_id"), result.getInt("product_id"),result.getInt("required_quantity"),result.getInt("current_quantity"),result.getInt("product_type_id"),result.getString("special_instruction")));
+                    list.add(
+                            new OrderedProduct(result.getInt("id"), result.getInt("transaction_id"),
+                                    result.getInt("product_id"), result.getInt("required_quantity"),
+                                    result.getInt("current_quantity"), result.getInt("product_type_id"),
+                                    result.getString("special_instruction")));
                 }
                 result.close();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return list;
     }
-    
-    
-    //Get stock types
+
+    // Get stock types
     public ObservableList<StockType> getStockTypes() {
         String query = "SELECT * FROM `zav-pms-db`.stock_type;";
-
 
         ObservableList<StockType> myList = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
@@ -659,7 +660,8 @@ public ObservableList<OrderedProduct> getOrder() {
             } else {
                 while (result.next()) {
                     myList.add(
-                            new StockType(result.getInt("id"), result.getString("type"), result.getInt("default_expiration")));
+                            new StockType(result.getInt("id"), result.getString("type"),
+                                    result.getInt("default_expiration")));
                 }
                 result.close();
             }
@@ -669,7 +671,6 @@ public ObservableList<OrderedProduct> getOrder() {
         // Return list
         return myList;
     }
-
 
     public ObservableList<Stock> getStocks(String stockName) {
         String query = "";
@@ -1280,7 +1281,7 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return retrievedID;
     }
-    
+
     public int getProductTypeId(String productType) {
         int retrievedID = -1;
         try (Connection con = this.zavPMSDB.createConnection();
@@ -1516,23 +1517,23 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return false;
     }
-    
-    public ObservableList<Transaction> getTransactions(String userQuery){
-    	ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-    	String query="";
-    	if(userQuery == null) {
-			query = "SELECT * FROM `zav-pms-db`.transaction;";
-		}else {
-			query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
-		}
+
+    public ObservableList<Transaction> getTransactions(String userQuery) {
+        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        String query = "";
+        if (userQuery == null) {
+            query = "SELECT * FROM `zav-pms-db`.transaction;";
+        } else {
+            query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
+        }
         try (Connection con = this.zavPMSDB.createConnection();
-        		
+
                 PreparedStatement stmt = con.prepareStatement(
-                		query)) {
+                        query)) {
             // Execute SQL Query
-        	if(userQuery !=null) {
-        		stmt.setString(1, userQuery);
-        	}
+            if (userQuery != null) {
+                stmt.setString(1, userQuery);
+            }
             stmt.execute();
 
             ResultSet result = stmt.getResultSet();
@@ -1540,15 +1541,20 @@ public ObservableList<OrderedProduct> getOrder() {
             if (isNoResult(result)) {
                 result.close();
             } else {
-                while(result.next()) {
-                	LocalDateTime fulfillment;
-                	if( result.getDate("fulfillment_date")==null) {
-                		fulfillment = null;
-                	}else {
-                		fulfillment = result.getDate("fulfillment_date").toLocalDate().atStartOfDay();
-                	}
-                	Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"), result.getDate("order_date").toLocalDate().atStartOfDay(), result.getDate("target_date").toLocalDate().atStartOfDay(), result.getString("contact_number"), result.getInt("transaction_type_id"), result.getDouble("discount_amount"), result.getBoolean("isVoided"), result.getDouble("total_amount_payable"),fulfillment, result.getDouble("balance"));
-                	transactions.add(transaction);
+                while (result.next()) {
+                    LocalDateTime fulfillment;
+                    if (result.getDate("fulfillment_date") == null) {
+                        fulfillment = null;
+                    } else {
+                        fulfillment = result.getDate("fulfillment_date").toLocalDate().atStartOfDay();
+                    }
+                    Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"),
+                            result.getDate("order_date").toLocalDate().atStartOfDay(),
+                            result.getDate("target_date").toLocalDate().atStartOfDay(),
+                            result.getString("contact_number"), result.getInt("transaction_type_id"),
+                            result.getDouble("discount_amount"), result.getBoolean("isVoided"),
+                            result.getDouble("total_amount_payable"), fulfillment, result.getDouble("balance"));
+                    transactions.add(transaction);
                 }
                 result.close();
             }
@@ -1557,23 +1563,23 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return transactions;
     }
-    
-    public ObservableList<Transaction> getTransactionsById(int id){
-    	ObservableList<Transaction> transactions = FXCollections.observableArrayList();
-    	String query="";
-    	if(id == 0) {
-			query = "SELECT * FROM `zav-pms-db`.transaction;";
-		}else {
-			query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
-		}
+
+    public ObservableList<Transaction> getTransactionsById(int id) {
+        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        String query = "";
+        if (id == 0) {
+            query = "SELECT * FROM `zav-pms-db`.transaction;";
+        } else {
+            query = "SELECT * FROM `zav-pms-db`.transaction WHERE customer_name LIKE ?;";
+        }
         try (Connection con = this.zavPMSDB.createConnection();
-        		
+
                 PreparedStatement stmt = con.prepareStatement(
-                		query)) {
+                        query)) {
             // Execute SQL Query
-        	if(id !=0) {
-        		stmt.setInt(2, id);
-        	}
+            if (id != 0) {
+                stmt.setInt(2, id);
+            }
             stmt.execute();
 
             ResultSet result = stmt.getResultSet();
@@ -1581,9 +1587,16 @@ public ObservableList<OrderedProduct> getOrder() {
             if (isNoResult(result)) {
                 result.close();
             } else {
-                while(result.next()) {
-                	Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"), result.getDate("order_date").toLocalDate().atStartOfDay(), result.getDate("target_date").toLocalDate().atStartOfDay(), result.getString("contact_number"), result.getInt("transaction_type_id"), result.getDouble("discount_amount"), result.getBoolean("isVoided"), result.getDouble("total_amount_payable"), result.getDate("fulfillment_date").toLocalDate().atStartOfDay(), result.getDouble("balance"));
-                	transactions.add(transaction);
+                while (result.next()) {
+                    Transaction transaction = new Transaction(result.getInt("id"), result.getString("customer_name"),
+                            result.getDate("order_date").toLocalDate().atStartOfDay(),
+                            result.getDate("target_date").toLocalDate().atStartOfDay(),
+                            result.getString("contact_number"), result.getInt("transaction_type_id"),
+                            result.getDouble("discount_amount"), result.getBoolean("isVoided"),
+                            result.getDouble("total_amount_payable"),
+                            result.getDate("fulfillment_date").toLocalDate().atStartOfDay(),
+                            result.getDouble("balance"));
+                    transactions.add(transaction);
                 }
                 result.close();
             }
@@ -1592,26 +1605,26 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return transactions;
     }
-    
+
     public boolean createTransaction(Transaction transaction, User loggedInUser) {
         try (Connection con = this.zavPMSDB.createConnection()) {
-                try (PreparedStatement stmt = con.prepareStatement(
-                        "INSERT INTO `zav-pms-db`.`transaction` ( `customer_name`, `order_date`, `target_date`, `contact_number`, `transaction_type_id`, `discount_amount`,`isVoided`, `total_amount_payable`, `balance`) VALUES  (?, ?, ?, ?,?, ?, ?,?,?)")) {
+            try (PreparedStatement stmt = con.prepareStatement(
+                    "INSERT INTO `zav-pms-db`.`transaction` ( `customer_name`, `order_date`, `target_date`, `contact_number`, `transaction_type_id`, `discount_amount`,`isVoided`, `total_amount_payable`, `balance`) VALUES  (?, ?, ?, ?,?, ?, ?,?,?)")) {
 
-                    // Setting order details
-                    
-                    stmt.setString(1, transaction.getCustomer_name());
-                    stmt.setDate(2, java.sql.Date.valueOf(LocalDate.now().toString()));
-                    stmt.setDate(3, java.sql.Date.valueOf(transaction.getTarget_date().toLocalDate().toString()));
-                    stmt.setString(4, transaction.getContact_number());
-                    stmt.setInt(5, transaction.getTransaction_type_id());
-                    stmt.setDouble(6, 0.0);
-                    stmt.setInt(7, 0);
-                    stmt.setDouble(8, transaction.getTotal_amount_payable());
-                    stmt.setDouble(9, transaction.getBalance());
-                    stmt.execute();
-                }
-            
+                // Setting order details
+
+                stmt.setString(1, transaction.getCustomer_name());
+                stmt.setDate(2, java.sql.Date.valueOf(LocalDate.now().toString()));
+                stmt.setDate(3, java.sql.Date.valueOf(transaction.getTarget_date().toLocalDate().toString()));
+                stmt.setString(4, transaction.getContact_number());
+                stmt.setInt(5, transaction.getTransaction_type_id());
+                stmt.setDouble(6, 0.0);
+                stmt.setInt(7, 0);
+                stmt.setDouble(8, transaction.getTotal_amount_payable());
+                stmt.setDouble(9, transaction.getBalance());
+                stmt.execute();
+            }
+
             logAction(loggedInUser.getId(), loggedInUser.getUname(),
                     UserLogActions.Actions.CREATED_TRANSACTION.getValue(),
                     DateHelper.getCurrentDateTimeString(), "created transaction");
@@ -1621,7 +1634,6 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return false;
     }
-
 
     // Returns inventory items in critical level
     public ObservableList<DeprecatedItem> getItemsInCriticalLevel() {
@@ -2229,7 +2241,7 @@ public ObservableList<OrderedProduct> getOrder() {
         }
         return paymentTypes;
     }
-    
+
     public ObservableList<String> getPaymentTypes() {
         ObservableList<String> paymentTypes = FXCollections.observableArrayList();
         String query = "SELECT * FROM `zav-pms-db`.payment_type;";
@@ -2381,14 +2393,116 @@ public ObservableList<OrderedProduct> getOrder() {
         return false;
     }
 
-		public ObservableList<OrderProduct> fetchOrderProducts() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+    public String getPaymentTypeByID(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.payment_type WHERE id = ?;");) {
 
-		public ObservableList<DiscountCard> fetchDiscountCards() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getString("payment_type");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return "error";
+    }
+
+    public String getModeOfPaymentByID(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.mode_of_payment WHERE id = ?;");) {
+
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getString("mode");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return "error";
+    }
+
+    public String getEwallet_vendor_id(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.`e-wallet_vendor` WHERE id = ?;");) {
+
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getString("vendor");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return null;
+    }
+
+    public ObservableList<Payment> retrievePayments(String userQuery) {
+        ObservableList<Payment> payments = FXCollections.observableArrayList();
+        String query = "";
+        if (userQuery == null) {
+            query = "SELECT payments.id, transaction.customer_name, transaction.contact_number, transaction.id, payments.mode_of_payment_id, payments.date_paid, payments.change, payments.paid, payments.payment_type_id, `e-wallet_reference_numbers`.reference_number, `e-wallet_reference_numbers`.`e-wallet_vendor_id` FROM `zav-pms-db`.payments JOIN transaction ON payments.transaction_id = transaction.id JOIN `e-wallet_reference_numbers` ON `e-wallet_reference_numbers`.payment_id = payments.id;";
+        } else {
+            query = "SELECT payments.id, transaction.customer_name, transaction.contact_number, transaction.id, payments.mode_of_payment_id, payments.date_paid, payments.change, payments.paid, payments.payment_type_id, `e-wallet_reference_numbers`.reference_number, `e-wallet_reference_numbers`.`e-wallet_vendor_id` FROM `zav-pms-db`.payments JOIN transaction ON payments.transaction_id = transaction.id JOIN `e-wallet_reference_numbers` ON `e-wallet_reference_numbers`.payment_id = payments.id WHERE transaction.customer_name LIKE ?;";
+        }
+        try (Connection con = this.zavPMSDB.createConnection();
+
+                PreparedStatement stmt = con.prepareStatement(
+                        query)) {
+            // Execute SQL Query
+            if (userQuery != null) {
+                stmt.setString(1, "%" + userQuery + "%");
+            }
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+            // Checking if there are any matches
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    payments.add(new Payment(result.getInt(1), result.getString(2), result.getString(3),
+                            result.getInt(4), result.getInt(5), result.getString(6), result.getDouble(7),
+                            result.getDouble(8), result.getInt(9), result.getString(10), result.getInt(11)));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return payments;
+    }
+
+    public ObservableList<OrderProduct> fetchOrderProducts() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public ObservableList<DiscountCard> fetchDiscountCards() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

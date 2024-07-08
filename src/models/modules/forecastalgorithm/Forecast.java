@@ -77,7 +77,8 @@ public class Forecast {
             public void run() {
                 System.out.println("Updating critical levels...");
                 if (new Forecast().updateCriticalLevels()) {
-                    PopupDialog.showInfoDialog("Auto Update Critical Levels", "Updated Critical Levels!");
+                    // PopupDialog.showInfoDialog("Auto Update Critical Levels", "Updated Critical
+                    // Levels!");
                 } else {
                     PopupDialog.showCustomErrorDialog("Algorithm failed to update Critical Levels");
                 }
@@ -166,10 +167,6 @@ public class Forecast {
                             .setScale(0, RoundingMode.HALF_UP).intValue());
         }
         return beverageAverages;
-    }
-
-    public static void main(String[] args) {
-        new Forecast().updateCriticalLevels();
     }
 
 }

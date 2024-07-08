@@ -70,7 +70,6 @@ public class PMS extends Application {
 
             // Comment to disable database save on exit
             AutoBackup.enableDatabaseSaveOnExit(mainStage, zavPMSDB);
-
             AutoReporter.setupAutoReporterTask();
             Forecast.setupAutoUpdateCriticalLevelTask();
 
