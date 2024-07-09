@@ -49,8 +49,12 @@ public class CashPaymentPopUpController extends ParentController{
 	            // For example, update the parent controller or close the dialog
 	            
 	            this.controller.setSelectedPaymentType(selectedPaymentType);
-	            this.controller.setChange(changeField.getText());
-	            this.controller.setAmount(amountPaidField.getText());
+	            if(Integer.parseInt(changeField.getText())>=0) {
+		            this.controller.setChange(changeField.getText());
+	            }
+	            if(!amountPaidField.getText().equals("")) {
+		            this.controller.setAmount(amountPaidField.getText());
+	            }
 
 	            this.borderPaneRootSwitcher.exitPopUpDialog();
 	        } else {

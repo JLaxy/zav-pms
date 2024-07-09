@@ -14,7 +14,7 @@ import enums.ProgramSettings;
 public class DateHelper {
 
     // Easy to change values
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("u-M-d");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("u-MM-d HH:mm:ss");
     private static final DateTimeFormatter READABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMMM d, Y");
 

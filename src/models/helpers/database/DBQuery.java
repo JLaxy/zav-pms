@@ -488,6 +488,34 @@ public class DBQuery {
         }
         return false;
     }
+    
+    public boolean savePayment(Payment payment, User loggedInUserInfo) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "INSERT INTO `zav-pms-db`.`payments` (`transaction_id`, `mode_of_payment_id`, `date_paid`, `change`, `paid`, `payment_type_id`) VALUES (?, ?, ?, ?, ?, ?);")) {
+
+            // Setting user info
+            stmt.setInt(1, payment.getTransaction_id());
+            stmt.setInt(2, payment.getMode_of_payment_id());
+            stmt.setString(3, payment.getDate_paid());
+            stmt.setDouble(4, payment.getChange());
+            stmt.setDouble(5, payment.getPaid());
+            stmt.setInt(6, payment.getPayment_type_id());
+            
+
+            stmt.execute();
+
+            // Log creating new user in database
+            logAction(loggedInUserInfo.getId(), loggedInUserInfo.getUname(),
+                    UserLogActions.Actions.CREATED_PAYMENT.getValue(),
+                    DateHelper.getCurrentDateTimeString(), "created payment");
+            return true;
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return false;
+    }
 
     // Returns all of the user logs stored in the database
     public ObservableList<UserLog> getUserLogs(String uname, String selectedDate) {
@@ -2486,6 +2514,31 @@ public class DBQuery {
             } else {
                 result.next();
                 return result.getString("vendor");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return null;
+    }
+    
+    public ObservableList<Payment> getAllPayments() {
+    	ObservableList<Payment> payments = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.payments;");) {
+
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while(result.next()) {
+                	Payment payment = new Payment(result.getInt("id"),"","",result.getInt("transaction_id"),result.getInt("mode_of_payment_id"),result.getDate("date_paid").toString(),result.getDouble("change"),result.getDouble("paid"),result.getInt("payment_type_id"),"",0);
+                	payments.add(payment);
+                }
+                return payments;
             }
         } catch (Exception e) {
             PopupDialog.showErrorDialog(e, this.getClass().getName());

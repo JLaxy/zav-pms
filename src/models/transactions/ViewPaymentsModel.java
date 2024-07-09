@@ -14,4 +14,7 @@ public class ViewPaymentsModel {
     public ObservableList<Payment> retrievePayments(String query) {
         return this.controller.getDBManager().query.retrievePayments(query);
     }
+    public ObservableList<Payment> getAllPayments() {
+        return this.controller.getDBManager().query.getAllPayments();
+    }
 }

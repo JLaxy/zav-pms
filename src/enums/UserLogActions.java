@@ -46,6 +46,7 @@ public class UserLogActions {
         REMOVED_EXPIRED_ITEM(32, "Removed Expired Inventory Item"),
         REMOVED_MISHANDLED_ITEM(33, "Removed Mishandled Inventory Item"),
         CREATED_TRANSACTION(34, "Create Transaction"),
+        CREATED_PAYMENT(34, "Create Payment"),
         USED_ITEM(35, "Used Inventory Item"),
         GENERATED_PERIODIC_SALES_REPORT(80, "Generated a Periodic Sales Report"),
         SENT_GENERATED_REPORT_TO_EMAIL(81, "Sent a System Generated Report via Email");

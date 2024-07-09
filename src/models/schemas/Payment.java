@@ -7,7 +7,7 @@ public class Payment {
     private int id, transaction_id, mode_of_payment_id, payment_type_id, ewallet_vendor_id;
     private Double change, paid;
     private String customer_name, contact_number, reference_number, mode_of_payment_id_string, payment_type_id_string,
-            ewallet_vendor_id_string, date_paid_formatted, date_paid;
+            ewallet_vendor_id_string, date_paid_formatted, date_paid,payment_type;
 
     public Payment(int id, String customer_name, String contact_number, int transaction_id, int mode_of_payment_id,
             String date_paid,
@@ -95,4 +95,78 @@ public class Payment {
     public Double getPaid() {
         return this.paid;
     }
+    
+
+	public String getPayment_type() {
+		return payment_type;
+	}
+
+	public void setPayment_type(String payment_type) {
+		this.payment_type = payment_type;
+	}
+
+	public String getReference_number() {
+		return reference_number;
+	}
+
+	public void setReference_number(String reference_number) {
+		this.reference_number = reference_number;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setTransaction_id(int transaction_id) {
+		this.transaction_id = transaction_id;
+	}
+
+	public void setMode_of_payment_id(int mode_of_payment_id) {
+		this.mode_of_payment_id = mode_of_payment_id;
+	}
+
+	public void setPayment_type_id(int payment_type_id) {
+		this.payment_type_id = payment_type_id;
+	}
+
+	public void setEwallet_vendor_id(int ewallet_vendor_id) {
+		this.ewallet_vendor_id = ewallet_vendor_id;
+	}
+
+	public void setChange(Double change) {
+		this.change = change;
+	}
+
+	public void setPaid(Double paid) {
+		this.paid = paid;
+	}
+
+	public void setCustomer_name(String customer_name) {
+		this.customer_name = customer_name;
+	}
+
+	public void setContact_number(String contact_number) {
+		this.contact_number = contact_number;
+	}
+
+	public void setMode_of_payment_id_string(String mode_of_payment_id_string) {
+		this.mode_of_payment_id_string = mode_of_payment_id_string;
+	}
+
+	public void setPayment_type_id_string(String payment_type_id_string) {
+		this.payment_type_id_string = payment_type_id_string;
+	}
+
+	public void setEwallet_vendor_id_string(String ewallet_vendor_id_string) {
+		this.ewallet_vendor_id_string = ewallet_vendor_id_string;
+	}
+
+	public void setDate_paid_formatted(String date_paid_formatted) {
+		this.date_paid_formatted = date_paid_formatted;
+	}
+
+	public void setDate_paid(String date_paid) {
+		this.date_paid = date_paid;
+	}
+    
 }

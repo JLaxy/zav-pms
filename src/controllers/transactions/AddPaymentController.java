@@ -48,7 +48,7 @@ public class AddPaymentController extends ParentController {
             // Add your logic to handle the selected payment type
             // For example, update the parent controller or close the dialog
             
-            this.controller.setSelectedPaymentType(selectedPaymentType);
+            this.controller.setModeOfPayment(selectedPaymentType);
             this.borderPaneRootSwitcher.exitPopUpDialog();
             CashPaymentPopUpController controller = (CashPaymentPopUpController) this
                     .initializePopUpDialog(ScreenPaths.Paths.CASH_PAYMENT.getPath(), this.loggedInUserInfo);
