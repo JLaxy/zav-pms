@@ -646,7 +646,7 @@ public class DBQuery {
         }
         return list;
     }
-    
+
     public ObservableList<StockRequired> getStockRequired() {
 
         ObservableList<StockRequired> list = FXCollections.observableArrayList();
@@ -664,7 +664,8 @@ public class DBQuery {
             } else {
                 while (result.next()) {
                     list.add(
-                            new StockRequired(result.getInt("food_product_id"),result.getInt("stock_id"),result.getInt("quantity")));
+                            new StockRequired(result.getInt("food_product_id"), result.getInt("stock_id"),
+                                    result.getInt("quantity")));
                 }
                 result.close();
             }
@@ -2601,7 +2602,7 @@ public class DBQuery {
 
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
-                        "SELECT total_amount_payable FROM `zav-pms-db`.transaction WHERE order_date >= DATE_SUB(?, INTERVAL ? DAY) AND order_date <= ?;");) {
+                        "SELECT * FROM `zav-pms-db`.transaction WHERE order_date >= DATE_SUB(?, INTERVAL ? DAY) AND order_date <= ?;");) {
 
             stmt.setString(1, dateSelected);
             stmt.setInt(2, timePeriod.getDays());
@@ -2617,9 +2618,11 @@ public class DBQuery {
                     if (result.getBoolean("isVoided")) {
                         ++unsuccessful;
                         continue;
+                        // If has fulfillment date, then it is successful
+                    } else if (result.getString("fulfillment_date") != null) {
+                        ++successful;
+                        income += result.getDouble("total_amount_payable");
                     }
-                    ++successful;
-                    income += result.getDouble("total_amount_payable");
                 }
             }
         } catch (Exception e) {
