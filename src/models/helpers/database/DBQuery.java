@@ -382,6 +382,9 @@ public class DBQuery {
             case DatabaseLists.Lists.REPORT_TIME_INTERVALS:
                 query = "SELECT report_intervals.interval FROM `zav-pms-db`.report_intervals;";
                 break;
+            case DatabaseLists.Lists.TRANSACTION_TYPES:
+                query = "SELECT type FROM `zav-pms-db`.transaction_types;";
+                break;
             default:
                 break;
         }
@@ -674,7 +677,7 @@ public class DBQuery {
         }
         return list;
     }
-    
+
     public ObservableList<StockRequired> getStockRequired() {
 
         ObservableList<StockRequired> list = FXCollections.observableArrayList();
@@ -692,7 +695,8 @@ public class DBQuery {
             } else {
                 while (result.next()) {
                     list.add(
-                            new StockRequired(result.getInt("food_product_id"),result.getInt("stock_id"),result.getInt("quantity")));
+                            new StockRequired(result.getInt("food_product_id"), result.getInt("stock_id"),
+                                    result.getInt("quantity")));
                 }
                 result.close();
             }
@@ -1594,7 +1598,7 @@ public class DBQuery {
                         query)) {
             // Execute SQL Query
             if (userQuery != null) {
-                stmt.setString(1, userQuery);
+                stmt.setString(1, "%" + userQuery + "%");
             }
             stmt.execute();
 
@@ -2654,7 +2658,7 @@ public class DBQuery {
 
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
-                        "SELECT total_amount_payable FROM `zav-pms-db`.transaction WHERE order_date >= DATE_SUB(?, INTERVAL ? DAY) AND order_date <= ?;");) {
+                        "SELECT * FROM `zav-pms-db`.transaction WHERE order_date >= DATE_SUB(?, INTERVAL ? DAY) AND order_date <= ?;");) {
 
             stmt.setString(1, dateSelected);
             stmt.setInt(2, timePeriod.getDays());
@@ -2670,9 +2674,11 @@ public class DBQuery {
                     if (result.getBoolean("isVoided")) {
                         ++unsuccessful;
                         continue;
+                        // If has fulfillment date, then it is successful
+                    } else if (result.getString("fulfillment_date") != null) {
+                        ++successful;
+                        income += result.getDouble("total_amount_payable");
                     }
-                    ++successful;
-                    income += result.getDouble("total_amount_payable");
                 }
             }
         } catch (Exception e) {
@@ -2707,6 +2713,50 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return 0.0;
+    }
+
+    public String getTransactionTypeByID(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.transaction_types WHERE id = ?;");) {
+
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getString("type");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return "";
+    }
+
+    public int getStockProductTypeIDByProductName(String product_name) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.products_name WHERE BINARY product_name = ?;");) {
+
+            stmt.setString(1, product_name);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getInt("stock_product_type_id");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return -1;
     }
 
 }

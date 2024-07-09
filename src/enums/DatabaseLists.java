@@ -16,7 +16,8 @@ public class DatabaseLists {
         STOCK_TYPE(5),
         PRODUCT_SERVING_SIZE(6),
         REDUCTION_TYPES(7),
-        REPORT_TIME_INTERVALS(8);
+        REPORT_TIME_INTERVALS(8),
+        TRANSACTION_TYPES(9);
 
         private final int database_list;
 

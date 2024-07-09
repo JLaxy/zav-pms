@@ -1,18 +1,11 @@
 package controllers.transactions;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import controllers.ParentController;
 import enums.ScreenPaths;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -92,11 +85,11 @@ public class CreateTransactionsController extends ParentController {
         }
         return totalCost;
     }
-    
+
     private double calculateTotalDiscountAmount() {
         double totalDiscount = 0.0;
         for (OrderProduct product : listOfOrders) {
-        	totalDiscount += product.getDiscountedPrice();
+            totalDiscount += product.getDiscountedPrice();
         }
         return totalDiscount;
     }
@@ -108,22 +101,21 @@ public class CreateTransactionsController extends ParentController {
     public void setSelectedPaymentType(String paymentType) {
         this.selectedPaymentType = paymentType;
         System.out.println("Payment type set to: " + paymentType);
-        
+
     }
-    
-    
 
     public String getChange() {
-		return change;
-	}
+        return String.valueOf(change);
+    }
 
-	public void setChange(String change) {
-		this.change = change;
-	}
+    public void setChange(String change) {
+        this.change = change;
+    }
 
-	public String getAmount() {
-		return amount;
-	}
+    public String getAmount() {
+        return String.valueOf(amount);
+    }
+
 
 	public void setAmount(String amount) {
 		this.amount = amount;
@@ -134,7 +126,9 @@ public class CreateTransactionsController extends ParentController {
 		
 	}
 
-	@FXML
+   
+
+    @FXML
     private void addpayment() {
         AddPaymentController controller = (AddPaymentController) this
                 .initializePopUpDialog(ScreenPaths.Paths.ADD_PAYMENT.getPath(), this.loggedInUserInfo);
@@ -145,6 +139,7 @@ public class CreateTransactionsController extends ParentController {
     @FXML
     private void save() {
         // Save logic here
+
     	if(modeOfPayment==null || selectedPaymentType==null || amount==null) {
     		PopupDialog.showCustomErrorDialog("Cannot create transaction without payment");
     	}else {
@@ -174,6 +169,7 @@ public class CreateTransactionsController extends ParentController {
     	}
     	
     	this.borderPaneRootSwitcher.goBack_BP(3);
+        
     }
 
     @FXML
