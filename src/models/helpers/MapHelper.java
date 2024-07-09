@@ -47,4 +47,24 @@ public class MapHelper {
 
         return sortedMap;
     }
+
+    public static Map<Integer, Map<String, Object>> sortByProductSold(Map<Integer, Map<String, Object>> productList) {
+        // Convert the map entries to a list
+        List<Map.Entry<Integer, Map<String, Object>>> entryList = new ArrayList<>(productList.entrySet());
+
+        // Sort the list by 'quantity' in descending order
+        entryList.sort((entry1, entry2) -> {
+            Integer quantity1 = (Integer) entry1.getValue().get("quantity");
+            Integer quantity2 = (Integer) entry2.getValue().get("quantity");
+            return quantity2.compareTo(quantity1); // Descending order
+        });
+
+        // Optionally, convert the sorted list back to a LinkedHashMap to preserve order
+        Map<Integer, Map<String, Object>> sortedSubMap = new LinkedHashMap<>();
+        for (Map.Entry<Integer, Map<String, Object>> entry : entryList) {
+            sortedSubMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedSubMap;
+    }
 }

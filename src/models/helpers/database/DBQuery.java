@@ -20,8 +20,11 @@ import java.util.Map;
 
 import enums.DatabaseLists;
 import enums.PreferredUnits;
+import enums.ProductTypes;
+import enums.ReportTimePeriods;
 import enums.StockProductType;
 import enums.UserLogActions;
+import enums.ReportTimePeriods.TimePeriod;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.helpers.DateHelper;
@@ -2503,6 +2506,123 @@ public class DBQuery {
     public ObservableList<DiscountCard> fetchDiscountCards() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public FoodVariant getFoodVariantByID(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.food_product JOIN products_name ON products_name.id = food_product.products_name_id WHERE food_product.id = ?;");) {
+
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return new FoodVariant(id, result.getInt("products_name_id"), result.getDouble("regular_price"),
+                        result.getInt("serving_size_id"), result.getInt("available_count"),
+                        result.getDouble("discounted_price"), result.getBoolean("isVoided"));
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return null;
+    }
+
+    // Returns the number of times product was ordered in supplied time period
+    public int getProductOrderCount(ReportTimePeriods.TimePeriod timePeriod, String dateSelected,
+            ProductTypes.Type productType, int productID) {
+
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT COUNT(ordered_products.id) AS count FROM `zav-pms-db`.ordered_products JOIN transaction on ordered_products.transaction_id = transaction.id WHERE ordered_products.product_type_id = ? AND transaction.order_date >= DATE_SUB( ?, INTERVAL ? DAY) AND transaction.order_date <= ? AND ordered_products.product_id = ?;");) {
+
+            stmt.setInt(1, productType.getValue());
+            stmt.setString(2, dateSelected);
+            stmt.setInt(3, timePeriod.getDays());
+            stmt.setString(4, dateSelected);
+            stmt.setInt(5, productID);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getInt("count");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return 0;
+    }
+
+    public Map<String, Object> getTransactionsStats(ReportTimePeriods.TimePeriod timePeriod, String dateSelected) {
+        int successful = 0;
+        int unsuccessful = 0;
+        Double income = 0.0;
+
+        Map<String, Object> transStats = new HashMap<String, Object>();
+
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT total_amount_payable FROM `zav-pms-db`.transaction WHERE order_date >= DATE_SUB(?, INTERVAL ? DAY) AND order_date <= ?;");) {
+
+            stmt.setString(1, dateSelected);
+            stmt.setInt(2, timePeriod.getDays());
+            stmt.setString(3, dateSelected);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    if (result.getBoolean("isVoided")) {
+                        ++unsuccessful;
+                        continue;
+                    }
+                    ++successful;
+                    income += result.getDouble("total_amount_payable");
+                }
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+
+        transStats.put("successful", successful);
+        transStats.put("unsuccessful", unsuccessful);
+        transStats.put("income", income);
+        return transStats;
+    }
+
+    public Double getExpenses(ReportTimePeriods.TimePeriod timePeriod, String dateSelected) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT SUM(total_cost) AS sum FROM `zav-pms-db`.stock_product_expenses WHERE date_purchased >= DATE_SUB(?, INTERVAL ? DAY) AND date_purchased <= ?;");) {
+
+            stmt.setString(1, dateSelected);
+            stmt.setInt(2, timePeriod.getDays());
+            stmt.setString(3, dateSelected);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return Double.valueOf(NumberHelper.toTwoDecimalPlaces(result.getDouble("sum")));
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return 0.0;
     }
 
 }

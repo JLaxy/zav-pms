@@ -52,7 +52,7 @@
                <children>
                   <Label prefHeight="234.0" prefWidth="1253.0" text="Welcome to our Product Management System, a robust LAN-based application designed to streamline and enhance your product management processes. This system is meticulously crafted using Java 21.0.2 for the backend and MySQL Workbench 8.0.33 for database management, ensuring a seamless and efficient user experience. As a newly created system, we are continually evolving to meet the needs of our users, and we are currently operating on Version 1.0. Our focus is to provide a reliable, secure, user-friendly, robust, and easy-to-maintain platform that simplifies product management solely for Zav’s Kitchen and RestoBar." textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
                      <font>
-                        <Font size="27.0" />
+                        <Font size="23.0" />
                      </font>
                   </Label>
                   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="27.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true">
