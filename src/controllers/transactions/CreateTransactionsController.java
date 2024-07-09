@@ -1,25 +1,17 @@
 package controllers.transactions;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import controllers.ParentController;
 import enums.ScreenPaths;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import models.order.CreateOrderModel;
 import models.schemas.OrderProduct;
 import models.schemas.OrderedProduct;
 import models.schemas.Transaction;
@@ -40,8 +32,7 @@ public class CreateTransactionsController extends ParentController {
     private CreateTransactionsModel model;
     private ObservableList<OrderProduct> listOfOrders;
     private String selectedPaymentType;
-    private String change;
-    private String amount;
+    private Double change, amount;
 
     @FXML
     public void initialize(ObservableList<OrderProduct> orderList) {
@@ -69,11 +60,11 @@ public class CreateTransactionsController extends ParentController {
         }
         return totalCost;
     }
-    
+
     private double calculateTotalDiscountAmount() {
         double totalDiscount = 0.0;
         for (OrderProduct product : listOfOrders) {
-        	totalDiscount += product.getDiscountedPrice();
+            totalDiscount += product.getDiscountedPrice();
         }
         return totalDiscount;
     }
@@ -85,30 +76,30 @@ public class CreateTransactionsController extends ParentController {
     public void setSelectedPaymentType(String paymentType) {
         this.selectedPaymentType = paymentType;
         System.out.println("Payment type set to: " + paymentType);
-        
+
     }
-    
-    
 
     public String getChange() {
-		return change;
-	}
+        return String.valueOf(change);
+    }
 
-	public void setChange(String change) {
-		this.change = change;
-	}
+    public void setChange(String change) {
+        this.change = Double.valueOf(change);
+    }
 
-	public String getAmount() {
-		return amount;
-	}
+    public String getAmount() {
+        return String.valueOf(amount);
+    }
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-		double downPayment=Double.parseDouble(requiredDownpaymentLabel.getText());
-		requiredDownpaymentLabel.setText(downPayment-Double.parseDouble(amount)+"");
-	}
+    public void setAmount(String amount) {
+        // this.amount = amount;
+        // double downPayment=Double.parseDouble(requiredDownpaymentLabel.getText());
+        // requiredDownpaymentLabel.setText(downPayment-Double.parseDouble(amount)+"");
 
-	@FXML
+        this.amount = Double.parseDouble(amount) - this.change;
+    }
+
+    @FXML
     private void addpayment() {
         AddPaymentController controller = (AddPaymentController) this
                 .initializePopUpDialog(ScreenPaths.Paths.ADD_PAYMENT.getPath(), this.loggedInUserInfo);
@@ -119,12 +110,23 @@ public class CreateTransactionsController extends ParentController {
     @FXML
     private void save() {
         // Save logic here
-    	Transaction transaction = new Transaction(0,customerNameField.getText(),LocalDateTime.now(),targetDate.getValue().atStartOfDay(),contactNumberField.getText(),transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()),calculateTotalDiscountAmount(),false,calculateTotalTransactionCost(),null,Double.parseDouble(requiredDownpaymentLabel.getText()));
-        this.model.saveTransaction(transaction,  loggedInUserInfo);
-        ObservableList <Transaction> transactions=this.getDBManager().query.getTransactions(customerNameField.getText());
-        for(OrderProduct order : this.listOfOrders) {
-       	 this.getDBManager().query.saveOrder(new OrderedProduct(0,transactions.get(0).getId(),this.getDBManager().query.getProductNameId(order.getProductName()),order.getQuantity(),order.getRemainingQuantity(),this.getDBManager().query.getProductNameId(order.getProductName()),""),this.loggedInUserInfo);
-       }
+        Transaction transaction = new Transaction(0, customerNameField.getText(), LocalDateTime.now(),
+                targetDate.getValue().atStartOfDay(), contactNumberField.getText(),
+                transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()), calculateTotalDiscountAmount(),
+                false, calculateTotalTransactionCost(), null, calculateTotalTransactionCost() - this.amount);
+        this.model.saveTransaction(transaction, loggedInUserInfo);
+        ObservableList<Transaction> transactions = this.getDBManager().query
+                .getTransactions(customerNameField.getText());
+        for (OrderProduct order : this.listOfOrders) {
+            this.getDBManager().query.saveOrder(
+                    new OrderedProduct(0, transactions.get(0).getId(),
+                            // TODO: asdasdaasda
+                            // THIS MUST BE PRODUCT_ID
+                            this.getDBManager().query.getProductNameId(order.getProductName()), order.getQuantity(),
+                            0,
+                            this.zavPMSDB.query.getStockProductTypeIDByProductName(order.getProductName()), ""),
+                    this.loggedInUserInfo);
+        }
     }
 
     @FXML

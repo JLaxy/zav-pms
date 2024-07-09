@@ -76,7 +76,7 @@ public class ScreenPaths {
         SELECT_TRANSACTION("../../views/fxmls/transactions/SelectTransactionsView.fxml"),
         CREATE_TRANSACTION("../../views/fxmls/transactions/CreateTransactionsView.fxml"),
         ADD_PAYMENT("../../views/fxmls/transactions/AddPaymentView.fxml"),
-        CASH_PAYMENT("../../views/fxmls/transactions/CashPaymentPopUpView.fxml"),
+        CASH_PAYMENT("../../views/fxmls/transactions/CashPaymentPopUp.fxml"),
         E_WALLET_PAYMENT("../../views/fxmls/transactions/E-walletPaymentPopUpView.fxml"),
         VIEW_TRANSACTIONS("../../views/fxmls/transactions/ViewTransactionsView.fxml"),
         VIEW_PAYMENTS("../../views/fxmls/transactions/ViewPaymentsView.fxml"),

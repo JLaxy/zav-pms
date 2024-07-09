@@ -1570,7 +1570,7 @@ public class DBQuery {
                         query)) {
             // Execute SQL Query
             if (userQuery != null) {
-                stmt.setString(1, userQuery);
+                stmt.setString(1, "%" + userQuery + "%");
             }
             stmt.execute();
 
@@ -2682,6 +2682,28 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return "";
+    }
+
+    public int getStockProductTypeIDByProductName(String product_name) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.products_name WHERE BINARY product_name = ?;");) {
+
+            stmt.setString(1, product_name);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getInt("stock_product_type_id");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return -1;
     }
 
 }
