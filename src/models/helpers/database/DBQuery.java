@@ -382,6 +382,9 @@ public class DBQuery {
             case DatabaseLists.Lists.REPORT_TIME_INTERVALS:
                 query = "SELECT report_intervals.interval FROM `zav-pms-db`.report_intervals;";
                 break;
+            case DatabaseLists.Lists.TRANSACTION_TYPES:
+                query = "SELECT type FROM `zav-pms-db`.transaction_types;";
+                break;
             default:
                 break;
         }
@@ -2657,6 +2660,28 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return 0.0;
+    }
+
+    public String getTransactionTypeByID(int id) {
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT * FROM `zav-pms-db`.transaction_types WHERE id = ?;");) {
+
+            stmt.setInt(1, id);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                result.next();
+                return result.getString("type");
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return "";
     }
 
 }

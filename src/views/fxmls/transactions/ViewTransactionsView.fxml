@@ -50,7 +50,7 @@
             </TableView>
          </children>
       </VBox>
-      <ScrollPane layoutX="685.0" layoutY="80.0" prefHeight="442.0" prefWidth="660.0">
+      <ScrollPane fx:id="transactionDetailsScrollPane" layoutX="685.0" layoutY="80.0" prefHeight="442.0" prefWidth="660.0">
          <content>
             <AnchorPane fx:id="transactionDetailsPane" prefWidth="664.0" style="-fx-background-color: #FDF9F9;">
                <children>
@@ -149,12 +149,12 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label alignment="BOTTOM_LEFT" prefHeight="45.0" text="Total Due">
+                              <Label alignment="BOTTOM_LEFT" prefHeight="45.0" text="Balance">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="totalDueLabel" text="Total Due">
+                              <Label fx:id="balanceLabel" text="Balance">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -167,7 +167,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <Button layoutX="1083.0" layoutY="447.0" mnemonicParsing="false" onAction="#editTransaction" style="-fx-background-radius: 100; -fx-background-color: #D552A0;" text="Edit Transaction" textFill="WHITE" translateZ="-105.0">
+      <Button fx:id="editTransactionButton" layoutX="1083.0" layoutY="447.0" mnemonicParsing="false" onAction="#editTransaction" style="-fx-background-radius: 100; -fx-background-color: #D552A0;" text="Edit Transaction" textFill="WHITE" translateZ="-105.0">
          <font>
             <Font name="Arial Black" size="23.0" />
          </font>
