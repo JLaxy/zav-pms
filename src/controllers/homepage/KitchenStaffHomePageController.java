@@ -1,10 +1,13 @@
 package controllers.homepage;
 
 import controllers.ParentController;
+import controllers.inventory.InventoryController;
+import enums.ScreenPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import models.helpers.JSONManager;
 
 public class KitchenStaffHomePageController extends ParentController {
 
@@ -34,12 +37,21 @@ public class KitchenStaffHomePageController extends ParentController {
     @FXML
     private void orderAction(ActionEvent e) {
         if ((Button) e.getSource() == this.orderButton) {
-            System.out.println("order button");
+            this.initializeNextScreen_BP(ScreenPaths.Paths.ORDER.getPath(), this.loggedInUserInfo, "ORDER");
         } else if ((Button) e.getSource() == this.inventoryButton) {
-            System.out.println("inventoryButton");
+            InventoryController controller = (InventoryController) this.initializeNextScreen_BP(
+                    ScreenPaths.Paths.INVENTORY.getPath(), this.loggedInUserInfo,
+                    "INVENTORY");
+
+            // If setting is autoCheckExpiredItems is ON
+            if (new JSONManager().getSetting("autoCheckExpiredItems").compareTo("true") == 0)
+                controller.checkExpiredItems();
         } else if ((Button) e.getSource() == this.helpButton) {
-            System.out.println("helpButton");
+            this.initializeNextScreen_BP(ScreenPaths.Paths.HELP.getPath(), this.loggedInUserInfo,
+                    "HELP");
         } else if ((Button) e.getSource() == this.aboutButton) {
+            this.initializeNextScreen_BP(ScreenPaths.Paths.ABOUT.getPath(), this.loggedInUserInfo,
+                    "ABOUT");
             System.out.println("aboutButton");
         }
     }

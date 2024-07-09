@@ -45,6 +45,7 @@ public class ViewPaymentsController extends ParentController {
     }
 
     public void retrievePayments() {
+        this.borderPaneRootSwitcher.showLoadingScreen_BP();
         Task<Void> paymentRetriever = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -57,7 +58,6 @@ public class ViewPaymentsController extends ParentController {
 
         paymentRetriever.setOnRunning((e) -> {
             this.paymentDetailsScrollPane.setVisible(false);
-            this.borderPaneRootSwitcher.showLoadingScreen_BP();
         });
         paymentRetriever.setOnSucceeded(e -> this.borderPaneRootSwitcher.exitLoadingScreen_BP());
 

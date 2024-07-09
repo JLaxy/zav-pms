@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import enums.ProductServingSize;
+import models.helpers.database.DBManager;
 
 public class FoodVariant {
     private int id, product_name_id, available_count, serving_size_id;
@@ -37,6 +38,8 @@ public class FoodVariant {
     }
 
     private void getStringEquivalents() {
+        DBManager db = new DBManager();
+
         if (this.serving_size_id == ProductServingSize.ServingSize.SOLO.getValue())
             this.serving_size_id_string = ProductServingSize.ServingSize.SOLO.getString();
         else if (this.serving_size_id == ProductServingSize.ServingSize.SHARING.getValue())
@@ -45,6 +48,8 @@ public class FoodVariant {
             this.serving_size_id_string = ProductServingSize.ServingSize.LARGE_TRAY.getString();
         else if (this.serving_size_id == ProductServingSize.ServingSize.EXTRA_LARGE_TRAY.getValue())
             this.serving_size_id_string = ProductServingSize.ServingSize.EXTRA_LARGE_TRAY.getString();
+
+        this.food_name = db.query.getProductName(this.product_name_id);
     }
 
     public void setFood_name(String name) {

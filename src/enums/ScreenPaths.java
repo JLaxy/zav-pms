@@ -60,6 +60,7 @@ public class ScreenPaths {
         EDIT_AUTO_REPORT_GENERATION("../../views/fxmls/report/EditAutoReportGenerationView.fxml"),
         EDIT_AUTO_REPORT_DESTINATION_EMAIL("../../views/fxmls/report/EditAutoReportDestinationEmailView.fxml"),
         EDIT_AUTO_REPORT_TIME_INTERVAL("../../views/fxmls/report/EditAutoReportTimeIntervalView.fxml"),
+        DATE_INTERVAL_SELECTION("../../views/fxmls/report/PS_DateIntervalSelection.fxml"),
 
         // Manage Accounts
         MANAGE_ACCOUNTS("../../views/fxmls/manageaccounts/ManageAccountsView.fxml"),

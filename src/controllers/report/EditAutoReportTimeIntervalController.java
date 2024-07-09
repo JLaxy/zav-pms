@@ -21,9 +21,9 @@ public class EditAutoReportTimeIntervalController extends ParentController {
 
     private void configureComboBox() {
         ObservableList<String> timeIntervals = FXCollections.observableArrayList();
-        timeIntervals.add("daily");
-        timeIntervals.add("weekly");
-        timeIntervals.add("monthly");
+        timeIntervals.add("Daily");
+        timeIntervals.add("Weekly");
+        timeIntervals.add("Monthly");
 
         this.timeIntervalComboBox.setItems(timeIntervals);
         this.timeIntervalComboBox.getSelectionModel().selectFirst();

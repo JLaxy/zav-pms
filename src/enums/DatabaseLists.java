@@ -15,7 +15,8 @@ public class DatabaseLists {
         UNIT_MEASURE(4),
         STOCK_TYPE(5),
         PRODUCT_SERVING_SIZE(6),
-        REDUCTION_TYPES(7);
+        REDUCTION_TYPES(7),
+        REPORT_TIME_INTERVALS(8);
 
         private final int database_list;
 

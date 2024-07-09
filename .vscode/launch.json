@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ReportManager",
+      "request": "launch",
+      "mainClass": "models.modules.report.ReportManager",
+      "projectName": "zav-pms_954a1701"
+    },
+    {
+      "type": "java",
+      "name": "ReportModel",
+      "request": "launch",
+      "mainClass": "models.modules.report.ReportModel",
+      "projectName": "zav-pms_954a1701"
+    },
+    {
+      "type": "java",
       "name": "Forecast",
       "request": "launch",
       "mainClass": "models.modules.forecastalgorithm.Forecast",
