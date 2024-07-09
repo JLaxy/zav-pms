@@ -30,6 +30,7 @@ import models.helpers.StringHelper;
 import models.helpers.NumberHelper;
 import models.modules.Security;
 import models.schemas.Stock;
+import models.schemas.StockRequired;
 import models.schemas.StockType;
 import models.schemas.Transaction;
 import models.schemas.User;
@@ -631,6 +632,33 @@ public class DBQuery {
                                     result.getInt("product_id"), result.getInt("required_quantity"),
                                     result.getInt("current_quantity"), result.getInt("product_type_id"),
                                     result.getString("special_instruction")));
+                }
+                result.close();
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return list;
+    }
+    
+    public ObservableList<StockRequired> getStockRequired() {
+
+        ObservableList<StockRequired> list = FXCollections.observableArrayList();
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con
+                        .prepareStatement(
+                                "SELECT * FROM `zav-pms-db`.stock_required;")) {
+
+            stmt.execute();
+            ResultSet result = stmt.getResultSet();
+
+            // Log creating new user in database
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    list.add(
+                            new StockRequired(result.getInt("food_product_id"),result.getInt("stock_id"),result.getInt("quantity")));
                 }
                 result.close();
             }

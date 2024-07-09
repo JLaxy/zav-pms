@@ -26,7 +26,14 @@ public class OrderController extends ParentController {
 
     @FXML
     private void showBackorders() {
-        initializeNextScreen_BP(ScreenPaths.Paths.VIEW_BACKORDER.getPath(), this.loggedInUserInfo,
+        ViewBackOrderController controller = (ViewBackOrderController)initializeNextScreen_BP(ScreenPaths.Paths.VIEW_BACKORDER.getPath(), this.loggedInUserInfo,
+        "VIEW BACKORDER");
+        System.out.println("showBackorders");
+    }
+    
+    @FXML
+    private void showMissingInventory() {
+        ViewBackOrderController controller = (ViewBackOrderController)initializeNextScreen_BP(ScreenPaths.Paths.VIEW_BACKORDER.getPath(), this.loggedInUserInfo,
         "VIEW BACKORDER");
         System.out.println("showBackorders");
     }
