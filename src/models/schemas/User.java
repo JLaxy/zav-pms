@@ -55,6 +55,10 @@ public class User {
             this.account_status_id_string = "Disabled";
     }
 
+    public void setUname(String uname){
+        this.uname = uname;
+    }
+
     // Returns copy of this user
     public User getCopy() {
         return new User(this.id, this.uname, this.pass, this.email, this.level_of_access_id, this.fname, this.lname,

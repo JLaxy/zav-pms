@@ -378,6 +378,9 @@ public class DBQuery {
             case DatabaseLists.Lists.REDUCTION_TYPES:
                 query = "SELECT reduction_type FROM `zav-pms-db`.reduction_types;";
                 break;
+            case DatabaseLists.Lists.REPORT_TIME_INTERVALS:
+                query = "SELECT report_intervals.interval FROM `zav-pms-db`.report_intervals;";
+                break;
             default:
                 break;
         }

@@ -77,7 +77,9 @@ public class Forecast {
             public void run() {
                 System.out.println("Updating critical levels...");
                 if (new Forecast().updateCriticalLevels()) {
-                    PopupDialog.showInfoDialog("Auto Update Critical Levels", "Updated Critical Levels!");
+                    // PopupDialog.showInfoDialog("Auto Update Critical Levels", "Updated Critical
+                    // Levels!");
+                    System.out.println("Successfully updated critical levels!");
                 } else {
                     PopupDialog.showCustomErrorDialog("Algorithm failed to update Critical Levels");
                 }
