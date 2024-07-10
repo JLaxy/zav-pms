@@ -115,11 +115,60 @@ public class ReportModel {
         return reportStats;
     }
 
-//     public Map<String, Object> getReorderQueueData(ReportTimePeriods.TimePeriod timeInterval,
-//     LocalDate dateSelected)
+    public Map<String, Object> getReorderQueueData(ReportTimePeriods.TimePeriod timeInterval,
+            LocalDate dateSelected) {
+        Map<String, Object> retrievedData = new HashMap<String, Object>();
+
+        // Retrieve list of foodIDS and drinkIDS
+        // Check if any transaction requires that ordered product
+
+        // {
+        // 1 : {
+        // ID : Quantity
+        // },
+        // 2 : {
+        // ID : Quantity
+        // }
+        // }
+
+        ArrayList<Integer> foodList = this.zavDBManager.query.getFoodIDs();
+        ArrayList<Integer> beverageList = this.zavDBManager.query.getBeverageIDs();
+
+        Map<Integer, Object> foodMap = new HashMap<Integer, Object>();
+        for (Integer foodID : foodList) {
+            Map<String, Object> foodDetails = new HashMap<String, Object>();
+            FoodVariant identifiedFood = this.zavDBManager.query.getFoodVariantByID(foodID);
+
+            foodDetails.put("quantity", this.zavDBManager.query.getOrderOccurence(foodID, ProductTypes.Type.FOOD,
+                    DateHelper.dateToString(dateSelected), timeInterval));
+            foodDetails.put("size", identifiedFood.getServing_size_id_string());
+            foodDetails.put("item_name", identifiedFood.getFood_name());
+
+            foodMap.put(foodID, foodDetails);
+        }
+        retrievedData.put("1", foodMap);
+
+        Map<Integer, Object> beverageMap = new HashMap<Integer, Object>();
+        for (Integer beverageID : beverageList) {
+            Map<String, Object> beverageDetails = new HashMap<String, Object>();
+            DrinkVariant identifiedDrink = this.zavDBManager.query.getBeverageByID(beverageID);
+
+            beverageDetails.put("quantity",
+                    this.zavDBManager.query.getOrderOccurence(beverageID, ProductTypes.Type.BEVERAGE,
+                            DateHelper.dateToString(dateSelected), timeInterval));
+            beverageDetails.put("size", identifiedDrink.getSize_string());
+            beverageDetails.put("item_name", identifiedDrink.getProduct_name());
+
+            beverageMap.put(beverageID, beverageDetails);
+        }
+        retrievedData.put("2", beverageMap);
+
+        System.out.println(retrievedData);
+        return retrievedData;
+    }
 
     public static void main(String[] args) {
-        new ReportModel().getPeriodicReportData(TimePeriod.WEEKLY, LocalDate.now());
+        new ReportModel().getReorderQueueData(TimePeriod.WEEKLY, LocalDate.now());
     }
 
 }

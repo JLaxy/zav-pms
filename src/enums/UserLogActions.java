@@ -49,7 +49,8 @@ public class UserLogActions {
         CREATED_PAYMENT(34, "Create Payment"),
         USED_ITEM(35, "Used Inventory Item"),
         GENERATED_PERIODIC_SALES_REPORT(80, "Generated a Periodic Sales Report"),
-        SENT_GENERATED_REPORT_TO_EMAIL(81, "Sent a System Generated Report via Email");
+        SENT_GENERATED_REPORT_TO_EMAIL(81, "Sent a System Generated Report via Email"),
+        GENERATED_REORDER_QUEUE_REPORT(82, "Generated a Reorder Queue Report");
 
         private final int action_id;
         private final String action_string;

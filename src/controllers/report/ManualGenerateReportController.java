@@ -14,7 +14,7 @@ public class ManualGenerateReportController extends ParentController {
     private ManualGenerateReportModel model;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         this.model = new ManualGenerateReportModel(this);
     }
 
@@ -58,9 +58,38 @@ public class ManualGenerateReportController extends ParentController {
         myThread.start();
     }
 
+    public void generateReorderQueue(ReportTimePeriods.TimePeriod timePeriod, String selectedDate) {
+        Task<Void> reportGenerator = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    if (!model.generaterReorderQueueReport(timePeriod, selectedDate, loggedInUserInfo)) {
+                        Platform.runLater(
+                                () -> PopupDialog.showCustomErrorDialog("Failed to generate Reorder Queue Report!"));
+                        return null;
+                    }
+                    Platform.runLater(() -> PopupDialog.showInfoDialog("Report Generated",
+                            "Successfully Generated Reorder Queue Report!"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        reportGenerator.setOnRunning(e -> this.borderPaneRootSwitcher.showLoadingScreen_BP());
+        reportGenerator.setOnSucceeded(e -> this.borderPaneRootSwitcher.exitLoadingScreen_BP());
+
+        Thread myThread = new Thread(reportGenerator);
+        myThread.setDaemon(true);
+        myThread.start();
+    }
+
     @FXML
     private void reorderqueue() {
-        System.out.println("Reorder Queue");
+        RQ_DateIntervalSelectionController controller = (RQ_DateIntervalSelectionController) this
+                .initializePopUpDialog(ScreenPaths.Paths.RQ_DATE_INTERVAL_SELECTION.getPath(), loggedInUserInfo);
+        controller.initialize(this);
     }
 
     @FXML

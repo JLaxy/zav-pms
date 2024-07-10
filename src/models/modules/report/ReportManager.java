@@ -23,6 +23,9 @@ public class ReportManager {
         public static void main(String[] args) {
                 User testUser = new User();
                 testUser.setUname("mocksiest");
+                // new
+                // ReportManager(testUser).createReorderQueue(ReportTimePeriods.TimePeriod.MONTHLY,
+                // DateHelper.getCurrentDateString());
                 new ReportManager(testUser).createDailyPeriodicSales(ReportTimePeriods.TimePeriod.MONTHLY,
                                 DateHelper.getCurrentDateString());
         }
@@ -159,6 +162,108 @@ public class ReportManager {
                                                         new Paragraph(String.valueOf(periodicSalesStats.get("revenue")))
                                                                         .setTextAlignment(TextAlignment.CENTER)));
                         document.add(transactionsTable);
+                        document.add(getEndParagraph());
+                        document.add(getFooter());
+
+                        document.close();
+                } catch (IOException e) {
+                        PopupDialog.showErrorDialog(e, getClass().getName());
+                        e.printStackTrace();
+                        // Set filename to null if an error has occured
+                        fileName = null;
+                }
+                return fileName;
+        }
+
+        public String createReorderQueue(ReportTimePeriods.TimePeriod timePeriod, String date) {
+                String fileName = REPORTS_FOLDER_PATH + timePeriod.getPeriodString() + "ReorderQueueReport_"
+                                + DateHelper.getCurrentDateTimeString().replace(" ", "_").replace(":", "-") + ".pdf";
+
+                try (PdfWriter writer = new PdfWriter(fileName);
+                                PdfDocument pdfDoc = new PdfDocument(writer);) {
+
+                        // Retrieving periodic sales data from database
+                        Map<String, Object> periodicSalesStats = this.model.getReorderQueueData(timePeriod,
+                                        DateHelper.stringToDate(date));
+
+                        // Creating new document with new size
+                        Document document = new Document(pdfDoc, PageSize.LETTER.rotate());
+                        pdfDoc.addNewPage();
+
+                        // Getting Header and Subheaders of PDF
+                        document.add(getHeader());
+                        document.add(getSubHeading(timePeriod.getPeriodString() + " Reorder Queue Report"));
+                        document.add(
+                                        getSubSubHeading(DateHelper.stringToDate(date).minusDays(timePeriod.getDays())
+                                                        + " to "
+                                                        + DateHelper.stringToDate(date)));
+
+                        document.add(new Paragraph("Food Products").setTextAlignment(TextAlignment.LEFT));
+                        // Creating Food Products Table
+                        Table foodProductSalesTable = new Table(UnitValue.createPercentArray(3)).useAllAvailableWidth();
+                        // // Creating Table Headers
+                        // Product Name Header
+                        Cell productNameHeader = new Cell().add(new Paragraph("PRODUCT NAME"));
+                        productNameHeader.setTextAlignment(TextAlignment.CENTER);
+                        productNameHeader.setBold();
+                        foodProductSalesTable.addHeaderCell(productNameHeader);
+                        // Size
+                        Cell sizeHeader = new Cell().add(new Paragraph("SIZE"));
+                        sizeHeader.setTextAlignment(TextAlignment.CENTER);
+                        sizeHeader.setBold();
+                        foodProductSalesTable.addHeaderCell(sizeHeader);
+                        // Quantity Sold Header
+                        Cell quantitySoldHeader = new Cell().add(new Paragraph("QUANTITY DEMANDED"));
+                        quantitySoldHeader.setTextAlignment(TextAlignment.CENTER);
+                        quantitySoldHeader.setBold();
+                        foodProductSalesTable.addHeaderCell(quantitySoldHeader);
+
+                        // Iterating through food
+                        Map<Integer, Object> iteratedMap = (Map<Integer, Object>) periodicSalesStats.get("1");
+                        for (Map.Entry<Integer, Object> mapEntry : iteratedMap.entrySet()) {
+                                Map<String, Object> foodMap = (Map<String, Object>) mapEntry.getValue();
+                                Cell myCell = new Cell().add(new Paragraph(String.valueOf(foodMap.get("item_name"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                foodProductSalesTable.addCell(myCell);
+                                myCell = new Cell().add(new Paragraph(String.valueOf(foodMap.get("size"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                foodProductSalesTable.addCell(myCell);
+                                myCell = new Cell().add(new Paragraph(String.valueOf(foodMap.get("quantity"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                foodProductSalesTable.addCell(myCell);
+                        }
+                        document.add(foodProductSalesTable);
+
+                        document.add(new Paragraph("Drink Products").setTextAlignment(TextAlignment.LEFT)
+                                        .setMarginTop(20));
+                        // Creating Beverage Products Table
+                        Table beverageProductSalesTable = new Table(UnitValue.createPercentArray(3))
+                                        .useAllAvailableWidth();
+                        // // Creating Table Headers
+                        // Product Name Header
+                        beverageProductSalesTable.addHeaderCell(productNameHeader);
+                        // Size
+                        beverageProductSalesTable.addHeaderCell(sizeHeader);
+                        // Quantity Sold Header
+                        beverageProductSalesTable.addHeaderCell(quantitySoldHeader);
+
+                        // Iterating through beverage
+                        iteratedMap = (Map<Integer, Object>) periodicSalesStats.get("2");
+                        for (Map.Entry<Integer, Object> mapEntry : iteratedMap.entrySet()) {
+                                Map<String, Object> beverageMap = (Map<String, Object>) mapEntry.getValue();
+                                Cell myCell = new Cell()
+                                                .add(new Paragraph(String.valueOf(beverageMap.get("item_name"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                beverageProductSalesTable.addCell(myCell);
+                                myCell = new Cell().add(new Paragraph(String.valueOf(beverageMap.get("size"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                beverageProductSalesTable.addCell(myCell);
+                                myCell = new Cell().add(new Paragraph(String.valueOf(beverageMap.get("quantity"))));
+                                myCell.setTextAlignment(TextAlignment.CENTER);
+                                beverageProductSalesTable.addCell(myCell);
+                        }
+                        document.add(beverageProductSalesTable);
+
                         document.add(getEndParagraph());
                         document.add(getFooter());
 

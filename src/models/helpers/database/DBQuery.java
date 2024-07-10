@@ -491,7 +491,7 @@ public class DBQuery {
         }
         return false;
     }
-    
+
     public boolean savePayment(Payment payment, User loggedInUserInfo) {
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con
@@ -505,7 +505,6 @@ public class DBQuery {
             stmt.setDouble(4, payment.getChange());
             stmt.setDouble(5, payment.getPaid());
             stmt.setInt(6, payment.getPayment_type_id());
-            
 
             stmt.execute();
 
@@ -2524,9 +2523,9 @@ public class DBQuery {
         }
         return null;
     }
-    
+
     public ObservableList<Payment> getAllPayments() {
-    	ObservableList<Payment> payments = FXCollections.observableArrayList();
+        ObservableList<Payment> payments = FXCollections.observableArrayList();
         try (Connection con = this.zavPMSDB.createConnection();
                 PreparedStatement stmt = con.prepareStatement(
                         "SELECT * FROM `zav-pms-db`.payments;");) {
@@ -2538,9 +2537,12 @@ public class DBQuery {
             if (isNoResult(result)) {
                 result.close();
             } else {
-                while(result.next()) {
-                	Payment payment = new Payment(result.getInt("id"),"","",result.getInt("transaction_id"),result.getInt("mode_of_payment_id"),result.getDate("date_paid").toString(),result.getDouble("change"),result.getDouble("paid"),result.getInt("payment_type_id"),"",0);
-                	payments.add(payment);
+                while (result.next()) {
+                    Payment payment = new Payment(result.getInt("id"), "", "", result.getInt("transaction_id"),
+                            result.getInt("mode_of_payment_id"), result.getDate("date_paid").toString(),
+                            result.getDouble("change"), result.getDouble("paid"), result.getInt("payment_type_id"), "",
+                            0);
+                    payments.add(payment);
                 }
                 return payments;
             }
@@ -2757,6 +2759,36 @@ public class DBQuery {
             PopupDialog.showErrorDialog(e, this.getClass().getName());
         }
         return -1;
+    }
+
+    public int getOrderOccurence(int product_id, ProductTypes.Type productType, String chosenDate,
+            ReportTimePeriods.TimePeriod timeInterval) {
+        int quantity = 0;
+        try (Connection con = this.zavPMSDB.createConnection();
+                PreparedStatement stmt = con.prepareStatement(
+                        "SELECT ordered_products.current_quantity, ordered_products.required_quantity FROM `zav-pms-db`.ordered_products JOIN transaction ON transaction.id = ordered_products.transaction_id WHERE product_id = ? AND ordered_products.product_type_id = ? AND target_date >= DATE_SUB(?, INTERVAL ? DAY) AND target_date <= ? AND transaction.isVoided = 0;");) {
+
+            stmt.setInt(1, product_id);
+            stmt.setInt(2, productType.getValue());
+            stmt.setString(3, chosenDate);
+            stmt.setInt(4, timeInterval.getDays());
+            stmt.setString(5, chosenDate);
+            stmt.execute();
+
+            ResultSet result = stmt.getResultSet();
+
+            if (isNoResult(result)) {
+                result.close();
+            } else {
+                while (result.next()) {
+                    quantity += result.getInt("required_quantity") - result.getInt("current_quantity");
+                }
+                return quantity;
+            }
+        } catch (Exception e) {
+            PopupDialog.showErrorDialog(e, this.getClass().getName());
+        }
+        return quantity;
     }
 
 }

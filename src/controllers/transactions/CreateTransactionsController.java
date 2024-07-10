@@ -57,28 +57,20 @@ public class CreateTransactionsController extends ParentController {
 
         transactionTypeCBox.setItems(FXCollections.observableList(transactionTypes));
     }
-    
-    
 
     public String getModeOfPayment() {
-		return modeOfPayment;
-	}
+        return modeOfPayment;
+    }
 
+    public void setModeOfPayment(String modeOfPayment) {
+        this.modeOfPayment = modeOfPayment;
+    }
 
+    public String getSelectedPaymentType() {
+        return selectedPaymentType;
+    }
 
-	public void setModeOfPayment(String modeOfPayment) {
-		this.modeOfPayment = modeOfPayment;
-	}
-
-
-
-	public String getSelectedPaymentType() {
-		return selectedPaymentType;
-	}
-
-
-
-	private double calculateTotalTransactionCost() {
+    private double calculateTotalTransactionCost() {
         double totalCost = 0.0;
         for (OrderProduct product : listOfOrders) {
             totalCost += product.getAmount();
@@ -116,17 +108,14 @@ public class CreateTransactionsController extends ParentController {
         return String.valueOf(amount);
     }
 
+    public void setAmount(String amount) {
+        this.amount = amount;
+        if (!requiredDownpaymentLabel.getText().equals("")) {
+            double downPayment = Double.parseDouble(requiredDownpaymentLabel.getText());
+            requiredDownpaymentLabel.setText(downPayment - Double.parseDouble(amount) + "");
+        }
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-		if(!requiredDownpaymentLabel.getText().equals("")) {
-			double downPayment=Double.parseDouble(requiredDownpaymentLabel.getText());
-			requiredDownpaymentLabel.setText(downPayment-Double.parseDouble(amount)+"");
-		}
-		
-	}
-
-   
+    }
 
     @FXML
     private void addpayment() {
@@ -140,36 +129,50 @@ public class CreateTransactionsController extends ParentController {
     private void save() {
         // Save logic here
 
-    	if(modeOfPayment==null || selectedPaymentType==null || amount==null) {
-    		PopupDialog.showCustomErrorDialog("Cannot create transaction without payment");
-    	}else {
-    		Transaction transaction = new Transaction(0,customerNameField.getText(),LocalDateTime.now(),targetDate.getValue().atStartOfDay(),contactNumberField.getText(),transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()),calculateTotalDiscountAmount(),false,calculateTotalTransactionCost(),null,Double.parseDouble(requiredDownpaymentLabel.getText()));
-            this.model.saveTransaction(transaction,  loggedInUserInfo);
-            ObservableList <Transaction> transactions=this.getDBManager().query.getTransactions(customerNameField.getText());
-            for(OrderProduct order : this.listOfOrders) {
-           	 this.getDBManager().query.saveOrder(new OrderedProduct(0,transactions.get(0).getId(),this.getDBManager().query.getProductNameId(order.getProductName()),order.getQuantity(),order.getRemainingQuantity(),this.getDBManager().query.getProductNameId(order.getProductName()),""),this.loggedInUserInfo);
-           }
+        if (modeOfPayment == null || selectedPaymentType == null || amount == null) {
+            PopupDialog.showCustomErrorDialog("Cannot create transaction without payment");
+        } else {
+            Transaction transaction = new Transaction(0, customerNameField.getText(), LocalDateTime.now(),
+                    targetDate.getValue().atStartOfDay(), contactNumberField.getText(),
+                    transactionTypeCBox.getItems().indexOf(transactionTypeCBox.getValue()),
+                    calculateTotalDiscountAmount(), false, calculateTotalTransactionCost(), null,
+                    Double.parseDouble(requiredDownpaymentLabel.getText()));
+            this.model.saveTransaction(transaction, loggedInUserInfo);
+            ObservableList<Transaction> transactions = this.getDBManager().query
+                    .getTransactions(customerNameField.getText());
+            for (OrderProduct order : this.listOfOrders) {
+                this.getDBManager().query.saveOrder(
+                        new OrderedProduct(0, transactions.get(0).getId(),
+                                this.getDBManager().query.getProductNameId(order.getProductName()), order.getQuantity(),
+                                order.getRemainingQuantity(),
+                                this.getDBManager().query.getProductNameId(order.getProductName()), ""),
+                        this.loggedInUserInfo);
+            }
             ObservableList<String> paymentTypes = this.getDBManager().query.getPaymentTypes();
             ObservableList<String> paymentModeTypes = this.getDBManager().query.getModeOfPaymentTypes();
-            int id=0;
-            int paymentId=0;
-            for(String payment : paymentModeTypes) {
-            	if(modeOfPayment.equals(payment)) {
-            		id=paymentModeTypes.indexOf(payment);
-            	}
+            int id = 0;
+            int paymentId = 0;
+            for (String payment : paymentModeTypes) {
+                if (modeOfPayment.equals(payment)) {
+                    id = paymentModeTypes.indexOf(payment);
+                }
             }
-            
-            for(String payment : paymentTypes) {
-            	if(selectedPaymentType.equals(payment)) {
-            		paymentId=paymentTypes.indexOf(payment)+1;
-            	}
+
+            for (String payment : paymentTypes) {
+                if (selectedPaymentType.equals(payment)) {
+                    paymentId = paymentTypes.indexOf(payment) + 1;
+                }
             }
-            Payment payment = new Payment(0,transaction.getCustomer_name(),transaction.getContact_number(),transactions.get(0).getId(),id,""+transaction.getOrder_date().getYear()+"-"+transaction.getOrder_date().getMonthValue()+"-"+transaction.getOrder_date().getDayOfMonth(),Double.parseDouble(change),Double.parseDouble(amount),paymentId,"",0);
+            Payment payment = new Payment(0, transaction.getCustomer_name(), transaction.getContact_number(),
+                    transactions.get(0).getId(), id,
+                    "" + transaction.getOrder_date().getYear() + "-" + transaction.getOrder_date().getMonthValue() + "-"
+                            + transaction.getOrder_date().getDayOfMonth(),
+                    Double.parseDouble(change), Double.parseDouble(amount), paymentId, "", 0);
             this.getDBManager().query.savePayment(payment, loggedInUserInfo);
-    	}
-    	
-    	this.borderPaneRootSwitcher.goBack_BP(3);
-        
+        }
+
+        this.borderPaneRootSwitcher.goBack_BP(3);
+
     }
 
     @FXML
