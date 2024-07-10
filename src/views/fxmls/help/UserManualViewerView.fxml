@@ -12,7 +12,7 @@
             <Font name="Arial Black" size="28.0" />
          </font>
       </Button>
-      <ImageView fx:id="manualView" fitHeight="487.0" fitWidth="411.0" layoutX="481.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="manualView" fitHeight="461.0" fitWidth="757.0" layoutX="305.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="leftArrowButton" layoutX="626.0" layoutY="551.0" mnemonicParsing="false" onAction="#previous" text="&lt;" />
       <Button fx:id="rightArrowButton" layoutX="718.0" layoutY="551.0" mnemonicParsing="false" onAction="#next" text="&gt;" />
    </children>
